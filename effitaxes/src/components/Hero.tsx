@@ -16,7 +16,7 @@ export default function Hero() {
         viewport={{ once: true }}
         className="mb-4 px-4 text-4xl font-extrabold sm:text-5xl md:text-6xl"
       >
-        Effitaxes : Dédié à l'excellence en services comptables et financiers.
+        Effitaxes : Dédié à l’excellence en services comptables et financiers.
       </motion.h1>
 
       <motion.p
