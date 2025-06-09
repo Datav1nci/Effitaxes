@@ -9,13 +9,13 @@ const data = [
       "Tenue de livres, analyse financière et optimisation fiscale pour assurer une gestion comptable solide.",
   },
   {
-    title: "Gestion de projets",
+    title: "Gestion de la paie",
     icon: <Wrench size={32} />,
     description:
       "Planification et exécution précises des paies et déclarations pour respecter les obligations légales.",
   },
   {
-    title: "Développement immobilier",
+    title: "Consultation",
     icon: <HardHat size={32} />,
     description:
       "Accompagnement et conseils stratégiques pour les particuliers et les PME",
