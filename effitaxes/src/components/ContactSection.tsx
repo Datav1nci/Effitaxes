@@ -48,14 +48,6 @@ export default function ContactSection() {
             <strong>Adresse :</strong> 9700 Boulv Saint-Michel, Montréal, QC
           </p>
 
-          <iframe
-            title="Google Maps – bureau effitaxes"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2795.1247!2d-73.5734!3d45.5088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDXCsDMwJzMyLjAiTiA3M8KwMzQnMjQuOCJX!5e0!3m2!1sfr!2sca!4v1715700000000"
-            width="100%"
-            height="250"
-            loading="lazy"
-            className="rounded shadow"
-          />
         </div>
       </div>
     </section>

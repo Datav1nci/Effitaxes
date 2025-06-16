@@ -18,7 +18,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm dark:bg-gray-950/80">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <Link href="/" className="text-2xl font-bold tracking-wide">
-          effitaxes
+          Effitaxes
         </Link>
 
         {/* Desktop nav */}

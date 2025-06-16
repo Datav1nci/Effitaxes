@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "effitaxes – Comptabilité à Montréal",
+  title: "Effitaxes – Comptabilité à Montréal",
   description: "Comptabilité et gestion financière partout au Québec.",
   keywords: ["comptabilité", "finance", "gestion", "Montréal", "effitaxes", "paies", "paie", "travailleurs autonomes", "déclarations fiscales", "impôts", "tenue de livres", "comptabilité d'entreprise", "consultation fiscale", "planification fiscale", "déductions d'impôt", "TPS", "TVQ", "rapports financiers", "audit", "conseils financiers", "gestion de paie", "comptabilité pour PME", "services comptables", "expertise comptable", "déclarations de revenus", "optimisation fiscale"],
   authors: [{ name: "Effitaxes Experts-Comptables" }],
