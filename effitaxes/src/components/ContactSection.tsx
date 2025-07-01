@@ -38,11 +38,11 @@ export default function ContactSection() {
         {/* Coordonnées + carte */}
         <div className="space-y-4 text-gray-700 dark:text-gray-300">
           <p>
-            <strong>Téléphone :</strong> <a href="tel:5142223444">(438) 476-9456</a>
+            <strong>Téléphone :</strong> <a href="tel:4384769456">(438) 476-9456</a>
           </p>
           <p>
             <strong>Courriel :</strong>{" "}
-            <a href="mailto:effitaxes@gmail.com">effitaxes@gmail.com</a>
+            <a href="mailto:youssef@effitaxes.com">youssef@effitaxes.com</a>
           </p>
           <p>
             <strong>Adresse :</strong> 9700 Boulv Saint-Michel, Montréal, QC
