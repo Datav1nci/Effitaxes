@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Moon, Sun, Menu, X } from "lucide-react";
 
 const links = [
   { href: "#accueil", label: "Accueil" },
@@ -13,6 +13,27 @@ const links = [
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+ 
+    useEffect(() => {
+      const stored = localStorage.getItem("theme");
+      if (stored === "dark") {
+        document.documentElement.classList.add("dark");
+        setDarkMode(true);
+      }
+    }, []);
+  
+  const toggleDarkMode = () => {
+  if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setDarkMode(false);
+  } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setDarkMode(true);
+  }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm dark:bg-gray-950/80">
@@ -20,7 +41,7 @@ export default function Header() {
         <Link href="/" className="text-2xl font-bold tracking-wide">
           Effitaxes
         </Link>
-
+        
         {/* Desktop nav */}
         <nav className="hidden md:flex gap-6">
           {links.map((l) => (
@@ -28,7 +49,10 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
-        </nav>
+       <button onClick={toggleDarkMode} className="ml-4 text-gray-600 dark:text-gray-300">
+        {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+        </nav>  
 
         {/* Mobile hamburger */}
         <button
@@ -53,6 +77,9 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
+        <button onClick={toggleDarkMode} className="ml-4 text-gray-600 dark:text-gray-300">
+        {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
         </nav>
       )}
     </header>
