@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Moon, Sun, Menu, X } from "lucide-react";
@@ -39,7 +40,13 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm dark:bg-gray-950/80">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <Link href="/" className="text-2xl font-bold tracking-wide">
-          Effitaxes
+          <Image
+          src="/images/Effitaxes_Logo2.webp"
+          alt="Effitaxes Logo"
+          width={120} // Adjust width as needed
+          height={40} // Adjust height as needed
+          priority // Optional: for faster loading of logo
+        />
         </Link>
         
         {/* Desktop nav */}
