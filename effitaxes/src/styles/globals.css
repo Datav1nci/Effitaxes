@@ -9,6 +9,14 @@ Les couleurs clair/sombre sont contrôlées via les variables --background / --f
 Si vous avez ajouté des plugins (ex. @tailwindcss/forms), ils restent actifs ; aucun changement requis côté tailwind.config.js.
 */
 
+@font-face {
+  font-family: 'Promethean';
+  src: url('/fonts/Promethean-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
 /* 1.  Tout Tailwind en un seul import  */
 @import "tailwindcss";
 
