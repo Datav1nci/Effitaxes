@@ -39,6 +39,8 @@ export default function ContactSection() {
         <div className="space-y-4 text-gray-700 dark:text-gray-300">
           <p>
             <strong>Téléphone Montréal :</strong> <a href="tel:4384769456">(438) 476-9456</a>
+          </p>
+          <p>
             <strong>Téléphone Rive-Sud:</strong> <a href="tel:4502591829">(450) 259-1829</a>
           </p>
           <p>
