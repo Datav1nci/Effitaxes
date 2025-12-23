@@ -1,23 +1,25 @@
- "use client";
+"use client";
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export default function ThemeSwitcher() {
-    const [mounted, setMounted] = useState(false);
-    const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
 
-    useEffect(() => {
-    setMounted(true);
-    }, []);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
 
-    if (!mounted) {
-    return null; // Render nothing on the server to prevent hydration issues
-    }
+  const isDark = resolvedTheme === "dark";
 
-    return (
-    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-        Toggle Theme
+  return (
+    <button
+      type="button"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      aria-label="Toggle theme"
+      className="ml-4 rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+    >
+      {isDark ? "☀️" : "🌙"}
     </button>
-    );
+  );
 }

@@ -44,11 +44,16 @@ Si vous avez ajouté des plugins (ex. @tailwindcss/forms), ils restent actifs ; 
    4.  Mode sombre automatique (media query)
 ------------------------------------------------------------------ */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
 }
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
 
 /* ------------------------------------------------------------------
    5.  Styles de base
