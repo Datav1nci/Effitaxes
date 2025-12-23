@@ -15,7 +15,7 @@ export default function AboutSection() {
         <div>
           <h2 className="mb-4 text-3xl font-bold">À propos de Effitaxes</h2>
           <p className="mb-4">
-            Basée à Montréal, Effitaxes est un cabinet comptable dédié à l’excellence en services financiers.
+            Basée sur la rive-sud de Montréal, Effitaxes est un cabinet comptable dédié à l’excellence en services financiers.
             Notre mission : soutenir nos clients dans la gestion comptable et fiscale avec professionnalisme et fiabilité.
           </p>
           <p>
