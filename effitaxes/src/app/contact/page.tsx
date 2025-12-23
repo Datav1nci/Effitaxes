@@ -3,6 +3,7 @@ export default function ContactPage() {
     <main>
       <h1>Contact Us</h1>
       <p>438 476 9456 </p>
+      <p>438 476 9456 </p>
     </main>
   );
 }

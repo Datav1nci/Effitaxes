@@ -19,26 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
         <Header />
         <main className="mx-auto max-w-7xl px-4">{children}</main>
-        <Footer />
-      
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                  navigator.serviceWorker
-                    .register('/service-worker.js')
-                    .then((registration) => {
-                      console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                      console.error('Service Worker registration failed:', error);
-                    });
-                });
-              }
-            `,
-          }}
-        />      
+        <Footer />     
       </body>
     </html>
   );
