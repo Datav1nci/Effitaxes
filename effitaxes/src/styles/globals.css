@@ -10,54 +10,54 @@ Si vous avez ajouté des plugins (ex. @tailwindcss/forms), ils restent actifs ; 
 */
 
 @font-face {
-  font-family: 'Promethean';
-  src: url('/fonts/Promethean-Regular.ttf') format('truetype');
+  font-family: "Promethean";
+  src: url("/fonts/Promethean-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
-
-/* 1.  Tout Tailwind en un seul import  */
+/* 1) Tailwind v4 import (single entry) */
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
-   2.  Variables racine (mode clair par défaut)
+   2) CSS variables (LIGHT by default)
+   - These variables are the single source of truth.
 ------------------------------------------------------------------ */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a; /* slate-900 */
 }
 
 /* ------------------------------------------------------------------
-   3.  Mapping vers le thème Tailwind (directive @theme inline)
-       Permet d’utiliser `bg-background` ou `text-foreground` côté JSX
+   3) DARK mode variables
+   - next-themes adds `class="dark"` on <html>
+   - So we bind dark colors to `.dark` (NOT prefers-color-scheme)
+------------------------------------------------------------------ */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #e5e7eb; /* gray-200 */
+}
+
+/* ------------------------------------------------------------------
+   4) Map variables to Tailwind theme tokens (Tailwind v4)
+   - Enables bg-background / text-foreground in JSX
 ------------------------------------------------------------------ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* fontes déclarées dans layout.tsx (Inter) */
+  /* font declared in layout.tsx (Inter) */
   --font-sans: var(--font-inter);
 }
 
 /* ------------------------------------------------------------------
-   4.  Mode sombre automatique (media query)
+   5) Base styles
 ------------------------------------------------------------------ */
-@media (prefers-color-scheme: dark) {
-  :root {
-  --background: #ffffff;
-  --foreground: #171717;
+html,
+body {
+  height: 100%;
 }
 
-  .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
-}
-
-/* ------------------------------------------------------------------
-   5.  Styles de base
------------------------------------------------------------------- */
 body {
   background: var(--background);
   color: var(--foreground);
@@ -65,10 +65,10 @@ body {
 }
 
 /* ------------------------------------------------------------------
-   6.  Détails UI facultatifs (sélection & scrollbar)
+   6) Optional UI details (selection & scrollbar)
 ------------------------------------------------------------------ */
 ::selection {
-  background-color: theme(colors.blue.600);   /* bleu 600 Tailwind */
+  background-color: theme(colors.blue.600);
   color: #fff;
 }
 
@@ -80,3 +80,4 @@ body {
   background-color: theme(colors.gray.400);
   border-radius: 4px;
 }
+

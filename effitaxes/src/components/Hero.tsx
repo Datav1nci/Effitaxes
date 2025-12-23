@@ -7,41 +7,85 @@ export default function Hero() {
   return (
     <section
       id="accueil"
-      className="flex min-h-[80vh] flex-col items-center justify-center text-center bg-gradient-to-b from-white to-gray-100 dark:from-gray-950 dark:to-gray-900"
+      className="
+        relative flex min-h-[80vh] flex-col items-center justify-center
+        text-center bg-background text-foreground
+        overflow-hidden
+      "
     >
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        viewport={{ once: true }}
-        className="mb-4 px-4 text-4xl font-extrabold sm:text-5xl md:text-6xl"
-      >
-        Effitaxes : Dédié à l’excellence en services comptables et financiers.
-      </motion.h1>
+      {/* Subtle background glow / gradient (theme-aware) */}
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none absolute inset-0
+          bg-gradient-to-b from-blue-50/70 via-background to-background
+          dark:from-blue-500/10 dark:via-background dark:to-background
+        "
+      />
 
-      <motion.p
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15, duration: 0.7 }}
-        viewport={{ once: true }}
-        className="mb-8 max-w-2xl px-6 text-lg md:text-xl"
-      >
-        Des solutions personnalisée et sur mesure pour les particuliers, les entreprises et travailleurs autonomes.
-      </motion.p>
+      {/* Optional: soft vignette */}
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none absolute inset-0
+          [mask-image:radial-gradient(60%_60%_at_50%_40%,black,transparent)]
+          bg-black/5 dark:bg-black/25
+        "
+      />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        <Link
-          href="#contact"
-          className="rounded-full bg-blue-600 px-8 py-3 text-white font-medium hover:bg-blue-700 transition"
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-4">
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="
+            mb-4 text-balance
+            text-4xl font-extrabold tracking-tight
+            sm:text-5xl md:text-6xl
+          "
         >
-          Contactez-nous
-        </Link>
-      </motion.div>
+          Effitaxes : Dédié à l’excellence en services comptables et financiers.
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.7 }}
+          viewport={{ once: true }}
+          className="
+            mx-auto mb-8 max-w-2xl
+            text-pretty text-lg md:text-xl
+            text-slate-600 dark:text-gray-300
+          "
+        >
+          Des solutions personnalisées et sur mesure pour les particuliers, les
+          entreprises et travailleurs autonomes.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          viewport={{ once: true }}
+          className="flex items-center justify-center"
+        >
+          <Link
+            href="#contact"
+            className="
+              inline-flex items-center justify-center
+              rounded-full px-8 py-3 font-medium
+              bg-blue-600 text-white shadow-sm
+              hover:bg-blue-700 transition
+              focus-visible:outline-none focus-visible:ring-2
+              focus-visible:ring-blue-500 focus-visible:ring-offset-2
+              dark:focus-visible:ring-offset-gray-950
+            "
+          >
+            Contactez-nous
+          </Link>
+        </motion.div>
+      </div>
     </section>
   );
 }
