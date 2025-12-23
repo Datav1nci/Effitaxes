@@ -48,7 +48,7 @@ export default function ContactSection() {
             <a href="mailto:youssef@effitaxes.com">youssef@effitaxes.com</a>
           </p>
           <p>
-            <strong>Adresse :</strong> 6955 Boulevard Taschereau, Brossard QC J4Z 1A7, Brossard, QC.
+            <strong>Adresse :</strong> 004-6955 Boulevard Taschereau, Brossard QC J4Z 1A7
           </p>
 
         </div>
