@@ -38,14 +38,15 @@ export default function ContactSection() {
         {/* Coordonnées + carte */}
         <div className="space-y-4 text-gray-700 dark:text-gray-300">
           <p>
-            <strong>Téléphone :</strong> <a href="tel:4384769456">(438) 476-9456</a>
+            <strong>Téléphone Montréal :</strong> <a href="tel:4384769456">(438) 476-9456</a>
+            <strong>Téléphone Rive-Sud:</strong> <a href="tel:4502591829">(450) 259-1829</a>
           </p>
           <p>
             <strong>Courriel :</strong>{" "}
             <a href="mailto:youssef@effitaxes.com">youssef@effitaxes.com</a>
           </p>
           <p>
-            <strong>Adresse :</strong> 9700 Boulv Saint-Michel, Montréal, QC
+            <strong>Adresse :</strong> 6955 Boulevard Taschereau, Brossard QC J4Z 1A7, Brossard, QC.
           </p>
 
         </div>
