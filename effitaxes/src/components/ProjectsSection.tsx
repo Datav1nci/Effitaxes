@@ -2,12 +2,7 @@
 
 import ProjectCard from "@/components/ProjectCard";
 
-const projects = [
-  { slug: "impots", title: "Déclaration d'impôts", img: "/images/projet1.webp" },
-  { slug: "optimisation-fiscale", title: "Optimisation fiscale", img: "/images/projet2.webp" },
-  { slug: "gestion-paie-pme", title: "Gestion paie PME", img: "/images/projet3.webp" },
-  { slug: "declarations-tps-tvq", title: "Déclarations TPS/TVQ", img: "/images/projet4.webp" },
-];
+import { projects } from "@/lib/projects";
 
 export default function ProjectsSection() {
   return (

@@ -6,11 +6,11 @@ import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 
 const links = [
-  { href: "#accueil", label: "Accueil" },
-  { href: "#services", label: "Services" },
-  { href: "#projets", label: "Projets" },
-  { href: "#apropos", label: "À propos" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#hero", label: "Accueil" },
+  { href: "/#services", label: "Services" },
+  { href: "/#projets", label: "Projets" },
+  { href: "/#apropos", label: "À propos" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export default function Header() {
