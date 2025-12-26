@@ -12,10 +12,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const { theme, setTheme } = useTheme();
-  // const isDark = theme === "dark"; // relying on theme directly avoids hydration mismatch issues if handled correctly, but resolvedTheme is safer for system preference.
-  // Actually next-themes provides 'theme' and 'resolvedTheme'.
-  // Let's use 'theme' and handle mounting check which we already do.
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   useEffect(() => setMounted(true), []);
 

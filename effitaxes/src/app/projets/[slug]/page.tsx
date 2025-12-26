@@ -1,8 +1,5 @@
-import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { projects } from "@/lib/projects";
-import { ArrowLeft } from "lucide-react";
 import ContactSection from "@/components/ContactSection";
 import ProjectDetails from "@/components/ProjectDetails";
 

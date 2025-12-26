@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import BrandName from "@/components/BrandName";
 
