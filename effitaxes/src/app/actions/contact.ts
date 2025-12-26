@@ -13,6 +13,7 @@ export type ContactState = {
     errors?: {
         name?: string[];
         email?: string[];
+        phone?: string[];
         message?: string[];
     };
 };
@@ -42,6 +43,7 @@ export async function submitContactForm(
     const rawData = {
         name: formData.get("name"),
         email: formData.get("email"),
+        phone: formData.get("phone"),
         message: formData.get("message"),
         _gotcha: formData.get("_gotcha"),
     };
@@ -56,7 +58,7 @@ export async function submitContactForm(
         };
     }
 
-    const { name, email, message, _gotcha } = validatedFields.data;
+    const { name, email, phone, message, _gotcha } = validatedFields.data;
 
     // 3. Honeypot Check (Anti-Bot)
     if (_gotcha && _gotcha.length > 0) {
@@ -80,6 +82,7 @@ export async function submitContactForm(
         
         Nom: ${name}
         Email: ${email}
+        Téléphone: ${phone || "Non fourni"}
         
         Message:
         ${message}

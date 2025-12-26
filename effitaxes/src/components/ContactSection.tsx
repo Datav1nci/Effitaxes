@@ -92,6 +92,24 @@ export default function ContactSection() {
                   </div>
 
                   <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {t.contact.form.phone}
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                      placeholder={t.contact.form.phonePlaceholder}
+                    />
+                    {state.errors?.phone && (
+                      <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
+                        <AlertCircle size={14} /> {state.errors.phone[0]}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       {t.contact.form.message}
                     </label>
