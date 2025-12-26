@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ProjectCard({
   slug,
@@ -10,6 +11,7 @@ export default function ProjectCard({
   title: string;
   img: string;
 }) {
+  const { t } = useLanguage();
   return (
     <Link
       href={`/projets/${slug}`}
@@ -33,15 +35,16 @@ export default function ProjectCard({
           quality={80}
           placeholder="blur"
           blurDataURL="/images/placeholder.webp"
+          suppressHydrationWarning
         />
         {/* subtle overlay to keep titles readable if you add text later */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition" />
       </div>
 
       <div className="p-4">
-        <h3 className="font-semibold tracking-tight">{title}</h3>
-        <p className="mt-1 text-sm text-slate-600 dark:text-gray-300">
-          En savoir plus →
+        <h3 className="font-semibold tracking-tight" suppressHydrationWarning>{title}</h3>
+        <p className="mt-1 text-sm text-slate-600 dark:text-gray-300" suppressHydrationWarning>
+          {t.projects.more} →
         </p>
       </div>
     </Link>

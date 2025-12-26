@@ -4,6 +4,7 @@ import "@/styles/globals.css";       // ⬅ placé dans src/styles
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -19,9 +20,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" suppressHydrationWarning className={`${inter.variable} scroll-smooth`}>
       <body className="antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
         <ThemeProvider>
-          <Header />
-          <main className="mx-auto max-w-7xl px-4">{children}</main>
-          <Footer />
+          <LanguageProvider>
+            <Header />
+            <main className="mx-auto max-w-7xl px-4">{children}</main>
+            <Footer />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

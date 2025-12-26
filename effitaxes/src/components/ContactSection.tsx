@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ContactSection() {
   //const [status, setStatus] = useState<"idle" | "loading" | "sent">("idle");
@@ -23,6 +24,8 @@ export default function ContactSection() {
   //    e.currentTarget.reset();
   //  };
 
+  const { t } = useLanguage();
+
   if (!isMounted) {
     return null; // Prevent rendering on server
   }
@@ -30,7 +33,7 @@ export default function ContactSection() {
   return (
     <section id="contact" className="py-20 bg-background text-foreground">
       <div className="mx-auto max-w-7xl px-4">
-        <h2 className="mb-8 text-center text-3xl font-bold">Contactez-nous</h2>
+        <h2 className="mb-8 text-center text-3xl font-bold">{t.contact.title}</h2>
 
         <div className="rounded-2xl bg-gray-50 p-8 sm:p-12 dark:bg-gray-950/40">
           <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2">
@@ -40,17 +43,17 @@ export default function ContactSection() {
             {/* Coordonnées + carte */}
             <div className="space-y-4 text-gray-700 dark:text-gray-300">
               <p>
-                <strong>Téléphone Montréal :</strong> <a href="tel:4384769456">(438) 476-9456</a>
+                <strong>{t.contact.phoneMtl} :</strong> <a href="tel:4384769456">(438) 476-9456</a>
               </p>
               <p>
-                <strong>Téléphone Rive-Sud:</strong> <a href="tel:4502591829">(450) 259-1829</a>
+                <strong>{t.contact.phoneRs}:</strong> <a href="tel:4502591829">(450) 259-1829</a>
               </p>
               <p>
-                <strong>Courriel :</strong>{" "}
+                <strong>{t.contact.email} :</strong>{" "}
                 <a href="mailto:youssef@effitaxes.com">youssef@effitaxes.com</a>
               </p>
               <p>
-                <strong>Adresse :</strong> 004-6955 Boulevard Taschereau, Brossard, QC. J4Z 1A7
+                <strong>{t.contact.address} :</strong> 004-6955 Boulevard Taschereau, Brossard, QC. J4Z 1A7
               </p>
 
             </div>

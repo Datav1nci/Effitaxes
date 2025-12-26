@@ -1,6 +1,11 @@
+"use client";
+
 import Image from "next/image";
+import { useLanguage } from "@/context/LanguageContext";
+import BrandName from "@/components/BrandName";
 
 export default function AboutSection() {
+  const { t } = useLanguage();
   return (
     <section id="apropos" className="py-20">
       <div className="mx-auto grid max-w-5xl gap-12 md:grid-cols-2 md:items-center">
@@ -13,15 +18,12 @@ export default function AboutSection() {
         />
 
         <div>
-          <h2 className="mb-4 text-3xl font-bold">À propos d’<span className="font-promethean">Effita{"><"}es</span></h2>
-          <p className="mb-4">
-            Basée sur la rive-sud de Montréal, Effitaxes est un cabinet comptable dédié à l’excellence en services financiers.
-            Notre mission : soutenir nos clients dans la gestion comptable et fiscale avec professionnalisme et fiabilité.
+          <h2 className="mb-4 text-3xl font-bold" suppressHydrationWarning>{t.about.title} <BrandName /></h2>
+          <p className="mb-4" suppressHydrationWarning>
+            {t.about.p1}
           </p>
-          <p>
-            Grâce à une approche personnalisée, nous offrons des solutions sur mesure incluant
-            la tenue de livres, les déclarations d’impôts, la gestion de paie et la planification financière
-            pour les pariculiers, les entreprises et travailleurs autonomes.
+          <p suppressHydrationWarning>
+            {t.about.p2}
           </p>
         </div>
       </div>

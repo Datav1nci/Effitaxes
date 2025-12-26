@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactNode } from "react";
 
 export default function ServiceCard({
@@ -23,11 +25,11 @@ export default function ServiceCard({
         {icon}
       </div>
 
-      <h3 className="mb-2 text-xl font-semibold tracking-tight">
+      <h3 className="mb-2 text-xl font-semibold tracking-tight" suppressHydrationWarning>
         {title}
       </h3>
 
-      <p className="text-slate-600 dark:text-gray-300">
+      <p className="text-slate-600 dark:text-gray-300" suppressHydrationWarning>
         {description}
       </p>
     </div>

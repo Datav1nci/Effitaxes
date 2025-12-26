@@ -2,8 +2,11 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
+import BrandName from "@/components/BrandName";
 
 export default function Hero() {
+  const { t } = useLanguage();
   return (
     <section
       id="accueil"
@@ -21,47 +24,43 @@ export default function Hero() {
 
       <div className="relative z-10 mx-auto w-full max-w-5xl px-4">
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="mb-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl"
+          className="mb-6 text-balance text-4xl tracking-tight sm:text-5xl md:text-6xl"
+          suppressHydrationWarning
         >
-          <span className="font-promethean">Effita{"><"}es</span> : Dédié à l’excellence en services comptables et financiers.
+          <BrandName className="block mb-2 text-5xl sm:text-6xl md:text-7xl" />
+          <span className="block text-slate-900 dark:text-white font-medium">
+            {t.hero.subtitle}
+          </span>
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.7 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="
-            mx-auto mb-8 max-w-2xl text-pretty text-lg md:text-xl
-            text-slate-700 dark:text-gray-300
-          "
+          className="mb-8 text-lg text-slate-700 dark:text-gray-300 sm:text-xl"
+          suppressHydrationWarning
         >
-          Des solutions personnalisées et sur mesure pour les particuliers, les
-          entreprises et travailleurs autonomes.
+          {t.hero.description}
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
           viewport={{ once: true }}
-          className="flex items-center justify-center"
         >
-          <Link
+          <a
             href="#contact"
-            className="
-              inline-flex items-center justify-center rounded-full px-8 py-3 font-medium
-              bg-blue-600 text-white shadow-sm hover:bg-blue-700 transition
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
-              dark:focus-visible:ring-offset-gray-950
-            "
+            className="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-lg transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+            suppressHydrationWarning
           >
-            Contactez-nous
-          </Link>
+            {t.hero.cta}
+          </a>
         </motion.div>
       </div>
     </section>
