@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Globe, Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
 import BrandName from "@/components/BrandName";
@@ -70,15 +70,39 @@ export default function Header() {
           </button>
         </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
-          onClick={() => setOpen((v) => !v)}
-          className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 bg-white text-slate-700 hover:bg-gray-50 transition dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        {/* Mobile Actions: Language & Theme Toggles + Hamburger */}
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={toggleLanguage}
+            className="rounded-full p-2 text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            aria-label="Toggle Language"
+          >
+            <span className="flex items-center justify-center font-bold text-sm h-5 w-5">
+              {language.toUpperCase()}
+            </span>
+          </button>
+
+          <button
+            onClick={toggleTheme}
+            className="rounded-full p-2 text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            aria-label="Toggle Theme"
+          >
+            {mounted && theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+            onClick={() => setOpen((v) => !v)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 bg-white text-slate-700 hover:bg-gray-50 transition dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile drawer */}
@@ -95,25 +119,6 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <button
-              onClick={() => {
-                toggleLanguage();
-                setOpen(false);
-              }}
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-slate-700 hover:bg-gray-50 transition dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
-            >
-              <Globe size={18} />
-              <span>{language === "fr" ? "English" : "Français"}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-slate-700 hover:bg-gray-50 transition dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
-            >
-              {mounted ? (isDark ? <Sun size={18} /> : <Moon size={18} />) : null}
-              <span>{isDark ? "Mode clair" : "Mode sombre"}</span>
-            </button>
           </div>
         </nav>
       )}
