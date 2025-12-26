@@ -1,34 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { submitContactForm } from "@/app/actions/contact";
+import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
+
+const initialState = {
+  success: false,
+  message: "",
+  errors: {},
+};
 
 export default function ContactSection() {
-  //const [status, setStatus] = useState<"idle" | "loading" | "sent">("idle");
+  const [state, formAction, isPending] = useActionState(submitContactForm, initialState);
   const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true); // Only render dynamic content after mount
-  }, []);
-
-  //  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //    e.preventDefault();
-  //    setStatus("loading");
-  //
-  //    //const data = Object.fromEntries(new FormData(e.currentTarget));
-  //
-  //    // ➜ Intégrer EmailJS OU fetch('/api/contact', {method:"POST", body:JSON.stringify(data)})
-  //    await new Promise((r) => setTimeout(r, 1500)); // démo
-  //
-  //    setStatus("sent");
-  //    e.currentTarget.reset();
-  //  };
-
   const { t } = useLanguage();
 
-  if (!isMounted) {
-    return null; // Prevent rendering on server
-  }
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <section id="contact" className="py-20 bg-background text-foreground">
@@ -37,7 +29,112 @@ export default function ContactSection() {
 
         <div className="rounded-2xl bg-gray-50 p-8 sm:p-12 dark:bg-gray-950/40">
           <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2">
+
             {/* Form */}
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+              {state.success ? (
+                <div className="flex flex-col items-center justify-center text-center h-full py-12 space-y-4">
+                  <CheckCircle className="w-16 h-16 text-green-500" />
+                  <p className="text-xl font-medium text-gray-900 dark:text-gray-100">{t.contact.form.successTitle}</p>
+                  <p className="text-gray-500 dark:text-gray-400">{t.contact.form.successMessage}</p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 text-blue-600 hover:underline text-sm"
+                  >
+                    {t.contact.form.sendAnother}
+                  </button>
+                </div>
+              ) : (
+                <form action={formAction} className="space-y-4">
+
+                  {/* Honeypot Field (Hidden) */}
+                  <div className="hidden" aria-hidden="true">
+                    <label htmlFor="_gotcha">Do not fill this field</label>
+                    <input type="text" id="_gotcha" name="_gotcha" tabIndex={-1} autoComplete="off" />
+                  </div>
+
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {t.contact.form.name}
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                      placeholder={t.contact.form.namePlaceholder}
+                    />
+                    {state.errors?.name && (
+                      <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
+                        <AlertCircle size={14} /> {state.errors.name[0]}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {t.contact.form.email}
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                      placeholder={t.contact.form.emailPlaceholder}
+                    />
+                    {state.errors?.email && (
+                      <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
+                        <AlertCircle size={14} /> {state.errors.email[0]}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      {t.contact.form.message}
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={4}
+                      required
+                      className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                      placeholder={t.contact.form.messagePlaceholder}
+                    />
+                    {state.errors?.message && (
+                      <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
+                        <AlertCircle size={14} /> {state.errors.message[0]}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isPending}
+                    className="w-full inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
+                    {isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t.contact.form.sending}
+                      </>
+                    ) : (
+                      t.contact.form.submit
+                    )}
+                  </button>
+
+                  {state.message && !state.success && (
+                    <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm rounded-md flex items-center gap-2">
+                      <AlertCircle size={16} />
+                      {state.message}
+                    </div>
+                  )}
+                </form>
+              )}
+            </div>
+
 
 
             {/* Coordonnées + carte */}
