@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { Globe, Menu, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
 import BrandName from "@/components/BrandName";
@@ -100,9 +100,10 @@ export default function Header() {
                 toggleLanguage();
                 setOpen(false);
               }}
-              className="mt-2 w-full text-left rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-slate-700 hover:bg-gray-50 transition dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
             >
-              Link: {language === "fr" ? "English" : "Français"}
+              <Globe size={18} />
+              <span>{language === "fr" ? "English" : "Français"}</span>
             </button>
 
             <button
