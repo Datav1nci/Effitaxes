@@ -19,6 +19,10 @@ Si vous avez ajouté des plugins (ex. @tailwindcss/forms), ils restent actifs ; 
 /* 1) Tailwind v4 import (single entry) */
 @import "tailwindcss";
 
+@utility font-promethean {
+  font-family: "Promethean", sans-serif;
+}
+
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:where(.dark, .dark *));

@@ -33,9 +33,9 @@ export default function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <Link
           href="/"
-          className="text-2xl font-bold tracking-wide text-slate-900 dark:text-white"
+          className="text-2xl font-promethean tracking-wide text-slate-900 dark:text-white"
         >
-          Effitaxes
+          Effita{"><"}es
         </Link>
 
         {/* Desktop nav */}

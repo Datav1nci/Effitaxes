@@ -27,7 +27,7 @@ export default function Hero() {
           viewport={{ once: true }}
           className="mb-4 text-balance text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl"
         >
-          Effitaxes : Dédié à l’excellence en services comptables et financiers.
+          <span className="font-promethean">Effita{"><"}es</span> : Dédié à l’excellence en services comptables et financiers.
         </motion.h1>
 
         <motion.p

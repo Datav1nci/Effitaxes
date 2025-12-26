@@ -24,17 +24,17 @@ export default function Nav() {
     }
   }, []);
 
-    const toggleDarkMode = () => {
+  const toggleDarkMode = () => {
     if (document.documentElement.classList.contains("dark")) {
-        document.documentElement.classList.remove("dark");
-        localStorage.setItem("theme", "light");
-        setDarkMode(false);
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setDarkMode(false);
     } else {
-        document.documentElement.classList.add("dark");
-        localStorage.setItem("theme", "dark");
-        setDarkMode(true);
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setDarkMode(true);
     }
-    };
+  };
 
 
 
@@ -44,7 +44,7 @@ export default function Nav() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-3">
             <img src="/vercel.svg" alt="Logo" className="h-6 w-auto" />
-            <span className="text-lg font-bold dark:text-white text-gray-900">Effitaxes</span>
+            <span className="text-lg font-promethean dark:text-white text-gray-900">Effita{"><"}es</span>
           </div>
 
           <div className="hidden md:flex items-center gap-6">
@@ -52,11 +52,10 @@ export default function Nav() {
               <Link
                 key={href}
                 href={href}
-                className={`text-sm font-medium transition-colors ${
-                  pathname === href
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
-                }`}
+                className={`text-sm font-medium transition-colors ${pathname === href
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  }`}
               >
                 {label}
               </Link>
@@ -87,11 +86,10 @@ export default function Nav() {
               <Link
                 key={href}
                 href={href}
-                className={`block text-sm font-medium ${
-                  pathname === href
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
-                }`}
+                className={`block text-sm font-medium ${pathname === href
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  }`}
                 onClick={() => setMenuOpen(false)}
               >
                 {label}
