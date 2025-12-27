@@ -12,7 +12,7 @@ export const dictionary = {
         hero: {
             subtitle: "Dédié à l’excellence en services comptables et financiers",
             description: "Des solutions personnalisées et sur mesure pour les particuliers, les entreprises et travailleurs autonomes",
-            cta: "Contactez-nous",
+            cta: "Inscription",
         },
         services: {
             title: "Nos Services",
@@ -211,7 +211,7 @@ export const dictionary = {
         hero: {
             subtitle: "Dedicated to excellence in accounting and financial services",
             description: "Personalized and tailored solutions for individuals, businesses, and self-employed workers",
-            cta: "Contact Us",
+            cta: "Enrollment",
         },
         services: {
             title: "Our Services",

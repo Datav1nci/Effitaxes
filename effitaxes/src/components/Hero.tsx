@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import BrandName from "@/components/BrandName";
@@ -53,13 +54,12 @@ export default function Hero() {
           transition={{ delay: 0.4, duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <a
-            href="#contact"
+          <Link
+            href="/inscription"
             className="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-lg transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-            suppressHydrationWarning
           >
             {t.hero.cta}
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>
