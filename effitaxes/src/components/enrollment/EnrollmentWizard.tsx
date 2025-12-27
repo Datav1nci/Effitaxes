@@ -5,6 +5,7 @@ import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createEnrollmentSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
 import { useLanguage } from "@/context/LanguageContext";
+import { submitEnrollment } from "@/actions/submitEnrollment";
 import { StepPersonal } from "./StepPersonal";
 import { StepIncomeSelection } from "./StepIncomeSelection";
 import { StepSelfEmployed } from "./StepSelfEmployed";
@@ -111,15 +112,17 @@ export default function EnrollmentWizard() {
     };
 
     const onSubmit: SubmitHandler<EnrollmentFormData> = async (data) => {
-        console.log("Submitting Form Data:", data);
-        alert(t.contact.form.sending); // Placeholder
+        alert(t.contact.form.sending);
 
-        // Here we would call a Server Action
-        // await submitEnrollment(data);
+        const result = await submitEnrollment(data);
 
-        setTimeout(() => {
+        if (result.success) {
             alert(t.contact.form.successMessage);
-        }, 1000);
+            // Optionally reset form or redirect
+        } else {
+            alert("Error sending form. Please try again.");
+            console.error(result.error);
+        }
     };
 
     if (!CurrentComponent) return null;
