@@ -1,5 +1,5 @@
 import React from "react";
-import { FormInput, FormLabel } from "./FormUI";
+import { FormInput } from "./FormUI";
 import { dictionary } from "@/lib/dictionary";
 
 type Dictionary = typeof dictionary.en;

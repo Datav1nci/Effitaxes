@@ -18,7 +18,8 @@ export const FormLabel = ({ children, className }: { children: React.ReactNode; 
 export const FormError = ({ name }: { name: string }) => {
     const { formState: { errors } } = useFormContext();
     // lodash.get style access for nested errors
-    const error = name.split('.').reduce((obj, key) => obj?.[key], errors as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const error = name.split('.').reduce((obj, key) => (obj as Record<string, any>)?.[key], errors) as any;
 
     if (!error?.message) return null;
     return <p className="text-red-500 text-xs mt-1">{error.message as string}</p>;

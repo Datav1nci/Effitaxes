@@ -8,13 +8,6 @@ export const StepReview = ({ t }: { t: Dictionary }) => {
     const { getValues } = useFormContext();
     const values = getValues();
 
-    // Helper to standard rendering of object values
-    const renderValue = (val: any) => {
-        if (typeof val === "boolean") return val ? "Yes" : "No";
-        if (typeof val === "object" && val !== null) return JSON.stringify(val);
-        return val;
-    };
-
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="mb-4">

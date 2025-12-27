@@ -29,7 +29,7 @@ export const createEnrollmentSchema = (t: T) => {
         insuranceMonths: z.string().optional(),
         workedRemotely: z.enum(["yes", "no"]),
         additionalInfo: z.string().optional(),
-    }).refine(data => {
+    }).refine(() => {
         return true;
     });
 

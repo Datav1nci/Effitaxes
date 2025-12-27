@@ -29,9 +29,10 @@ export default function EnrollmentWizard() {
         },
     });
 
-    const { watch, trigger, handleSubmit, formState: { errors } } = methods;
+    const { watch, trigger, handleSubmit } = methods;
 
-    const incomeSources = watch("incomeSources") || [];
+    const watchedIncomeSources = watch("incomeSources");
+    const incomeSources = useMemo(() => watchedIncomeSources || [], [watchedIncomeSources]);
 
     // Dynamic Steps Definition
     const steps = useMemo(() => {
@@ -91,7 +92,7 @@ export default function EnrollmentWizard() {
 
         // Validate current step fields
         if (stepFields.length > 0) {
-            // @ts-ignore - trigger accepts array of field names/paths
+            // @ts-expect-error - trigger accepts array of field names/paths
             const isValid = await trigger(stepFields);
             if (!isValid) return;
         }
