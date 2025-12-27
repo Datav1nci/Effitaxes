@@ -28,7 +28,7 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
             ${data.rental ? `<h2>Rental Income</h2><pre>${JSON.stringify(data.rental, null, 2)}</pre>` : ''}
         `;
 
-        await resend.emails.send({
+        const { data: emailData, error } = await resend.emails.send({
             from: "Effitaxes Enrollment <onboarding@resend.dev>",
             to: ["yberjman@gmail.com"], // Hardcoded for now per user context or general default? I'll use a placeholder variable.
             // keeping it simple for dev. Ideally process.env.CONTACT_EMAIL
@@ -36,6 +36,12 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
             html: htmlBody,
         });
 
+        if (error) {
+            console.error("Resend API Failed:", error);
+            return { success: false, error: error.message };
+        }
+
+        console.log("Email sent successfully. ID:", emailData?.id);
         return { success: true };
     } catch (error) {
         console.error("Failed to send email:", error);
