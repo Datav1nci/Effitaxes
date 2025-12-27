@@ -30,7 +30,7 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
 
         const { data: emailData, error } = await resend.emails.send({
             from: "Effitaxes Enrollment <onboarding@resend.dev>",
-            to: ["yberjman@gmail.com"], // Hardcoded for now per user context or general default? I'll use a placeholder variable.
+            to: ["effitaxes@gmail.com"], // Hardcoded for now per user context or general default? I'll use a placeholder variable.
             // keeping it simple for dev. Ideally process.env.CONTACT_EMAIL
             subject: subject,
             html: htmlBody,
