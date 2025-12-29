@@ -11,7 +11,7 @@ export const StepCarExpenses = ({ t }: { t: Dictionary }) => {
                 <h3 className="text-lg font-medium">{t.enrollment.car.title}</h3>
             </div>
 
-            <FormInput label={t.enrollment.car.makeModel} name="car.makeModel" placeholder="e.g. Honda Civic 2020" />
+            <FormInput label={t.enrollment.car.makeModel} name="car.makeModel" placeholder="e.g. Honda Civic 2021" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormInput label={t.enrollment.car.businessKm} name="car.businessKm" type="number" />
