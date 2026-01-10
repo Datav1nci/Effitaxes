@@ -5,12 +5,10 @@ export default function ProjectCard({
   slug,
   title,
   img,
-  moreLabel,
 }: {
   slug: string;
   title: string;
   img: string;
-  moreLabel: string;
 }) {
   return (
     <Link

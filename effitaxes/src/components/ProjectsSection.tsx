@@ -2,7 +2,7 @@ import ProjectCard from "@/components/ProjectCard";
 import { projects } from "@/lib/projects";
 import BrandName from "@/components/BrandName";
 import { Dictionary } from "@/lib/dictionary";
-import Link from "next/link";
+
 
 export default function ProjectsSection({ t, lang, isTeaser = false }: { t: Dictionary; lang: "fr" | "en"; isTeaser?: boolean }) {
   const displayedProjects = isTeaser ? projects.slice(0, 4) : projects;
@@ -27,7 +27,6 @@ export default function ProjectsSection({ t, lang, isTeaser = false }: { t: Dict
                 slug={project.slug}
                 title={lang === "en" ? project.titleEn : project.title}
                 img={project.img}
-                moreLabel={t.projects.more}
               />
             ))}
           </div>
