@@ -86,7 +86,8 @@ export default function EnrollmentWizard() {
         }
     }, [steps.length, currentStep]);
 
-    const CurrentComponent = steps[currentStep]?.component;
+    // Cast to any to avoid TS error about highlighting prop not existing on other steps
+    const CurrentComponent = steps[currentStep]?.component as React.FC<any>;
 
     const handleNext = async () => {
         const stepFields = steps[currentStep].fields;
@@ -111,19 +112,44 @@ export default function EnrollmentWizard() {
         }
     };
 
-    const onSubmit: SubmitHandler<EnrollmentFormData> = async (data) => {
-        alert(t.contact.form.sending);
+    const [highlightConfirmation, setHighlightConfirmation] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const confirmed = watch("confirmed");
 
+    const onSubmit: SubmitHandler<EnrollmentFormData> = async (data) => {
         const result = await submitEnrollment(data);
 
         if (result.success) {
-            alert(t.contact.form.successMessage);
-            // Optionally reset form or redirect
+            setIsSubmitted(true);
+            window.scrollTo(0, 0);
         } else {
-            alert("Error sending form. Please try again.");
             console.error(result.error);
+            // In a real app we'd set a general error state here
         }
     };
+
+    const handleFakeSubmit = () => {
+        if (!confirmed) {
+            setHighlightConfirmation(true);
+            setTimeout(() => setHighlightConfirmation(false), 500);
+        }
+    };
+
+    if (isSubmitted) {
+        return (
+            <div className="max-w-3xl mx-auto py-20 px-4 text-center animate-in fade-in zoom-in duration-500">
+                <div className="bg-green-100 text-green-600 p-6 rounded-full inline-block mb-6">
+                    <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t.contact.form.successMessage}</h2>
+                <p className="text-xl text-gray-600 dark:text-gray-300">
+                    We have received your information and will be in touch shortly.
+                </p>
+            </div>
+        );
+    }
 
     if (!CurrentComponent) return null;
 
@@ -153,7 +179,7 @@ export default function EnrollmentWizard() {
                 {/* Dynamic Step Content */}
                 <form onSubmit={handleSubmit(onSubmit)} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700">
 
-                    <CurrentComponent t={t} />
+                    <CurrentComponent t={t} highlightConfirmation={highlightConfirmation} />
 
                     {/* Navigation Buttons */}
                     <div className="mt-8 flex justify-between pt-4 border-t">
@@ -175,12 +201,22 @@ export default function EnrollmentWizard() {
                                 {t.enrollment.buttons.next}
                             </button>
                         ) : (
-                            <button
-                                type="submit"
-                                className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                            >
-                                {t.enrollment.buttons.submit}
-                            </button>
+                            confirmed ? (
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+                                >
+                                    {t.enrollment.buttons.submit}
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={handleFakeSubmit}
+                                    className="px-4 py-2 text-sm font-medium text-white bg-gray-400 border border-transparent rounded-md shadow-sm cursor-not-allowed focus:outline-none transition-colors duration-200"
+                                >
+                                    {t.enrollment.buttons.submit}
+                                </button>
+                            )
                         )}
                     </div>
                 </form>

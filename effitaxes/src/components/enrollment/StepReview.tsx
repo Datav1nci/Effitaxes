@@ -4,8 +4,13 @@ import { dictionary } from "@/lib/dictionary";
 
 type Dictionary = typeof dictionary.en;
 
-export const StepReview = ({ t }: { t: Dictionary }) => {
-    const { getValues } = useFormContext();
+type StepReviewProps = {
+    t: Dictionary;
+    highlightConfirmation?: boolean;
+};
+
+export const StepReview = ({ t, highlightConfirmation }: StepReviewProps) => {
+    const { getValues, register } = useFormContext();
     const values = getValues();
 
     return (
@@ -43,10 +48,21 @@ export const StepReview = ({ t }: { t: Dictionary }) => {
                 {/* Can be expanded to show all fields */}
             </div>
 
-            <div className="p-4 bg-blue-50 text-blue-800 rounded-md">
-                <p className="text-sm">
-                    By clicking submit, you confirm that all information provided is accurate.
-                </p>
+            <div className={`p-4 rounded-md transition-all duration-300 ${highlightConfirmation
+                    ? 'bg-red-50 border border-red-200 shadow-sm'
+                    : 'bg-blue-50 text-blue-800'
+                }`}>
+                <label className="flex items-center space-x-3 cursor-pointer group">
+                    <input
+                        type="checkbox"
+                        {...register("confirmed")}
+                        className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
+                    />
+                    <span className={`text-sm select-none transition-all duration-300 ${highlightConfirmation ? 'font-bold text-red-600' : 'group-hover:text-blue-900'
+                        }`}>
+                        I confirm that all information provided is accurate.
+                    </span>
+                </label>
             </div>
         </div>
     );

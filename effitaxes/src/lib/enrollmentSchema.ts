@@ -122,6 +122,7 @@ export const createEnrollmentSchema = (t: T) => {
         selfEmployed: selfEmployedSchema.optional(), // We'll make it optional here so it doesn't block the initial steps
         car: carSchema.optional(),
         rental: rentalSchema.optional(),
+        confirmed: z.boolean().default(false),
     }).superRefine((data, ctx) => {
         // Conditional Validation Logic
 
