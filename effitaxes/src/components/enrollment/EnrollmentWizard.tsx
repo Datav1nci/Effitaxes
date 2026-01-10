@@ -5,6 +5,7 @@ import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createEnrollmentSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
 import { useLanguage } from "@/context/LanguageContext";
+import { Dictionary } from "@/lib/dictionary";
 import { submitEnrollment } from "@/actions/submitEnrollment";
 import { StepPersonal } from "./StepPersonal";
 import { StepIncomeSelection } from "./StepIncomeSelection";
@@ -12,6 +13,11 @@ import { StepSelfEmployed } from "./StepSelfEmployed";
 import { StepCarExpenses } from "./StepCarExpenses";
 import { StepRental } from "./StepRental";
 import { StepReview } from "./StepReview";
+
+type StepProps = {
+    t: Dictionary;
+    highlightConfirmation?: boolean;
+};
 
 export default function EnrollmentWizard() {
     const { t } = useLanguage();
@@ -112,8 +118,8 @@ export default function EnrollmentWizard() {
         }
     }, [steps.length, currentStep]);
 
-    // Cast to any to avoid TS error about highlighting prop not existing on other steps
-    const CurrentComponent = steps[currentStep]?.component as React.FC<any>;
+    // Cast to React.FC<StepProps> to allow optional highlightConfirmation prop
+    const CurrentComponent = steps[currentStep]?.component as React.FC<StepProps>;
 
     const handleNext = async () => {
         const stepFields = steps[currentStep].fields;
