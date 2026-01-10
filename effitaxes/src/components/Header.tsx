@@ -18,11 +18,11 @@ export default function Header() {
   useEffect(() => setMounted(true), []);
 
   const links = [
-    { href: "/#hero", label: t.nav.home },
-    { href: "/#services", label: t.nav.services },
-    { href: "/#projets", label: t.nav.projects },
-    { href: "/#apropos", label: t.nav.about },
-    { href: "/#contact", label: t.nav.contact },
+    { href: `/${language}/#hero`, label: t.nav.home },
+    { href: `/${language}/#services`, label: t.nav.services },
+    { href: `/${language}/projets`, label: t.nav.projects }, // Link to full projects page
+    { href: `/${language}/about`, label: t.nav.about },     // Link to full about page
+    { href: `/${language}/contact`, label: t.nav.contact }, // Link to full contact page
   ];
 
   const toggleTheme = () => {
@@ -35,7 +35,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/70">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <Link
-          href="/"
+          href={`/${language}`}
           className="text-2xl font-promethean tracking-wide text-slate-900 dark:text-white"
         >
           <BrandName />

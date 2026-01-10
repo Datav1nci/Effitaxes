@@ -1,11 +1,8 @@
-"use client";
-
 import { Wrench, Building, HardHat } from "lucide-react";
 import ServiceCard from "@/components/ServiceCard";
-import { useLanguage } from "@/context/LanguageContext";
+import { Dictionary } from "@/lib/dictionary";
 
-export default function ServicesSection() {
-  const { t } = useLanguage();
+export default function ServicesSection({ t }: { t: Dictionary }) {
   return (
     <section
       id="services"

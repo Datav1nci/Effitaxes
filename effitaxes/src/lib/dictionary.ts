@@ -41,6 +41,7 @@ export const dictionary = {
             title: "À propos de",
             p1: "Basée sur la rive-sud de Montréal, Effitaxes est un cabinet comptable dédié à l’excellence en services financiers. Notre mission : soutenir nos clients dans la gestion comptable et fiscale avec professionnalisme et fiabilité.",
             p2: "Grâce à une approche personnalisée, nous offrons des solutions sur mesure incluant la tenue de livres, les déclarations d’impôts, la gestion de paie et la planification financière pour les particuliers, les entreprises et travailleurs autonomes.",
+            more: "En savoir plus",
         },
         contact: {
             title: "Contactez-nous",
@@ -54,7 +55,7 @@ export const dictionary = {
                 email: "Email",
                 emailPlaceholder: "votre@email.com",
                 phone: "Téléphone",
-                phonePlaceholder: "(555) 555-5555",
+                phonePlaceholder: "(514) 123-4567",
                 message: "Message",
                 messagePlaceholder: "Comment pouvons-nous vous aider ?",
                 submit: "Envoyer le message",
@@ -199,6 +200,15 @@ export const dictionary = {
                 positive: "Doit être un nombre positif",
             },
         },
+        metadata: {
+            title: "Effitaxes – Comptabilité à Montréal",
+            description: "Comptabilité et gestion financière partout au Québec.",
+            keywords: ["Fair fair mes impots", "comptabilité", "finance", "gestion", "Montréal", "effitaxes", "paies", "paie", "travailleurs autonomes", "déclarations fiscales", "impôts", "tenue de livres", "comptabilité d'entreprise", "consultation fiscale", "planification fiscale", "déductions d'impôt", "TPS", "TVQ", "rapports financiers", "audit", "conseils financiers", "gestion de paie", "comptabilité pour PME", "services comptables", "expertise comptable", "déclarations de revenus", "optimisation fiscale"],
+            og: {
+                siteName: "Effitaxes",
+                locale: "fr_CA",
+            }
+        }
     },
     en: {
         nav: {
@@ -240,6 +250,7 @@ export const dictionary = {
             title: "About",
             p1: "Based on the South Shore of Montreal, Effitaxes is an accounting firm dedicated to excellence in financial services. Our mission: to support our clients in accounting and tax management with professionalism and reliability.",
             p2: "Thanks to a personalized approach, we offer tailored solutions including bookkeeping, tax returns, payroll management, and financial planning for individuals, businesses, and self-employed workers.",
+            more: "Learn more",
         },
         contact: {
             title: "Contact Us",
@@ -398,5 +409,16 @@ export const dictionary = {
                 positive: "Must be a positive number",
             },
         },
+        metadata: {
+            title: "Effitaxes – Accounting Services in Montreal",
+            description: "Professional accounting and financial management services across Quebec.",
+            keywords: ["do my tax", "accounting", "finance", "management", "Montreal", "effitaxes", "payroll", "self-employed", "tax returns", "taxes", "bookkeeping", "corporate accounting", "tax consulting", "financial planning", "tax deductions", "GST", "QST", "financial reports", "audit", "financial advice", "payroll management", "SME accounting", "accounting services", "CPA", "tax optimization"],
+            og: {
+                siteName: "Effitaxes",
+                locale: "en_CA",
+            }
+        }
     },
 };
+
+export type Dictionary = typeof dictionary.fr;

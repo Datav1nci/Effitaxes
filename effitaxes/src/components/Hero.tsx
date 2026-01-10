@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useLanguage } from "@/context/LanguageContext";
 import BrandName from "@/components/BrandName";
+import { Dictionary } from "@/lib/dictionary";
 
-export default function Hero() {
-  const { t } = useLanguage();
+export default function Hero({ t }: { t: Dictionary }) {
   return (
     <section
       id="accueil"

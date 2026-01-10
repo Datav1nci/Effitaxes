@@ -1,9 +1,10 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import { useLanguage } from "@/context/LanguageContext";
 import { submitContactForm } from "@/app/actions/contact";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Dictionary } from "@/lib/dictionary";
+import Link from "next/link";
 
 const initialState = {
   success: false,
@@ -11,16 +12,31 @@ const initialState = {
   errors: {},
 };
 
-export default function ContactSection() {
+export default function ContactSection({ t, isTeaser = false }: { t: Dictionary; isTeaser?: boolean }) {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState);
   const [isMounted, setIsMounted] = useState(false);
-  const { t } = useLanguage();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) return null;
+  if (!isMounted && !isTeaser) return null; // Teaser can be SSR? Teaser CTA is simple. But Component is client.
+
+  if (isTeaser) {
+    return (
+      <section id="contact" className="py-20 bg-blue-600 text-white">
+        <div className="mx-auto max-w-7xl px-4 text-center">
+          <h2 className="mb-6 text-3xl font-bold">{t.contact.title}</h2>
+          <p className="mb-8 text-xl opacity-90">{t.hero.subtitle}</p>
+          <Link href="/contact" className="inline-block bg-white text-blue-600 px-8 py-3 rounded-full font-bold shadow-lg hover:bg-gray-100 transition">
+            {t.nav.contact}
+          </Link>
+        </div>
+      </section>
+    )
+  }
+
+  if (!isMounted) return null; // Fallback for form mode
 
   return (
     <section id="contact" className="py-20 bg-background text-foreground">

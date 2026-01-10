@@ -1,17 +1,17 @@
-import Image from "next/image";
 import Link from "next/link";
-import { useLanguage } from "@/context/LanguageContext";
+import Image from "next/image";
 
 export default function ProjectCard({
   slug,
   title,
   img,
+  moreLabel,
 }: {
   slug: string;
   title: string;
   img: string;
+  moreLabel: string;
 }) {
-  const { t } = useLanguage();
   return (
     <Link
       href={`/projets/${slug}`}
@@ -43,9 +43,7 @@ export default function ProjectCard({
 
       <div className="p-4">
         <h3 className="font-semibold tracking-tight" suppressHydrationWarning>{title}</h3>
-        <p className="mt-1 text-sm text-slate-600 dark:text-gray-300" suppressHydrationWarning>
-          {t.projects.more} →
-        </p>
+
       </div>
     </Link>
   );
