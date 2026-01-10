@@ -30,10 +30,36 @@ export default function EnrollmentWizard() {
         },
     });
 
-    const { watch, trigger, handleSubmit } = methods;
+    const { watch, trigger, handleSubmit, reset } = methods;
 
     const watchedIncomeSources = watch("incomeSources");
     const incomeSources = useMemo(() => watchedIncomeSources || [], [watchedIncomeSources]);
+
+    // Persistence Logic
+    useEffect(() => {
+        // Load saved data on mount
+        const savedData = localStorage.getItem("enrollment_draft");
+        if (savedData) {
+            try {
+                const parsedData = JSON.parse(savedData);
+                reset({
+                    ...parsedData,
+                    // Ensure incomeSources is an array even if saved as null
+                    incomeSources: parsedData.incomeSources || []
+                });
+            } catch (e) {
+                console.error("Failed to parse saved enrollment form data", e);
+            }
+        }
+    }, [reset]);
+
+    useEffect(() => {
+        // Save data on change
+        const subscription = watch((value) => {
+            localStorage.setItem("enrollment_draft", JSON.stringify(value));
+        });
+        return () => subscription.unsubscribe();
+    }, [watch]);
 
     // Dynamic Steps Definition
     const steps = useMemo(() => {
@@ -120,6 +146,7 @@ export default function EnrollmentWizard() {
         const result = await submitEnrollment(data);
 
         if (result.success) {
+            localStorage.removeItem("enrollment_draft");
             setIsSubmitted(true);
             window.scrollTo(0, 0);
         } else {
