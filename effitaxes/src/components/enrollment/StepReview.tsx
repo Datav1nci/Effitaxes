@@ -49,8 +49,8 @@ export const StepReview = ({ t, highlightConfirmation }: StepReviewProps) => {
             </div>
 
             <div className={`p-4 rounded-md transition-all duration-300 ${highlightConfirmation
-                    ? 'bg-red-50 border border-red-200 shadow-sm'
-                    : 'bg-blue-50 text-blue-800'
+                ? 'bg-red-50 border border-red-200 shadow-sm'
+                : 'bg-blue-50 text-blue-800'
                 }`}>
                 <label className="flex items-center space-x-3 cursor-pointer group">
                     <input
@@ -60,7 +60,7 @@ export const StepReview = ({ t, highlightConfirmation }: StepReviewProps) => {
                     />
                     <span className={`text-sm select-none transition-all duration-300 ${highlightConfirmation ? 'font-bold text-red-600' : 'group-hover:text-blue-900'
                         }`}>
-                        I confirm that all information provided is accurate.
+                        {t.enrollment.confirmation}
                     </span>
                 </label>
             </div>

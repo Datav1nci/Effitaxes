@@ -199,6 +199,7 @@ export const dictionary = {
                 number: "Doit être un nombre",
                 positive: "Doit être un nombre positif",
             },
+            confirmation: "Je confirme que toutes les informations fournies sont exactes.",
         },
         metadata: {
             title: "Effitaxes – Comptabilité à Montréal",
@@ -408,6 +409,7 @@ export const dictionary = {
                 number: "Must be a number",
                 positive: "Must be a positive number",
             },
+            confirmation: "I confirm that all information provided is accurate.",
         },
         metadata: {
             title: "Effitaxes – Accounting Services in Montreal",
