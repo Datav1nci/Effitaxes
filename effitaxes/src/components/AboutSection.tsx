@@ -26,7 +26,7 @@ export default function AboutSection({ t, isTeaser = false }: { t: Dictionary; i
             </p>
           )}
           {isTeaser && (
-            <Link href="/about" className="mt-4 inline-block rounded-full bg-blue-600 px-6 py-2 text-white font-medium hover:bg-blue-700 transition">
+            <Link href="/about" className="mt-4 inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-lg transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
               {t.about.more}
             </Link>
           )}
