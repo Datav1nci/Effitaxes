@@ -17,7 +17,19 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 <FormInput label={t.enrollment.personal.lastName} name="personal.lastName" />
             </div>
 
-            <FormInput label={t.enrollment.personal.address} name="personal.address" />
+            <div className="grid grid-cols-6 gap-4">
+                <div className="col-span-2 md:col-span-1">
+                    <FormInput label={t.enrollment.personal.addressNumber} name="personal.addressNumber" />
+                </div>
+                <div className="col-span-4 md:col-span-5">
+                    <FormInput label={t.enrollment.personal.addressName} name="personal.addressName" />
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormInput label={t.enrollment.personal.addressCity} name="personal.addressCity" />
+                <FormInput label={t.enrollment.personal.addressApp} name="personal.addressApp" />
+                <FormInput label={t.enrollment.personal.province} name="personal.province" defaultValue="QC" />
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormInput label={t.enrollment.personal.phone} name="personal.phone" placeholder={t.contact.form.phonePlaceholder} />
@@ -50,7 +62,7 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormInput label={t.enrollment.personal.province} name="personal.province" defaultValue="QC" />
+
                 <FormSelect
                     label={t.enrollment.personal.ownerTenant}
                     name="personal.ownerTenant"

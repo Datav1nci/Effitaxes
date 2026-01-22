@@ -9,7 +9,10 @@ export const createEnrollmentSchema = (t: T) => {
     const personalSchema = z.object({
         firstName: z.string().min(1, t.enrollment.errors.required),
         lastName: z.string().min(1, t.enrollment.errors.required),
-        address: z.string().min(1, t.enrollment.errors.required),
+        addressNumber: z.string().min(1, t.enrollment.errors.required),
+        addressName: z.string().min(1, t.enrollment.errors.required),
+        addressCity: z.string().min(1, t.enrollment.errors.required),
+        addressApp: z.string().optional(),
         phone: z.string().regex(phoneRegex, t.contact.form.phonePlaceholder),
         dob: z.string().min(1, t.enrollment.errors.required),
         email: z.string().email(t.enrollment.errors.invalidEmail),
