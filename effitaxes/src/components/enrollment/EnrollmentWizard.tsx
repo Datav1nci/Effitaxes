@@ -84,7 +84,7 @@ export default function EnrollmentWizard() {
             });
         }
 
-        if (incomeSources.includes("carExpenses")) {
+        if (incomeSources.includes("carExpenses") || incomeSources.includes("studentCarExpenses") || incomeSources.includes("selfEmployedCarExpenses")) {
             baseSteps.push({
                 id: "car",
                 title: t.enrollment.steps.car,

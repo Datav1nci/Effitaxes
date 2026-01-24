@@ -131,6 +131,7 @@ export const dictionary = {
                 crypto: "Achat/Vente/Détention Crypto",
                 carExpenses: "Dépenses Auto",
                 workFromHome: "J'ai fait du télétravail cette année",
+                declareHomeOffice: "Je déclare des dépenses de maison",
             },
             workFromHome: {
                 title: "Dépenses de Télétravail",
@@ -371,6 +372,7 @@ export const dictionary = {
                 crypto: "Bought/Sold/Held Crypto",
                 carExpenses: "Car Expenses",
                 workFromHome: "I worked remotely",
+                declareHomeOffice: "I declare home expenses",
             },
             workFromHome: {
                 title: "Work from Home Expenses",

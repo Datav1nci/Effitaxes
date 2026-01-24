@@ -9,6 +9,8 @@ export const StepIncomeSelection = ({ t }: { t: Dictionary }) => {
     const { watch } = useFormContext();
     const incomeSources = watch("incomeSources") || [];
     const isEmployee = incomeSources.includes("employee");
+    const isStudent = incomeSources.includes("student");
+    const isSelfEmployed = incomeSources.includes("selfEmployed");
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -29,12 +31,28 @@ export const StepIncomeSelection = ({ t }: { t: Dictionary }) => {
                     )}
                 </div>
 
-                <FormCheckbox label={t.enrollment.selection.selfEmployed} name="incomeSources" value="selfEmployed" />
-                <FormCheckbox label={t.enrollment.selection.student} name="incomeSources" value="student" />
+                <div className="space-y-2">
+                    <FormCheckbox label={t.enrollment.selection.selfEmployed} name="incomeSources" value="selfEmployed" />
+                    {isSelfEmployed && (
+                        <div className="ml-8 border-l-2 border-gray-200 pl-4 py-2 space-y-2 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-gray-700">
+                            <FormCheckbox label={t.enrollment.selection.carExpenses} name="incomeSources" value="selfEmployedCarExpenses" />
+                            <FormCheckbox label={t.enrollment.selection.declareHomeOffice} name="incomeSources" value="selfEmployedHomeOffice" />
+                        </div>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                    <FormCheckbox label={t.enrollment.selection.student} name="incomeSources" value="student" />
+                    {isStudent && (
+                        <div className="ml-8 border-l-2 border-gray-200 pl-4 py-2 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-gray-700">
+                            <FormCheckbox label={t.enrollment.selection.carExpenses} name="incomeSources" value="studentCarExpenses" />
+                        </div>
+                    )}
+                </div>
+
                 <FormCheckbox label={t.enrollment.selection.retired} name="incomeSources" value="retired" />
                 <FormCheckbox label={t.enrollment.selection.rental} name="incomeSources" value="rental" />
                 <FormCheckbox label={t.enrollment.selection.crypto} name="incomeSources" value="crypto" />
-                <FormCheckbox label={t.enrollment.selection.carExpenses} name="incomeSources" value="carExpenses" />
             </div>
         </div>
     );

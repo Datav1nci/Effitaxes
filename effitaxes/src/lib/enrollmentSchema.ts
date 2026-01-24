@@ -68,7 +68,7 @@ export const createEnrollmentSchema = (t: T) => {
             mortgageInterest: z.coerce.number().optional(),
             propertyTaxes: z.coerce.number().optional(),
             other: z.coerce.number().optional(),
-        }),
+        }).optional(),
     });
 
     // ... (keeping carSchema and rentalSchema separate for clarity in diff if needed, but I must match exact target content)
@@ -169,7 +169,7 @@ export const createEnrollmentSchema = (t: T) => {
             }
         }
 
-        if (data.incomeSources.includes("carExpenses")) {
+        if (data.incomeSources.includes("carExpenses") || data.incomeSources.includes("studentCarExpenses") || data.incomeSources.includes("selfEmployedCarExpenses")) {
             if (!data.car) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
