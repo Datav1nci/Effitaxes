@@ -68,6 +68,10 @@ export const dictionary = {
         footer: {
             rights: "Tous droits réservés.",
         },
+        common: {
+            yes: "Oui",
+            no: "Non",
+        },
         enrollment: {
             title: "Inscription Impôts 2025",
             steps: {
@@ -114,7 +118,6 @@ export const dictionary = {
                 incomeSource: "Source principale de revenus en 2025",
                 privateDrugInsurance: "Aviez-vous une assurance médicaments privée ?",
                 insuranceMonths: "Nombre de mois couverts (si partie de l'année)",
-                workedRemotely: "Avez-vous travaillé à distance en 2025 ?",
                 additionalInfo: "Informations supplémentaires / Personnes à charge",
             },
             selection: {
@@ -305,6 +308,10 @@ export const dictionary = {
         footer: {
             rights: "All rights reserved.",
         },
+        common: {
+            yes: "Yes",
+            no: "No",
+        },
         enrollment: {
             title: "2025 Tax Enrollment",
             steps: {
@@ -351,7 +358,6 @@ export const dictionary = {
                 incomeSource: "Main source of income in 2025",
                 privateDrugInsurance: "Did you have private drug insurance?",
                 insuranceMonths: "Number of months covered (if partial year)",
-                workedRemotely: "Did you work remotely in 2025?",
                 additionalInfo: "Additional Information / Dependents",
             },
             selection: {

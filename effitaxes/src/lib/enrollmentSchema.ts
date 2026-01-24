@@ -30,7 +30,6 @@ export const createEnrollmentSchema = (t: T) => {
         incomeSource: z.string().min(1, t.enrollment.errors.required),
         privateDrugInsurance: z.enum(["yes", "no"]),
         insuranceMonths: z.string().optional(),
-        workedRemotely: z.enum(["yes", "no"]),
         additionalInfo: z.string().optional(),
     }).refine(() => {
         return true;

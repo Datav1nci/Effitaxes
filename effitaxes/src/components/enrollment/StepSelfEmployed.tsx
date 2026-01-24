@@ -20,7 +20,7 @@ export const StepSelfEmployed = ({ t }: { t: Dictionary }) => {
                     <FormRadioGroup
                         label={t.enrollment.selfEmployed.isActive}
                         name="selfEmployed.isActive"
-                        options={[{ value: "yes", label: "Yes" }, { value: "no", label: "No" }]}
+                        options={[{ value: "yes", label: t.common.yes }, { value: "no", label: t.common.no }]}
                     />
                 </div>
                 <FormInput label={t.enrollment.selfEmployed.productType} name="selfEmployed.productType" />

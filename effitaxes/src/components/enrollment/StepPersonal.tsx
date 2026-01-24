@@ -97,9 +97,8 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 label={t.enrollment.personal.soldBuyHouse}
                 name="personal.soldBuyHouseStr"
                 options={[
-                    { value: "yes", label: "Yes / Oui" }, // Hardcoded or needs dictionary for Yes/No common? 
-                    // Ideally dictionary should have "common.yes", "common.no". 
-                    { value: "no", label: "No / Non" }
+                    { value: "yes", label: t.common.yes },
+                    { value: "no", label: t.common.no }
                 ]}
             />
 
@@ -109,16 +108,12 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 <FormRadioGroup
                     label={t.enrollment.personal.privateDrugInsurance}
                     name="personal.privateDrugInsurance"
-                    options={[{ value: "yes", label: "Yes" }, { value: "no", label: "No" }]}
+                    options={[{ value: "yes", label: t.common.yes }, { value: "no", label: t.common.no }]}
                 />
                 <FormInput label={t.enrollment.personal.insuranceMonths} name="personal.insuranceMonths" type="number" placeholder="0-12" />
             </div>
 
-            <FormRadioGroup
-                label={t.enrollment.personal.workedRemotely}
-                name="personal.workedRemotely"
-                options={[{ value: "yes", label: "Yes" }, { value: "no", label: "No" }]}
-            />
+
 
             <FormInput
                 label={t.enrollment.personal.additionalInfo}
