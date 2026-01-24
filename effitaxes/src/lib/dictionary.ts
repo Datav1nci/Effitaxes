@@ -104,7 +104,7 @@ export const dictionary = {
                     widowed: "Veuf/Veuve",
                 },
                 maritalChangeDate: "Date du changement (si changé en 2025)",
-                province: "Province de résidence (au31 déc)",
+                province: "Province de résidence (au 31 déc)",
                 ownerTenant: "Êtes-vous propriétaire ou locataire ?",
                 ownerTenantOptions: {
                     owner: "Propriétaire",

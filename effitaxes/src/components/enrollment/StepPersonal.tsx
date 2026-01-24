@@ -26,9 +26,29 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormInput label={t.enrollment.personal.addressCity} name="personal.addressCity" />
-                <FormInput label={t.enrollment.personal.addressApp} name="personal.addressApp" />
-                <FormInput label={t.enrollment.personal.province} name="personal.province" defaultValue="QC" />
+                <FormInput
+                    label={t.enrollment.personal.addressCity}
+                    name="personal.addressCity"
+                    labelClassName="md:min-h-10 flex md:items-end"
+                />
+                <FormInput
+                    label={t.enrollment.personal.addressApp}
+                    name="personal.addressApp"
+                    labelClassName="md:min-h-10 flex md:items-end"
+                />
+                <FormInput
+                    label={
+                        <span>
+                            {t.enrollment.personal.province.split('(')[0]}
+                            <span className="whitespace-nowrap">
+                                ({t.enrollment.personal.province.split('(')[1]}
+                            </span>
+                        </span>
+                    }
+                    name="personal.province"
+                    defaultValue="QC"
+                    labelClassName="md:min-h-10 flex md:items-end"
+                />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

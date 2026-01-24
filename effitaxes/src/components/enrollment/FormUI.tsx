@@ -5,8 +5,9 @@ import { useFormContext } from "react-hook-form";
 
 
 interface FieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label: string;
+    label: string | React.ReactNode;
     name: string;
+    labelClassName?: string;
 }
 
 export const FormLabel = ({ children, className }: { children: React.ReactNode; className?: string }) => (
@@ -25,11 +26,11 @@ export const FormError = ({ name }: { name: string }) => {
     return <p className="text-red-500 text-xs mt-1">{error.message as string}</p>;
 };
 
-export const FormInput = ({ label, name, className, ...props }: FieldProps) => {
+export const FormInput = ({ label, name, className, labelClassName, ...props }: FieldProps) => {
     const { register } = useFormContext();
     return (
         <div className="mb-4">
-            <FormLabel>{label}</FormLabel>
+            <FormLabel className={labelClassName}>{label}</FormLabel>
             <input
                 {...register(name)}
                 {...props}
@@ -41,16 +42,17 @@ export const FormInput = ({ label, name, className, ...props }: FieldProps) => {
 };
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-    label: string;
+    label: string | React.ReactNode;
     name: string;
     options: { label: string; value: string }[];
+    labelClassName?: string;
 }
 
-export const FormSelect = ({ label, name, options, className, ...props }: SelectProps) => {
+export const FormSelect = ({ label, name, options, className, labelClassName, ...props }: SelectProps) => {
     const { register } = useFormContext();
     return (
         <div className="mb-4">
-            <FormLabel>{label}</FormLabel>
+            <FormLabel className={labelClassName}>{label}</FormLabel>
             <select
                 {...register(name)}
                 {...props}
