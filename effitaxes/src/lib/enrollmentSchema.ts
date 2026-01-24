@@ -116,6 +116,25 @@ export const createEnrollmentSchema = (t: T) => {
         }),
     });
 
+    const workFromHomeSchema = z.object({
+        utilities: z.object({
+            electricity: z.coerce.number().optional(),
+            heating: z.coerce.number().optional(),
+            water: z.coerce.number().optional(),
+            internet: z.coerce.number().optional(),
+            rent: z.coerce.number().optional(),
+            propertyTaxes: z.coerce.number().optional(),
+            insurance: z.coerce.number().optional(),
+        }),
+        maintenance: z.object({
+            maintenance: z.coerce.number().optional(),
+            officeSupplies: z.coerce.number().optional(),
+        }),
+        communication: z.object({
+            cellPhone: z.coerce.number().optional(),
+        }),
+    });
+
     // Base Schema linking everything
     return z.object({
         personal: personalSchema,
@@ -125,6 +144,7 @@ export const createEnrollmentSchema = (t: T) => {
         selfEmployed: selfEmployedSchema.optional(), // We'll make it optional here so it doesn't block the initial steps
         car: carSchema.optional(),
         rental: rentalSchema.optional(),
+        workFromHome: workFromHomeSchema.optional(),
         confirmed: z.boolean().default(false),
     }).superRefine((data, ctx) => {
         // Conditional Validation Logic
@@ -166,6 +186,16 @@ export const createEnrollmentSchema = (t: T) => {
                     code: z.ZodIssueCode.custom,
                     message: t.enrollment.errors.required,
                     path: ["rental"]
+                });
+            }
+        }
+
+        if (data.incomeSources.includes("workFromHome")) {
+            if (!data.workFromHome) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: t.enrollment.errors.required,
+                    path: ["workFromHome"]
                 });
             }
         }

@@ -127,6 +127,30 @@ export const dictionary = {
                 rental: "Revenus de Location",
                 crypto: "Achat/Vente/Détention Crypto",
                 carExpenses: "Dépenses Auto",
+                workFromHome: "J'ai fait du télétravail cette année",
+            },
+            workFromHome: {
+                title: "Dépenses de Télétravail",
+                description: "Entrez vos dépenses liées à votre espace de bureau à domicile.",
+                utilities: {
+                    title: "Utilities & Home Costs",
+                    electricity: "Électricité",
+                    heating: "Chauffage",
+                    water: "Eau",
+                    internet: "Frais d’accès à l’Internet résidentiel",
+                    rent: "Loyer",
+                    propertyTaxes: "Taxes foncières",
+                    insurance: "Assurance habitation",
+                },
+                maintenance: {
+                    title: "Maintenance & Supplies",
+                    maintenance: "Entretien (produits de nettoyage, ampoules, etc.)",
+                    officeSupplies: "Fournitures de bureau (papier, encre, cartouches, frais postaux — work use only)",
+                },
+                communication: {
+                    title: "Communication",
+                    cellPhone: "Téléphone cellulaire",
+                },
             },
             selfEmployed: {
                 title: "Informations Travailleur Autonome",
@@ -340,6 +364,30 @@ export const dictionary = {
                 rental: "Rental Revenue",
                 crypto: "Bought/Sold/Held Crypto",
                 carExpenses: "Car Expenses",
+                workFromHome: "I worked remotely",
+            },
+            workFromHome: {
+                title: "Work from Home Expenses",
+                description: "Enter your expenses related to your home office space.",
+                utilities: {
+                    title: "Utilities & Home Costs",
+                    electricity: "Electricity",
+                    heating: "Heating",
+                    water: "Water",
+                    internet: "Home Internet Access Fees",
+                    rent: "Rent",
+                    propertyTaxes: "Property Taxes",
+                    insurance: "Home Insurance",
+                },
+                maintenance: {
+                    title: "Maintenance & Supplies",
+                    maintenance: "Maintenance (cleaning products, light bulbs, etc.)",
+                    officeSupplies: "Office Supplies (paper, ink, cartridges, postage — work use only)",
+                },
+                communication: {
+                    title: "Communication",
+                    cellPhone: "Cell Phone",
+                },
             },
             selfEmployed: {
                 title: "Self-Employment Information",

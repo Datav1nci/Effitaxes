@@ -12,6 +12,7 @@ import { StepIncomeSelection } from "./StepIncomeSelection";
 import { StepSelfEmployed } from "./StepSelfEmployed";
 import { StepCarExpenses } from "./StepCarExpenses";
 import { StepRental } from "./StepRental";
+import { StepWorkFromHome } from "./StepWorkFromHome";
 import { StepReview } from "./StepReview";
 
 type StepProps = {
@@ -98,6 +99,15 @@ export default function EnrollmentWizard() {
                 title: t.enrollment.steps.rental,
                 component: StepRental,
                 fields: ["rental"]
+            });
+        }
+
+        if (incomeSources.includes("workFromHome")) {
+            baseSteps.push({
+                id: "workFromHome",
+                title: t.enrollment.workFromHome.title,
+                component: StepWorkFromHome,
+                fields: ["workFromHome"]
             });
         }
 
