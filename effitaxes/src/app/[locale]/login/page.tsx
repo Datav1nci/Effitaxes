@@ -21,8 +21,9 @@ export default async function LoginPage(props: {
     const { locale } = params;
     const { message } = searchParams;
 
-    // Use dictionary directly
-    const t = dictionary[locale as Language] || dictionary.fr; // Fallback to fr
+    // Use dictionary directly if needed in future, currently unused
+    // const t = dictionary[locale as Language] || dictionary.fr; 
+
 
     return (
         <div className="flex min-h-[calc(100vh-200px)] flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
