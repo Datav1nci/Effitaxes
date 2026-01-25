@@ -27,6 +27,8 @@ interface Profile {
     last_name: string | null;
     phone: string | null;
     email?: string | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tax_data?: any;
 }
 
 interface EnrollmentWizardProps {
@@ -35,7 +37,7 @@ interface EnrollmentWizardProps {
 }
 
 export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProps) {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [currentStep, setCurrentStep] = useState(0);
 
     // Dynamic Schema based on language
@@ -45,14 +47,32 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
         resolver: zodResolver(schema),
         mode: "onChange",
         defaultValues: {
-            incomeSources: [],
+            incomeSources: profile?.tax_data?.incomeSources || [],
             personal: {
-                firstName: profile?.first_name || "",
-                lastName: profile?.last_name || "",
-                email: user?.email || "",
-                phone: profile?.phone || "",
-                // other fields default to empty/undefined
-            }
+                firstName: profile?.tax_data?.personal?.firstName || profile?.first_name || "",
+                lastName: profile?.tax_data?.personal?.lastName || profile?.last_name || "",
+                email: profile?.tax_data?.personal?.email || user?.email || "",
+                phone: profile?.tax_data?.personal?.phone || profile?.phone || "",
+                addressNumber: profile?.tax_data?.personal?.addressNumber || "",
+                addressName: profile?.tax_data?.personal?.addressName || "",
+                addressCity: profile?.tax_data?.personal?.addressCity || "",
+                addressApp: profile?.tax_data?.personal?.addressApp || "",
+                dob: profile?.tax_data?.personal?.dob || "",
+                maritalStatus: profile?.tax_data?.personal?.maritalStatus,
+                maritalChangeDate: profile?.tax_data?.personal?.maritalChangeDate || "",
+                province: profile?.tax_data?.personal?.province || "",
+                ownerTenant: profile?.tax_data?.personal?.ownerTenant,
+                soldBuyHouse: profile?.tax_data?.personal?.soldBuyHouse || false,
+                soldBuyHouseStr: profile?.tax_data?.personal?.soldBuyHouseStr,
+                incomeSource: profile?.tax_data?.personal?.incomeSource || "",
+                privateDrugInsurance: profile?.tax_data?.personal?.privateDrugInsurance,
+                insuranceMonths: profile?.tax_data?.personal?.insuranceMonths || "",
+                additionalInfo: profile?.tax_data?.personal?.additionalInfo || "",
+            },
+            selfEmployed: profile?.tax_data?.selfEmployed,
+            car: profile?.tax_data?.car,
+            rental: profile?.tax_data?.rental,
+            workFromHome: profile?.tax_data?.workFromHome,
         },
     });
 
@@ -206,9 +226,15 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
                     </svg>
                 </div>
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t.contact.form.successMessage}</h2>
-                <p className="text-xl text-gray-600 dark:text-gray-300">
+                <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
                     We have received your information and will be in touch shortly.
                 </p>
+                <a
+                    href={`/${language}/dashboard`}
+                    className="px-6 py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition"
+                >
+                    {t.auth.backDashboard}
+                </a>
             </div>
         );
     }

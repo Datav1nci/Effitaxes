@@ -98,6 +98,8 @@ export const dictionary = {
             cancel: "Annuler",
             successUpdate: "Profil mis à jour !",
             errorUpdate: "Erreur lors de la mise à jour.",
+            updateTaxProfile: "Modifier vos infos fiscales",
+            backDashboard: "Retour au tableau de bord",
         },
         enrollment: {
             title: "Inscription Impôts 2025",
@@ -556,6 +558,8 @@ export const dictionary = {
             cancel: "Cancel",
             successUpdate: "Profile updated!",
             errorUpdate: "Error updating profile.",
+            updateTaxProfile: "Update Tax Profile",
+            backDashboard: "Back to Dashboard",
         },
         enrollment: {
             title: "2025 Tax Enrollment",

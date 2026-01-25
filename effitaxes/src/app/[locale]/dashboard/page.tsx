@@ -39,6 +39,15 @@ export default async function DashboardPage(props: {
 
             <ProfileForm user={user} profile={profile} />
 
+            <div className="mt-8">
+                <a
+                    href={`/${locale}/dashboard/tax-profile`}
+                    className="block w-full max-w-lg mx-auto text-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                    {t.auth.updateTaxProfile}
+                </a>
+            </div>
+
             <form action={signOut} className="mt-8">
                 <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
                     {t.auth.signOut}

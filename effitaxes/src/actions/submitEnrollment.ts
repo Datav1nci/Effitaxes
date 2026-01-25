@@ -3,10 +3,33 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+import { createClient } from "@/utils/supabase/server";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function submitEnrollment(data: any): Promise<{ success: boolean; error?: string }> {
     try {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+            const { error: dbError } = await supabase
+                .from("profiles")
+                .update({
+                    tax_data: data,
+                    enrollment_status: "completed",
+                    updated_at: new Date().toISOString(),
+                })
+                .eq("id", user.id);
+
+            if (dbError) {
+                console.error("Failed to save to database:", dbError);
+                // We might want to return here, but sending email is also important.
+                // For now, let's log and proceed to email, or return error?
+                // Returning error is safer to ensure data is saved.
+                return { success: false, error: "Failed to save profile data" };
+            }
+        }
+
         if (!process.env.RESEND_API_KEY) {
             console.error("Missing RESEND_API_KEY");
             return { success: false, error: "Configuration Error: Missing API Key" };
@@ -44,7 +67,7 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
         console.log("Email sent successfully. ID:", emailData?.id);
         return { success: true };
     } catch (error) {
-        console.error("Failed to send email:", error);
-        return { success: false, error: "Failed to send email" };
+        console.error("Failed to submit enrollment:", error);
+        return { success: false, error: "Failed to submit enrollment" };
     }
 }

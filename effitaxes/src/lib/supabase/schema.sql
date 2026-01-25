@@ -6,6 +6,8 @@ create table profiles (
   first_name text,
   last_name text,
   phone text,
+  enrollment_status text default 'pending',
+  tax_data jsonb,
   
   constraint username_length check (char_length(first_name) >= 3)
 );
