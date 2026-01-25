@@ -17,20 +17,20 @@ export async function updateProfile(formData: FormData) {
     const last_name = formData.get("last_name") as string;
     const phone = formData.get("phone") as string;
 
-    // 1. Update the public profile table
+    // 1. Update the public profile table (upsert to handle missing rows)
     const { error } = await supabase
         .from("profiles")
-        .update({
+        .upsert({
+            id: user.id,
             first_name,
             last_name,
             phone,
             updated_at: new Date().toISOString(),
-        })
-        .eq("id", user.id);
+        });
 
     if (error) {
         console.error("Profile update error:", error);
-        throw new Error("Could not update profile");
+        throw new Error(error.message);
     }
 
     // 2. Update the auth metadata (so Header initials/name update correctly)
