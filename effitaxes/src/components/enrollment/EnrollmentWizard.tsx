@@ -22,9 +22,16 @@ type StepProps = {
     highlightConfirmation?: boolean;
 };
 
+interface Profile {
+    first_name: string | null;
+    last_name: string | null;
+    phone: string | null;
+    email?: string | null;
+}
+
 interface EnrollmentWizardProps {
     user?: User;
-    profile?: any;
+    profile?: Profile | null;
 }
 
 export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProps) {
