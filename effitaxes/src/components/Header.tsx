@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, Moon, Sun, X, User as UserIcon, LogOut } from "lucide-react";
+import { Menu, Moon, Sun, X, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
 import BrandName from "@/components/BrandName";

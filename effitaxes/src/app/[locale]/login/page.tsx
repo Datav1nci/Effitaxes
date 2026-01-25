@@ -1,5 +1,4 @@
-import { login, signup } from "@/actions/auth";
-import { SignInButtons } from "@/components/auth/SignInButtons";
+import AuthForm from "@/components/auth/AuthForm";
 // The layout.tsx uses dictionary.ts. This page is a Server Component by default?
 // But it uses context? No, if I make it server component I can use dictionary directly if I get lang params.
 // Let's make it a server component for the actions, but if we want interactivity (like switching tabs between login/signup) we need "use client" or separate components.
