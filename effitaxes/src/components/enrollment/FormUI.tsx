@@ -29,12 +29,12 @@ export const FormError = ({ name }: { name: string }) => {
 export const FormInput = ({ label, name, className, labelClassName, ...props }: FieldProps) => {
     const { register } = useFormContext();
     return (
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col h-full">
             <FormLabel className={labelClassName}>{label}</FormLabel>
             <input
                 {...register(name)}
                 {...props}
-                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 ${className || ""}`}
+                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 mt-auto ${className || ""}`}
             />
             <FormError name={name} />
         </div>
@@ -51,12 +51,12 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 export const FormSelect = ({ label, name, options, className, labelClassName, ...props }: SelectProps) => {
     const { register } = useFormContext();
     return (
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col h-full">
             <FormLabel className={labelClassName}>{label}</FormLabel>
             <select
                 {...register(name)}
                 {...props}
-                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 ${className || ""}`}
+                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 mt-auto ${className || ""}`}
             >
                 <option value="">Select...</option>
                 {options.map((opt) => (
