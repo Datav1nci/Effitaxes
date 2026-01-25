@@ -86,7 +86,7 @@ export const dictionary = {
             orContinueWith: "Ou continuer avec",
             dashboard: "Tableau de bord",
             yourProfile: "Votre Profil",
-            welcome: "Bienvenue",
+            welcome: "Salut",
             yourAccount: "Votre Compte",
             signInGoogle: "Se connecter avec Google",
             signInFacebook: "Se connecter avec Facebook",

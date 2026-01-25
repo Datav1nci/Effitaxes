@@ -33,7 +33,6 @@ export default async function DashboardPage(props: {
 
     return (
         <div className="flex flex-col items-center justify-center p-24">
-            <h1 className="text-4xl font-bold mb-8">{t.auth.dashboard}</h1>
             <p className="text-xl mb-4">
                 {t.auth.welcome} {profile?.first_name ? profile.first_name : user.email}!
             </p>

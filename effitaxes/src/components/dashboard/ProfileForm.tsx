@@ -43,8 +43,7 @@ export default function ProfileForm({ user, profile }: ProfileFormProps) {
 
     return (
         <div className="w-full max-w-lg p-6 border rounded-lg shadow-md bg-white dark:bg-gray-800">
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold">{t.auth.yourProfile}</h2>
+            <div className="flex items-center justify-end mb-6 min-h-[40px]">
                 {!isEditing && (
                     <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
                         {t.auth.editProfile}
