@@ -7,7 +7,7 @@ import AuthForm from "@/components/auth/AuthForm";
 // Actually, let's stick to Server Actions with simple forms.
 // I need valid params handling.
 
-import AuthForm from "@/components/auth/AuthForm";
+
 
 export default async function LoginPage(props: {
     searchParams: Promise<{ message: string }>;

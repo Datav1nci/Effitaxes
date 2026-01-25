@@ -46,9 +46,14 @@ export async function signup(formData: FormData) {
     });
 
     if (error) {
-        return redirect("/login?message=Could not authenticate user");
+        if (error.code === "user_already_exists" || error.message.includes("already registered")) {
+            return redirect("/login?message=User already registered. Please sign in.");
+        }
+        return redirect(`/login?message=${encodeURIComponent(error.message)}`);
     }
 
+    // If no error, check if session is created (auto-confirm or existing session)
+    // If we are here and no error, standard flow involves email confirmation usually
     return redirect("/login?message=Check email to continue sign in process");
 }
 
