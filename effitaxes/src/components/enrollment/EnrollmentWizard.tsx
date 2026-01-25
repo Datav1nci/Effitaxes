@@ -15,12 +15,19 @@ import { StepRental } from "./StepRental";
 import { StepWorkFromHome } from "./StepWorkFromHome";
 import { StepReview } from "./StepReview";
 
+import { User } from "@supabase/supabase-js";
+
 type StepProps = {
     t: Dictionary;
     highlightConfirmation?: boolean;
 };
 
-export default function EnrollmentWizard() {
+interface EnrollmentWizardProps {
+    user?: User;
+    profile?: any;
+}
+
+export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProps) {
     const { t } = useLanguage();
     const [currentStep, setCurrentStep] = useState(0);
 
@@ -32,8 +39,13 @@ export default function EnrollmentWizard() {
         mode: "onChange",
         defaultValues: {
             incomeSources: [],
-            // Initialize objects to avoid undefined issues if we want to be safe, 
-            // but strictly optional fields should be fine.
+            personal: {
+                firstName: profile?.first_name || "",
+                lastName: profile?.last_name || "",
+                email: user?.email || "",
+                phone: profile?.phone || "",
+                // other fields default to empty/undefined
+            }
         },
     });
 
