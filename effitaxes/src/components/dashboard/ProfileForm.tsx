@@ -6,9 +6,16 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { User } from "@supabase/supabase-js";
 
+interface Profile {
+    first_name: string | null;
+    last_name: string | null;
+    phone: string | null;
+    email?: string | null;
+}
+
 interface ProfileFormProps {
     user: User;
-    profile: any; // Using any for simplicity with Supabase query result, or define strict type
+    profile: Profile | null;
 }
 
 export default function ProfileForm({ user, profile }: ProfileFormProps) {
