@@ -31,9 +31,23 @@ export default function Header() {
   useEffect(() => {
     setMounted(true);
     const supabase = createClient();
+
+    // Initial fetch
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
     });
+
+    // Listen for changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (_event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const links = [
