@@ -260,8 +260,8 @@ export const dictionary = {
             confirmation: "Je confirme que toutes les informations fournies sont exactes.",
         },
         metadata: {
-            title: "Effitaxes – Comptabilité à Montréal",
-            description: "Comptabilité et gestion financière partout au Québec.",
+            title: "Effitaxes — Déclaration d'impôts au Québec (T1, TP1, Travailleurs Autonomes)",
+            description: "Service rapide et sécurisé de déclaration d'impôts au Québec. T1, TP1, travailleurs autonomes, impôts des sociétés et tenue de livres. Professionnels fiscaux locaux de confiance.",
             keywords: ["Fair fair mes impots", "comptabilité", "finance", "gestion", "Montréal", "effitaxes", "paies", "paie", "travailleurs autonomes", "déclarations fiscales", "impôts", "tenue de livres", "comptabilité d'entreprise", "consultation fiscale", "planification fiscale", "déductions d'impôt", "TPS", "TVQ", "rapports financiers", "audit", "conseils financiers", "gestion de paie", "comptabilité pour PME", "services comptables", "expertise comptable", "déclarations de revenus", "optimisation fiscale"],
             og: {
                 siteName: "Effitaxes",
@@ -718,8 +718,8 @@ export const dictionary = {
             confirmation: "I confirm that all information provided is accurate.",
         },
         metadata: {
-            title: "Effitaxes – Accounting Services in Montreal",
-            description: "Professional accounting and financial management services across Quebec.",
+            title: "Effitaxes — Expert Tax Filing in Quebec (T1, TP1, Self-Employed)",
+            description: "Fast and secure tax filing in Quebec. T1, TP1, self-employed, business taxes, and bookkeeping. Trusted local tax professionals.",
             keywords: ["do my tax", "accounting", "finance", "management", "Montreal", "effitaxes", "payroll", "self-employed", "tax returns", "taxes", "bookkeeping", "corporate accounting", "tax consulting", "financial planning", "tax deductions", "GST", "QST", "financial reports", "audit", "financial advice", "payroll management", "SME accounting", "accounting services", "CPA", "tax optimization"],
             og: {
                 siteName: "Effitaxes",
