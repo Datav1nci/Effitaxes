@@ -26,6 +26,10 @@ export async function signup(formData: FormData) {
     const origin = (await headers()).get("origin");
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const firstName = formData.get("first_name") as string;
+    const lastName = formData.get("last_name") as string;
+    const phone = formData.get("phone") as string;
+
     const supabase = await createClient();
 
     const { error } = await supabase.auth.signUp({
@@ -33,6 +37,11 @@ export async function signup(formData: FormData) {
         password,
         options: {
             emailRedirectTo: `${origin}/auth/callback`,
+            data: {
+                first_name: firstName,
+                last_name: lastName,
+                phone: phone,
+            },
         },
     });
 

@@ -14,16 +14,37 @@ export default async function DashboardPage() {
         return redirect("/login");
     }
 
+    // Fetch profile
+    const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
     return (
         <div className="flex flex-col items-center justify-center p-24">
             <h1 className="text-4xl font-bold mb-8">Dashboard</h1>
-            <p className="text-xl mb-4">Welcome, {user.email}!</p>
-            <div className="p-6 border rounded-lg shadow-md bg-white dark:bg-gray-800">
-                <h2 className="text-2xl font-semibold mb-4">Your Account</h2>
-                <div className="space-y-2">
-                    <p><span className="font-medium">Email:</span> {user.email}</p>
-                    <p><span className="font-medium">User ID:</span> {user.id}</p>
-                    <p><span className="font-medium">Last Sign In:</span> {new Date(user.last_sign_in_at || "").toLocaleString()}</p>
+            <p className="text-xl mb-4">Welcome, {profile?.first_name || user.email}!</p>
+
+            <div className="p-6 border rounded-lg shadow-md bg-white dark:bg-gray-800 w-full max-w-lg">
+                <h2 className="text-2xl font-semibold mb-6">Your Profile</h2>
+                <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-4 border-b pb-2">
+                        <span className="font-medium text-gray-500">First Name</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">{profile?.first_name || '-'}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 border-b pb-2">
+                        <span className="font-medium text-gray-500">Last Name</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">{profile?.last_name || '-'}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 border-b pb-2">
+                        <span className="font-medium text-gray-500">Email</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">{user.email}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 border-b pb-2">
+                        <span className="font-medium text-gray-500">Phone</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">{profile?.phone || '-'}</span>
+                    </div>
                 </div>
             </div>
 
