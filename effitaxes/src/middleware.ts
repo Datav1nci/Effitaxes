@@ -29,6 +29,6 @@ export const config = {
         // Skip all internal paths (_next)
         // Skip all static files (images, favicon, etc)
         // Removed 'api' from exclusion so auth runs on API routes too
-        '/((?!_next/static|_next/image|images|fonts|favicon.ico).*)',
+        '/((?!_next/static|_next/image|images|fonts|favicon.ico|sitemap.xml|robots.txt).*)',
     ],
 };
