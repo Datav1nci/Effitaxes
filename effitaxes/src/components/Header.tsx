@@ -124,18 +124,18 @@ export default function Header() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href={`/${language}/dashboard`}>Dashboard</Link>
+                    <Link href={`/${language}/dashboard`}>{t.auth.dashboard}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <span>{t.auth.signOut}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Link href={`/${language}/login`}>
-                <Button variant="outline" size="sm">Sign In</Button>
+                <Button variant="outline" size="sm">{t.auth.signIn}</Button>
               </Link>
             )
           )}

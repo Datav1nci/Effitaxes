@@ -4,8 +4,10 @@ import { useState } from "react";
 import { login, signup } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { SignInButtons } from "@/components/auth/SignInButtons";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AuthForm() {
+    const { t } = useLanguage();
     const [isLogin, setIsLogin] = useState(true);
 
     return (
@@ -15,7 +17,7 @@ export default function AuthForm() {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                First Name
+                                {t.auth.firstName}
                             </label>
                             <div className="mt-1">
                                 <input
@@ -29,7 +31,7 @@ export default function AuthForm() {
                         </div>
                         <div>
                             <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Last Name
+                                {t.auth.lastName}
                             </label>
                             <div className="mt-1">
                                 <input
@@ -49,7 +51,7 @@ export default function AuthForm() {
                         htmlFor="email"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Email address
+                        {t.auth.email}
                     </label>
                     <div className="mt-1">
                         <input
@@ -69,7 +71,7 @@ export default function AuthForm() {
                             htmlFor="phone"
                             className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                         >
-                            Phone Number
+                            {t.auth.phone}
                         </label>
                         <div className="mt-1">
                             <input
@@ -89,7 +91,7 @@ export default function AuthForm() {
                         htmlFor="password"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Password
+                        {t.auth.password}
                     </label>
                     <div className="mt-1">
                         <input
@@ -109,14 +111,14 @@ export default function AuthForm() {
                             formAction={login}
                             className="w-full flex justify-center"
                         >
-                            Sign in
+                            {t.auth.signIn}
                         </Button>
                     ) : (
                         <Button
                             formAction={signup}
                             className="w-full flex justify-center"
                         >
-                            Sign up
+                            {t.auth.signUp}
                         </Button>
                     )}
                 </div>
@@ -128,7 +130,7 @@ export default function AuthForm() {
                     onClick={() => setIsLogin(!isLogin)}
                     className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400"
                 >
-                    {isLogin ? "Need an account? Sign up" : "Already have an account? Sign in"}
+                    {isLogin ? t.auth.needAccount : t.auth.haveAccount}
                 </button>
             </div>
 
@@ -139,7 +141,7 @@ export default function AuthForm() {
                     </div>
                     <div className="relative flex justify-center text-sm">
                         <span className="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
-                            Or continue with
+                            {t.auth.orContinueWith}
                         </span>
                     </div>
                 </div>
