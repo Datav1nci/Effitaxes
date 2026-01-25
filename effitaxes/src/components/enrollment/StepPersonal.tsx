@@ -56,7 +56,14 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 <FormInput label={t.enrollment.personal.dob} name="personal.dob" type="date" />
             </div>
 
-            <FormInput label={t.enrollment.personal.email} name="personal.email" type="email" placeholder={t.contact.form.emailPlaceholder} />
+            <FormInput
+                label={t.enrollment.personal.email}
+                name="personal.email"
+                type="email"
+                placeholder={t.contact.form.emailPlaceholder}
+                readOnly
+                className="bg-gray-100 cursor-not-allowed text-gray-500"
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormSelect
