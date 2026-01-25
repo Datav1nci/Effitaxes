@@ -54,7 +54,7 @@ export async function signup(formData: FormData) {
 
     // If no error, check if session is created (auto-confirm or existing session)
     // If we are here and no error, standard flow involves email confirmation usually
-    return redirect("/login?message=Check email to continue sign in process");
+    return redirect("/login?success=check_email");
 }
 
 export async function signInWithProvider(provider: Provider) {
