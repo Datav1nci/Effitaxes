@@ -2,33 +2,51 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, Moon, Sun, X, User as UserIcon, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
 import BrandName from "@/components/BrandName";
+import { createClient } from "@/utils/supabase/client";
+import { signOut } from "@/actions/auth";
+import type { User } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const { t, language, toggleLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   const { theme, setTheme, resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  // const isDark = resolvedTheme === "dark";
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+  }, []);
 
   const links = [
     { href: `/${language}/#hero`, label: t.nav.home },
     { href: `/${language}/#services`, label: t.nav.services },
-    { href: `/${language}/projets`, label: t.nav.projects }, // Link to full projects page
-    { href: `/${language}/about`, label: t.nav.about },     // Link to full about page
-    { href: `/${language}/contact`, label: t.nav.contact }, // Link to full contact page
+    { href: `/${language}/projets`, label: t.nav.projects },
+    { href: `/${language}/about`, label: t.nav.about },
+    { href: `/${language}/contact`, label: t.nav.contact },
   ];
 
   const toggleTheme = () => {
-    // If not mounted yet, do nothing to avoid hydration mismatch
     if (!mounted) return;
-    setTheme(isDark ? "light" : "dark");
+    setTheme(theme === "dark" || resolvedTheme === "dark" ? "light" : "dark");
   };
 
   return (
@@ -40,8 +58,6 @@ export default function Header() {
         >
           <BrandName />
         </Link>
-
-        {/* Desktop nav */}
         <nav className="hidden items-center gap-6 md:flex">
           {links.map((link) => (
             <Link
@@ -53,10 +69,10 @@ export default function Header() {
             </Link>
           ))}
           <button
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            onClick={toggleTheme}
             className="rounded-full p-2 hover:bg-slate-100 dark:hover:bg-gray-800"
           >
-            {mounted && theme === "dark" ? (
+            {mounted && (theme === "dark" || resolvedTheme === "dark") ? (
               <Sun className="h-5 w-5 text-slate-700 dark:text-gray-300" />
             ) : (
               <Moon className="h-5 w-5 text-slate-700 dark:text-gray-300" />
@@ -68,35 +84,59 @@ export default function Header() {
           >
             {language.toUpperCase()}
           </button>
-        </nav>
 
-        {/* Mobile Actions: Language & Theme Toggles + Hamburger */}
+          {mounted && (
+            user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <UserIcon className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href={`/${language}/dashboard`}>Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href={`/${language}/login`}>
+                <Button variant="outline" size="sm">Sign In</Button>
+              </Link>
+            )
+          )}
+        </nav>
         <div className="flex items-center gap-2 md:hidden">
           <button
             onClick={toggleLanguage}
             className="rounded-full p-2 text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
-            aria-label="Toggle Language"
           >
             <span className="flex items-center justify-center font-bold text-sm h-5 w-5">
               {language.toUpperCase()}
             </span>
           </button>
-
           <button
             onClick={toggleTheme}
             className="rounded-full p-2 text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
-            aria-label="Toggle Theme"
           >
-            {mounted && theme === "dark" ? (
+            {mounted && (theme === "dark" || resolvedTheme === "dark") ? (
               <Sun className="h-5 w-5" />
             ) : (
               <Moon className="h-5 w-5" />
             )}
           </button>
-
           <button
-            type="button"
-            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
             onClick={() => setOpen((v) => !v)}
             className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 bg-white text-slate-700 hover:bg-gray-50 transition dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
           >
@@ -104,8 +144,6 @@ export default function Header() {
           </button>
         </div>
       </div>
-
-      {/* Mobile drawer */}
       {open && (
         <nav className="md:hidden border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
           <div className="mx-auto max-w-7xl px-4 py-2">
@@ -119,6 +157,37 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            {/* Mobile Auth Links */}
+            {mounted && (
+              user ? (
+                <>
+                  <Link
+                    href={`/${language}/dashboard`}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                  >
+                    Dashboard ({user.email})
+                  </Link>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setOpen(false);
+                    }}
+                    className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-red-600 hover:bg-slate-100 dark:text-red-400 dark:hover:bg-gray-800"
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href={`/${language}/login`}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                >
+                  Sign In
+                </Link>
+              )
+            )}
           </div>
         </nav>
       )}
