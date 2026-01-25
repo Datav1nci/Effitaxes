@@ -9,11 +9,24 @@ import AuthForm from "@/components/auth/AuthForm";
 
 
 
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+
 export default async function LoginPage(props: {
     searchParams: Promise<{ message: string }>;
+    params: Promise<{ locale: string }>;
 }) {
     const searchParams = await props.searchParams;
     const { message } = searchParams;
+    const params = await props.params;
+    const { locale } = params;
+
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+        return redirect(`/${locale}/dashboard`);
+    }
 
     // Use dictionary directly if needed in future, currently unused
     // const t = dictionary[locale as Language] || dictionary.fr; 
