@@ -18,20 +18,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const t = dictionary[lang];
 
   return {
-    metadataBase: new URL("https://effitaxes.com"),
+    metadataBase: new URL("https://www.effitaxes.com"),
     title: t.metadata.title,
     description: t.metadata.description,
     keywords: t.metadata.keywords,
     openGraph: {
       title: t.metadata.title,
       description: t.metadata.description,
-      url: `https://effitaxes.com/${lang}`,
+      url: `https://www.effitaxes.com/${lang}`,
       siteName: t.metadata.og.siteName,
       locale: t.metadata.og.locale,
       type: "website",
     },
     alternates: {
-      canonical: `/${lang}`,
+      canonical: "./",
       languages: {
         "fr": "/fr",
         "en": "/en",

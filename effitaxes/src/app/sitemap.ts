@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://effitaxes.com';
+    const baseUrl = 'https://www.effitaxes.com';
     const locales = ['fr', 'en'];
 
     // Base routes
