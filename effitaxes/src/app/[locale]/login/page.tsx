@@ -8,17 +8,11 @@ import { SignInButtons } from "@/components/auth/SignInButtons";
 // Actually, let's stick to Server Actions with simple forms.
 // I need valid params handling.
 
-import { dictionary } from "@/lib/dictionary";
-
-type Language = "en" | "fr"; // or import from dictionary if exported
 
 export default async function LoginPage(props: {
-    params: Promise<{ locale: string }>;
     searchParams: Promise<{ message: string }>;
 }) {
-    const params = await props.params;
     const searchParams = await props.searchParams;
-    const { locale } = params;
     const { message } = searchParams;
 
     // Use dictionary directly if needed in future, currently unused
