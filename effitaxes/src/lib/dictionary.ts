@@ -267,6 +267,196 @@ export const dictionary = {
                 siteName: "Effitaxes",
                 locale: "fr_CA",
             }
+        },
+        privacy: {
+            title: "Politique de Confidentialité",
+            lastUpdated: "Dernière mise à jour : 24 Janvier 2026",
+            intro: "Effitaxes (« nous », « notre », « nos ») respecte votre vie privée et s'engage à protéger vos informations personnelles et financières. Cette politique de confidentialité explique comment nous collectons, utilisons, stockons et protégeons vos données lorsque vous utilisez notre site web et nos services.",
+            sections: [
+                {
+                    title: "1. Informations que nous collectons",
+                    content: [
+                        "Nous pouvons collecter les types d'informations suivants :",
+                        "**Informations Personnelles** : Nom, Adresse courriel, Numéro de téléphone, Détails de connexion au compte, Informations d'identité requises pour la déclaration d'impôts.",
+                        "**Informations Financières et Fiscales** : Documents fiscaux et déclarations, Revenus, déductions et dossiers financiers connexes, Informations sur l'entreprise ou le travail indépendant (le cas échéant).",
+                        "**Informations Techniques** : Adresse IP, Type d'appareil et de navigateur, Journaux d'utilisation et données analytiques, Données du fournisseur d'authentification (Google, Facebook)."
+                    ]
+                },
+                {
+                    title: "2. Comment nous utilisons vos informations",
+                    content: [
+                        "Nous utilisons vos informations pour :",
+                        "Fournir des services de préparation d'impôts et financiers",
+                        "Authentifier et gérer les comptes utilisateurs",
+                        "Communiquer au sujet de votre compte ou de vos déclarations",
+                        "Améliorer notre site web et nos services",
+                        "Se conformer aux exigences légales et réglementaires",
+                        "Prévenir la fraude et l'accès non autorisé"
+                    ]
+                },
+                {
+                    title: "3. Authentification et Fournisseurs Tiers",
+                    content: [
+                        "Nous utilisons des fournisseurs d'identité tiers tels que Google et Facebook pour permettre une connexion sécurisée.",
+                        "Ces fournisseurs peuvent partager des informations de profil de base (telles que le nom et l'adresse courriel) conformément à leurs politiques de confidentialité.",
+                        "Nous ne vendons ni n'échangeons vos données personnelles."
+                    ]
+                },
+                {
+                    title: "4. Stockage et Sécurité des Données",
+                    content: [
+                        "Nous mettons en œuvre des mesures de sécurité conformes aux normes de l'industrie, notamment :",
+                        "Transmission de données cryptée (HTTPS)",
+                        "Protocoles d'authentification sécurisés",
+                        "Accès restreint aux dossiers sensibles",
+                        "Infrastructure cloud sécurisée (ex: Supabase, Vercel)",
+                        "Malgré tous nos efforts, aucun système en ligne ne peut garantir une sécurité absolue."
+                    ]
+                },
+                {
+                    title: "5. Conservation des Données",
+                    content: [
+                        "Nous ne conservons les informations personnelles et fiscales que le temps nécessaire :",
+                        "Pour fournir les services",
+                        "Pour se conformer aux exigences légales de conservation",
+                        "Pour résoudre les litiges ou faire respecter les accords"
+                    ]
+                },
+                {
+                    title: "6. Vos Droits",
+                    content: [
+                        "Selon votre juridiction, vous pouvez avoir le droit de :",
+                        "Accéder à vos données personnelles",
+                        "Demander des corrections ou suppressions",
+                        "Retirer votre consentement",
+                        "Demander une copie de vos informations stockées",
+                        "Les demandes peuvent être faites en nous contactant."
+                    ]
+                },
+                {
+                    title: "7. Cookies et Analytique",
+                    content: [
+                        "Nous pouvons utiliser des cookies et des outils d'analyse pour :",
+                        "Maintenir les sessions de connexion",
+                        "Comprendre l'utilisation du site",
+                        "Améliorer les performances",
+                        "Vous pouvez contrôler les cookies dans les paramètres de votre navigateur."
+                    ]
+                },
+                {
+                    title: "8. Conformité Légale",
+                    content: [
+                        "Nous nous conformons aux lois sur la protection de la vie privée applicables, notamment :",
+                        "Lois canadiennes sur la protection de la vie privée (LPRPDE)",
+                        "Loi 25 du Québec",
+                        "RGPD (le cas échéant)",
+                        "Autres réglementations pertinentes sur la protection des données"
+                    ]
+                },
+                {
+                    title: "9. Modifications de cette Politique",
+                    content: [
+                        "Nous pouvons mettre à jour cette politique de confidentialité périodiquement. Les mises à jour seront publiées sur cette page."
+                    ]
+                },
+                {
+                    title: "10. Contactez-nous",
+                    content: [
+                        "Si vous avez des préoccupations concernant la confidentialité, contactez :",
+                        "Effitaxes",
+                        "Site web : [https://effitaxes.com](https://effitaxes.com)",
+                        "Courriel : [youssef@effitaxes.com](mailto:youssef@effitaxes.com)"
+                    ]
+                }
+            ]
+        },
+        terms: {
+            title: "Conditions d'Utilisation",
+            lastUpdated: "Dernière mise à jour : 24 Janvier 2026",
+            intro: "Ces conditions régissent votre accès et votre utilisation du site web et des services d'Effitaxes. En utilisant nos services, vous acceptez ces conditions.",
+            sections: [
+                {
+                    title: "1. Services Fournis",
+                    content: [
+                        "Effitaxes fournit des services de préparation d'impôts, de soutien financier et des services numériques connexes.",
+                        "Nous ne garantissons pas de résultats fiscaux spécifiques ou de remboursements."
+                    ]
+                },
+                {
+                    title: "2. Responsabilités de l'Utilisateur",
+                    content: [
+                        "Vous acceptez de :",
+                        "Fournir des informations exactes et véridiques",
+                        "Garder vos identifiants de connexion sécurisés",
+                        "Utiliser les services uniquement à des fins légales",
+                        "Ne pas abuser ou tenter d'exploiter nos systèmes",
+                        "Vous êtes responsable de l'exactitude des informations soumises pour les déclarations d'impôts."
+                    ]
+                },
+                {
+                    title: "3. Accès au Compte et Sécurité",
+                    content: [
+                        "Vous êtes responsable du maintien de la confidentialité de votre compte.",
+                        "Nous pouvons suspendre ou résilier des comptes pour activité suspecte ou abusive."
+                    ]
+                },
+                {
+                    title: "4. Paiements et Remboursements (le cas échéant)",
+                    content: [
+                        "Les frais pour les services seront divulgués avant l'achat.",
+                        "Les remboursements sont sujets à examen et au statut d'achèvement du service."
+                    ]
+                },
+                {
+                    title: "5. Limitation de Responsabilité",
+                    content: [
+                        "Effitaxes n'est pas responsable de :",
+                        "Erreurs causées par des données incorrectes soumises par l'utilisateur",
+                        "Retards des autorités fiscales ou de tiers",
+                        "Pertes au-delà de la valeur des services payés",
+                        "Les services sont fournis « tels quels »."
+                    ]
+                },
+                {
+                    title: "6. Données et Confidentialité",
+                    content: [
+                        "Votre utilisation de nos services est régie par notre Politique de Confidentialité.",
+                        "En utilisant Effitaxes, vous consentez au traitement des données nécessaire pour fournir les services."
+                    ]
+                },
+                {
+                    title: "7. Propriété Intellectuelle",
+                    content: [
+                        "Tout le contenu du site web, la marque et les logiciels appartiennent à Effitaxes et ne peuvent être copiés sans permission."
+                    ]
+                },
+                {
+                    title: "8. Résiliation",
+                    content: [
+                        "Nous pouvons suspendre ou mettre fin à l'accès si ces conditions sont violées."
+                    ]
+                },
+                {
+                    title: "9. Loi Applicable",
+                    content: [
+                        "Ces conditions sont régies par les lois du Québec et du Canada."
+                    ]
+                },
+                {
+                    title: "10. Coordonnées",
+                    content: [
+                        "Effitaxes",
+                        "Site web : [https://effitaxes.com](https://effitaxes.com)",
+                        "Courriel : [youssef@effitaxes.com](mailto:youssef@effitaxes.com)"
+                    ]
+                }
+            ]
+        },
+        consent: {
+            text: "Nous utilisons des témoins (cookies) pour assurer le bon fonctionnement du site et analyser notre trafic.",
+            accept: "Accepter",
+            decline: "Refuser",
+            learnMore: "En savoir plus",
         }
     },
     en: {
@@ -535,6 +725,196 @@ export const dictionary = {
                 siteName: "Effitaxes",
                 locale: "en_CA",
             }
+        },
+        privacy: {
+            title: "Privacy Policy",
+            lastUpdated: "Last updated: January 24, 2026",
+            intro: "Effitaxes (“we”, “our”, “us”) respects your privacy and is committed to protecting your personal and financial information. This Privacy Policy explains how we collect, use, store, and protect your data when you use our website and services.",
+            sections: [
+                {
+                    title: "1. Information We Collect",
+                    content: [
+                        "We may collect the following types of information:",
+                        "**Personal Information**: Name, Email address, Phone number, Account login details, Identity information required for tax filing.",
+                        "**Financial & Tax Information**: Tax documents and filings, Income, deductions, and related financial records, Business or self-employment information (if applicable).",
+                        "**Technical Information**: IP address, Device and browser type, Usage logs and analytics data, Authentication provider data (Google, Facebook)."
+                    ]
+                },
+                {
+                    title: "2. How We Use Your Information",
+                    content: [
+                        "We use your information to:",
+                        "Provide tax preparation and financial services",
+                        "Authenticate and manage user accounts",
+                        "Communicate about your account or filings",
+                        "Improve our website and services",
+                        "Comply with legal and regulatory requirements",
+                        "Prevent fraud and unauthorized access"
+                    ]
+                },
+                {
+                    title: "3. Authentication & Third-Party Providers",
+                    content: [
+                        "We use third-party identity providers such as Google and Facebook to allow secure login.",
+                        "These providers may share basic profile information (such as name and email) in accordance with their privacy policies.",
+                        "We do not sell or trade your personal data."
+                    ]
+                },
+                {
+                    title: "4. Data Storage & Security",
+                    content: [
+                        "We implement industry-standard security measures, including:",
+                        "Encrypted data transmission (HTTPS)",
+                        "Secure authentication protocols",
+                        "Restricted access to sensitive records",
+                        "Secure cloud infrastructure (e.g., Supabase, Vercel)",
+                        "Despite best efforts, no online system can guarantee absolute security."
+                    ]
+                },
+                {
+                    title: "5. Data Retention",
+                    content: [
+                        "We retain personal and tax information only as long as required:",
+                        "To provide services",
+                        "To comply with legal retention requirements",
+                        "To resolve disputes or enforce agreements"
+                    ]
+                },
+                {
+                    title: "6. Your Rights",
+                    content: [
+                        "Depending on your jurisdiction, you may have the right to:",
+                        "Access your personal data",
+                        "Request corrections or deletions",
+                        "Withdraw consent",
+                        "Request a copy of your stored information",
+                        "Requests can be made by contacting us."
+                    ]
+                },
+                {
+                    title: "7. Cookies & Analytics",
+                    content: [
+                        "We may use cookies and analytics tools to:",
+                        "Maintain login sessions",
+                        "Understand site usage",
+                        "Improve performance",
+                        "You can control cookies in your browser settings."
+                    ]
+                },
+                {
+                    title: "8. Legal Compliance",
+                    content: [
+                        "We comply with applicable privacy laws including:",
+                        "Canadian privacy laws (PIPEDA)",
+                        "Quebec Law 25",
+                        "GDPR (if applicable)",
+                        "Other relevant data protection regulations"
+                    ]
+                },
+                {
+                    title: "9. Changes to This Policy",
+                    content: [
+                        "We may update this Privacy Policy periodically. Updates will be posted on this page."
+                    ]
+                },
+                {
+                    title: "10. Contact Us",
+                    content: [
+                        "If you have privacy concerns, contact:",
+                        "Effitaxes",
+                        "Website: [https://effitaxes.com](https://effitaxes.com)",
+                        "Email: [youssef@effitaxes.com](mailto:youssef@effitaxes.com)"
+                    ]
+                }
+            ]
+        },
+        terms: {
+            title: "Terms of Service",
+            lastUpdated: "Last updated: January 24, 2026",
+            intro: "These Terms govern your access to and use of Effitaxes’ website and services. By using our services, you agree to these Terms.",
+            sections: [
+                {
+                    title: "1. Services Provided",
+                    content: [
+                        "Effitaxes provides tax preparation, financial support, and related digital services.",
+                        "We do not guarantee specific tax outcomes or refunds."
+                    ]
+                },
+                {
+                    title: "2. User Responsibilities",
+                    content: [
+                        "You agree to:",
+                        "Provide accurate and truthful information",
+                        "Keep login credentials secure",
+                        "Use services only for lawful purposes",
+                        "Not misuse or attempt to exploit our systems",
+                        "You are responsible for the accuracy of information submitted for tax filings."
+                    ]
+                },
+                {
+                    title: "3. Account Access & Security",
+                    content: [
+                        "You are responsible for maintaining account confidentiality.",
+                        "We may suspend or terminate accounts for suspicious or abusive activity."
+                    ]
+                },
+                {
+                    title: "4. Payments & Refunds (if applicable)",
+                    content: [
+                        "Fees for services will be disclosed before purchase.",
+                        "Refunds are subject to review and service completion status."
+                    ]
+                },
+                {
+                    title: "5. Limitation of Liability",
+                    content: [
+                        "Effitaxes is not liable for:",
+                        "Errors caused by incorrect user-submitted data",
+                        "Delays from tax authorities or third parties",
+                        "Losses beyond the value of paid services",
+                        "Services are provided “as is”."
+                    ]
+                },
+                {
+                    title: "6. Data & Privacy",
+                    content: [
+                        "Your use of our services is governed by our Privacy Policy.",
+                        "By using Effitaxes, you consent to data processing required to deliver services."
+                    ]
+                },
+                {
+                    title: "7. Intellectual Property",
+                    content: [
+                        "All website content, branding, and software belong to Effitaxes and may not be copied without permission."
+                    ]
+                },
+                {
+                    title: "8. Termination",
+                    content: [
+                        "We may suspend or terminate access if these Terms are violated."
+                    ]
+                },
+                {
+                    title: "9. Governing Law",
+                    content: [
+                        "These Terms are governed by the laws of Quebec and Canada."
+                    ]
+                },
+                {
+                    title: "10. Contact Information",
+                    content: [
+                        "Effitaxes",
+                        "Website: [https://effitaxes.com](https://effitaxes.com)",
+                        "Email: [youssef@effitaxes.com](mailto:youssef@effitaxes.com)"
+                    ]
+                }
+            ]
+        },
+        consent: {
+            text: "We use cookies to ensure the proper functioning of the site and to analyze our traffic.",
+            accept: "Accept",
+            decline: "Decline",
+            learnMore: "Learn more",
         }
     },
 };
