@@ -25,8 +25,9 @@ export const StepIncomeSelection = ({ t }: { t: Dictionary }) => {
                     <FormCheckbox label={t.enrollment.selection.employee} name="incomeSources" value="employee" />
 
                     {isEmployee && (
-                        <div className="ml-8 border-l-2 border-gray-200 pl-4 py-2 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-gray-700">
+                        <div className="ml-8 border-l-2 border-gray-200 pl-4 py-2 space-y-2 animate-in fade-in slide-in-from-top-2 duration-300 dark:border-gray-700">
                             <FormCheckbox label={t.enrollment.selection.workFromHome} name="incomeSources" value="workFromHome" />
+                            <FormCheckbox label={t.enrollment.selection.carExpenses} name="incomeSources" value="employeeCarExpenses" />
                         </div>
                     )}
                 </div>

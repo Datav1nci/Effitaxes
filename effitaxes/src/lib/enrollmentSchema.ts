@@ -169,7 +169,7 @@ export const createEnrollmentSchema = (t: T) => {
             }
         }
 
-        if (data.incomeSources.includes("carExpenses") || data.incomeSources.includes("studentCarExpenses") || data.incomeSources.includes("selfEmployedCarExpenses")) {
+        if (data.incomeSources.includes("carExpenses") || data.incomeSources.includes("studentCarExpenses") || data.incomeSources.includes("selfEmployedCarExpenses") || data.incomeSources.includes("employeeCarExpenses")) {
             if (!data.car) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
