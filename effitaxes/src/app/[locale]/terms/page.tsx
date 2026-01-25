@@ -44,7 +44,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
                                     <div key={pIndex}>
                                         <ReactMarkdown
                                             components={{
-                                                a: ({ node, ...props }) => <a {...props} className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 underline" />
+                                                a: ({ ...props }) => <a {...props} className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 underline" />
                                             }}
                                         >
                                             {paragraph}

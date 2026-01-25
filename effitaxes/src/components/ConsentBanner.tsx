@@ -6,7 +6,7 @@ import Link from "next/link";
 import { X } from "lucide-react";
 
 export default function ConsentBanner() {
-    const { t, language } = useLanguage();
+    const { t } = useLanguage();
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
