@@ -2,6 +2,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import EnrollmentWizard from "@/components/enrollment/EnrollmentWizard";
+import TaxProfileView from "@/components/dashboard/TaxProfileView";
 import { dictionary } from "@/lib/dictionary";
 import type { Language } from "@/lib/dictionary";
 
@@ -26,6 +27,8 @@ export default async function TaxProfilePage(props: {
         .eq("id", user.id)
         .single();
 
+    const isEnrollmentCompleted = profile?.enrollment_status === "completed" || (profile?.tax_data && Object.keys(profile.tax_data).length > 0);
+
     return (
         <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -33,7 +36,12 @@ export default async function TaxProfilePage(props: {
                     &larr; {t.auth.backDashboard}
                 </a>
             </div>
-            <EnrollmentWizard user={user} profile={profile} />
+
+            {isEnrollmentCompleted ? (
+                <TaxProfileView profile={profile} t={t} />
+            ) : (
+                <EnrollmentWizard user={user} profile={profile} />
+            )}
         </div>
     );
 }
