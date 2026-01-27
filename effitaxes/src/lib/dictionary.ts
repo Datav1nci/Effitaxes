@@ -71,6 +71,9 @@ export const dictionary = {
         common: {
             yes: "Oui",
             no: "Non",
+            edit: "Modifier",
+            missingInfo: "Informations manquantes. Veuillez cliquer sur Modifier pour compléter cette section.",
+            editSection: "Modification :",
         },
         auth: {
             signIn: "Se connecter",
@@ -541,6 +544,9 @@ export const dictionary = {
         common: {
             yes: "Yes",
             no: "No",
+            edit: "Edit",
+            missingInfo: "Information missing. Please click Edit to complete this section.",
+            editSection: "Editing:",
         },
         auth: {
             signIn: "Sign In",
