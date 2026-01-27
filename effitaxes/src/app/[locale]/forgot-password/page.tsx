@@ -21,16 +21,25 @@ export default async function ForgotPasswordPage(props: {
                     <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
                         {t.auth.forgotPassword}
                     </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-                        {t.auth.enterEmailReset}
-                    </p>
+                    {!success && (
+                        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                            {t.auth.enterEmailReset}
+                        </p>
+                    )}
                 </div>
 
                 {success && (
-                    <div className="rounded-md bg-green-50 p-4 border border-green-200 dark:bg-green-900/20 dark:border-green-800">
-                        <p className="text-sm font-medium text-green-800 dark:text-green-200 text-center">
-                            {t.auth.checkEmail}
-                        </p>
+                    <div className="space-y-6">
+                        <div className="rounded-md bg-green-50 p-4 border border-green-200 dark:bg-green-900/20 dark:border-green-800">
+                            <p className="text-sm font-medium text-green-800 dark:text-green-200 text-center">
+                                {t.auth.checkEmail}
+                            </p>
+                        </div>
+                        <div className="text-center">
+                            <a href={`/${locale}/login`} className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
+                                {t.auth.backToSignIn}
+                            </a>
+                        </div>
                     </div>
                 )}
 
