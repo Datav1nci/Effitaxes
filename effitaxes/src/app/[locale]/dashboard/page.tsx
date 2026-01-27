@@ -6,6 +6,7 @@ import { signOut } from "@/actions/auth";
 import { dictionary } from "@/lib/dictionary";
 import type { Language } from "@/lib/dictionary";
 import ProfileForm from "@/components/dashboard/ProfileForm";
+import TaxProfileView from "@/components/dashboard/TaxProfileView";
 
 export default async function DashboardPage(props: {
     params: Promise<{ locale: string }>;
@@ -39,13 +40,8 @@ export default async function DashboardPage(props: {
 
             <ProfileForm user={user} profile={profile} />
 
-            <div className="mt-8">
-                <a
-                    href={`/${locale}/dashboard/tax-profile`}
-                    className="block w-full max-w-lg mx-auto text-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                >
-                    {t.auth.updateTaxProfile}
-                </a>
+            <div className="mt-8 w-full">
+                <TaxProfileView profile={profile} t={t} />
             </div>
 
             <form action={signOut} className="mt-8">

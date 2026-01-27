@@ -158,11 +158,12 @@ export async function signOut() {
 
 export async function forgotPassword(formData: FormData) {
     const email = formData.get("email") as string;
+    const locale = (formData.get("locale") as string) || "fr";
     const supabase = await createClient();
     const origin = (await headers()).get("origin");
 
     if (!email) {
-        return redirect("/forgot-password?message=Email is required");
+        return redirect(`/${locale}/forgot-password?message=Email is required`);
     }
 
     // Unlock account if locked (Reset flow implicitly unlocks by proving ownership via email)
@@ -175,16 +176,16 @@ export async function forgotPassword(formData: FormData) {
     // They need to click the link.
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${origin}/auth/callback?next=/reset-password`,
+        redirectTo: `${origin}/auth/callback?next=/${locale}/reset-password`,
     });
 
     if (error) {
         console.error("Forgot Password Error:", error);
         // Don't reveal if user exists or not for security, but Supabase might error.
-        return redirect("/forgot-password?message=Could not send reset link. Try again.");
+        return redirect(`/${locale}/forgot-password?message=Could not send reset link. Try again.`);
     }
 
-    return redirect("/forgot-password?success=true");
+    return redirect(`/${locale}/forgot-password?success=true`);
 }
 
 export async function resetPassword(formData: FormData) {
