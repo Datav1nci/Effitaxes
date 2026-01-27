@@ -135,12 +135,24 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
 
     const incomeSources = (data.incomeSources as string[]) || [];
 
-    // Helper to check if a section has data (naive check)
+    // Helper to check if a section has data
     const hasData = (obj: Record<string, unknown> | undefined | null) => obj && Object.keys(obj).length > 0;
+
+    const FieldRow = ({ label, value }: { label: string, value: string | number | boolean | undefined | null }) => {
+        if (value === undefined || value === null || value === "") return null;
+        let displayValue = value;
+        if (typeof value === "boolean") displayValue = value ? t.common.yes : t.common.no;
+        return (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-1 border-b border-gray-100 dark:border-gray-700 last:border-0">
+                <span className="font-medium text-gray-500 dark:text-gray-400">{label}</span>
+                <span className="sm:col-span-2 text-gray-900 dark:text-gray-100 break-words">{String(displayValue)}</span>
+            </div>
+        );
+    };
 
     return (
         <div className="max-w-4xl mx-auto py-8 px-4">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Your Tax Profile</h2>
+            <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{t.auth.yourProfile}</h2>
 
             {/* Personal Section */}
             {isEditing === 'personal' ? (
@@ -156,12 +168,27 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                 />
             ) : (
                 <Section title={t.enrollment.steps.personal} onEdit={() => setIsEditing('personal')} isEmpty={!hasData(data.personal)}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                        <div><span className="text-gray-500">First Name:</span> {data.personal?.firstName}</div>
-                        <div><span className="text-gray-500">Last Name:</span> {data.personal?.lastName}</div>
-                        <div><span className="text-gray-500">Email:</span> {data.personal?.email}</div>
-                        <div><span className="text-gray-500">Phone:</span> {data.personal?.phone}</div>
-                        <div className="col-span-1 sm:col-span-2"><span className="text-gray-500">Address:</span> {data.personal?.addressNumber} {data.personal?.addressName}, {data.personal?.addressCity}</div>
+                    <div className="space-y-1">
+                        <FieldRow label={t.enrollment.personal.firstName} value={data.personal?.firstName} />
+                        <FieldRow label={t.enrollment.personal.lastName} value={data.personal?.lastName} />
+                        <FieldRow label={t.enrollment.personal.email} value={data.personal?.email} />
+                        <FieldRow label={t.enrollment.personal.phone} value={data.personal?.phone} />
+                        <FieldRow label={t.enrollment.personal.dob} value={data.personal?.dob} />
+                        <FieldRow label={t.enrollment.personal.maritalStatus} value={data.personal?.maritalStatus ? t.enrollment.personal.maritalStatusOptions[data.personal?.maritalStatus as keyof typeof t.enrollment.personal.maritalStatusOptions] : ""} />
+                        <FieldRow label={t.enrollment.personal.maritalChangeDate} value={data.personal?.maritalChangeDate} />
+                        <FieldRow label={t.enrollment.personal.province} value={data.personal?.province} />
+                        <FieldRow label={t.enrollment.personal.ownerTenant} value={data.personal?.ownerTenant === "owner" ? t.enrollment.personal.ownerTenantOptions.owner : (data.personal?.ownerTenant === "tenant" ? t.enrollment.personal.ownerTenantOptions.tenant : "")} />
+                        <FieldRow label={t.enrollment.personal.soldBuyHouse} value={data.personal?.soldBuyHouse} />
+                        <FieldRow label={t.enrollment.personal.incomeSource} value={data.personal?.incomeSource} />
+                        <FieldRow label={t.enrollment.personal.privateDrugInsurance} value={data.personal?.privateDrugInsurance === "yes" ? t.common.yes : (data.personal?.privateDrugInsurance === "no" ? t.common.no : "")} />
+                        <FieldRow label={t.enrollment.personal.insuranceMonths} value={data.personal?.insuranceMonths} />
+                        <FieldRow label={t.enrollment.personal.additionalInfo} value={data.personal?.additionalInfo} />
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 py-1 border-b border-gray-100 dark:border-gray-700 last:border-0">
+                            <span className="font-medium text-gray-500 dark:text-gray-400">{t.contact.address}</span>
+                            <span className="sm:col-span-2 text-gray-900 dark:text-gray-100">
+                                {data.personal?.addressNumber} {data.personal?.addressName}, {data.personal?.addressApp ? `#${data.personal.addressApp}, ` : ""}{data.personal?.addressCity}
+                            </span>
+                        </div>
                     </div>
                 </Section>
             )}
@@ -190,10 +217,8 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                 </Section>
             )}
 
-            {/* Conditional Sections */}
-
             {/* Self Employed */}
-            {incomeSources.includes("selfEmployed") && (
+            {(incomeSources.includes("selfEmployed") || hasData(data.selfEmployed)) && (
                 isEditing === 'selfEmployed' ? (
                     <SectionEditor
                         title={t.enrollment.steps.selfEmployed}
@@ -207,16 +232,29 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                     />
                 ) : (
                     <Section title={t.enrollment.steps.selfEmployed} onEdit={() => setIsEditing('selfEmployed')} isEmpty={!hasData(data.selfEmployed)}>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                            <div><span className="text-gray-500">Business Name:</span> {data.selfEmployed?.businessName}</div>
-                            <div><span className="text-gray-500">GST/HST:</span> {data.selfEmployed?.gstHstNumber || "N/A"}</div>
+                        <div className="space-y-1">
+                            <h4 className="font-semibold mt-2 mb-1 border-b pb-1 dark:border-gray-700">General</h4>
+                            <FieldRow label={t.enrollment.selfEmployed.businessName} value={data.selfEmployed?.businessName} />
+                            <FieldRow label={t.enrollment.selfEmployed.businessPhone} value={data.selfEmployed?.businessPhone} />
+                            <FieldRow label="GST/HST" value={data.selfEmployed?.gstHstNumber} />
+                            <FieldRow label={t.enrollment.selfEmployed.creationDate} value={data.selfEmployed?.creationDate} />
+                            <FieldRow label={t.enrollment.selfEmployed.isActive} value={data.selfEmployed?.isActive === "yes" ? t.common.yes : t.common.no} />
+                            <FieldRow label={t.enrollment.selfEmployed.productType} value={data.selfEmployed?.productType} />
+                            <FieldRow label={t.enrollment.selfEmployed.grossIncome} value={data.selfEmployed?.grossIncome} />
+
+                            <h4 className="font-semibold mt-4 mb-1 border-b pb-1 dark:border-gray-700">{t.enrollment.selfEmployed.expenses.title}</h4>
+                            {data.selfEmployed?.expenses && Object.entries(data.selfEmployed.expenses).map(([key, value]) => {
+                                const labelKey = key as keyof typeof t.enrollment.selfEmployed.expenses;
+                                const label = t.enrollment.selfEmployed.expenses[labelKey] || key;
+                                return <FieldRow key={key} label={label} value={value as string | number} />;
+                            })}
                         </div>
                     </Section>
                 )
             )}
 
             {/* Car Expenses */}
-            {(incomeSources.includes("carExpenses") || incomeSources.includes("studentCarExpenses") || incomeSources.includes("selfEmployedCarExpenses") || incomeSources.includes("employeeCarExpenses") || data.car) && (
+            {(incomeSources.includes("carExpenses") || incomeSources.includes("studentCarExpenses") || incomeSources.includes("selfEmployedCarExpenses") || incomeSources.includes("employeeCarExpenses") || hasData(data.car)) && (
                 isEditing === 'car' ? (
                     <SectionEditor
                         title={t.enrollment.steps.car}
@@ -230,16 +268,25 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                     />
                 ) : (
                     <Section title={t.enrollment.steps.car} onEdit={() => setIsEditing('car')} isEmpty={!hasData(data.car)}>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                            <div><span className="text-gray-500">Make/Model:</span> {data.car?.makeModel}</div>
-                            <div><span className="text-gray-500">Total KM:</span> {data.car?.totalKm}</div>
+                        <div className="space-y-1">
+                            <FieldRow label={t.enrollment.car.makeModel} value={data.car?.makeModel} />
+                            <FieldRow label={t.enrollment.car.businessKm} value={data.car?.businessKm} />
+                            <FieldRow label={t.enrollment.car.totalKm} value={data.car?.totalKm} />
+                            <FieldRow label={t.enrollment.car.gas} value={data.car?.gas} />
+                            <FieldRow label={t.enrollment.car.insurance} value={data.car?.insurance} />
+                            <FieldRow label={t.enrollment.car.license} value={data.car?.license} />
+                            <FieldRow label={t.enrollment.car.maintenance} value={data.car?.maintenance} />
+                            <FieldRow label={t.enrollment.car.purchaseLeaseDate} value={data.car?.purchaseLeaseDate} />
+                            <FieldRow label={t.enrollment.car.leaseEndDate} value={data.car?.leaseEndDate} />
+                            <FieldRow label={t.enrollment.car.leasePayments} value={data.car?.leasePayments} />
+                            <FieldRow label={t.enrollment.car.notes} value={data.car?.notes} />
                         </div>
                     </Section>
                 )
             )}
 
             {/* Rental */}
-            {incomeSources.includes("rental") && (
+            {(incomeSources.includes("rental") || hasData(data.rental)) && (
                 isEditing === 'rental' ? (
                     <SectionEditor
                         title={t.enrollment.steps.rental}
@@ -253,16 +300,24 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                     />
                 ) : (
                     <Section title={t.enrollment.steps.rental} onEdit={() => setIsEditing('rental')} isEmpty={!hasData(data.rental)}>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                            <div><span className="text-gray-500">Address:</span> {data.rental?.address}</div>
-                            <div><span className="text-gray-500">Gross Income:</span> {data.rental?.grossIncome}</div>
+                        <div className="space-y-1">
+                            <FieldRow label={t.enrollment.rental.address} value={data.rental?.address} />
+                            <FieldRow label={t.enrollment.rental.grossIncome} value={data.rental?.grossIncome} />
+                            <FieldRow label={t.enrollment.rental.ownershipPercentage} value={data.rental?.ownershipPercentage} />
+
+                            <h4 className="font-semibold mt-4 mb-1 border-b pb-1 dark:border-gray-700">Expenses</h4>
+                            {data.rental?.expenses && Object.entries(data.rental.expenses).map(([key, value]) => {
+                                const labelKey = key as keyof typeof t.enrollment.rental.expenses;
+                                const label = t.enrollment.rental.expenses[labelKey] || key;
+                                return <FieldRow key={key} label={label} value={value as string | number} />;
+                            })}
                         </div>
                     </Section>
                 )
             )}
 
             {/* Work From Home */}
-            {incomeSources.includes("workFromHome") && (
+            {(incomeSources.includes("workFromHome") || hasData(data.workFromHome)) && (
                 isEditing === 'workFromHome' ? (
                     <SectionEditor
                         title={t.enrollment.workFromHome.title}
@@ -276,8 +331,29 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                     />
                 ) : (
                     <Section title={t.enrollment.workFromHome.title} onEdit={() => setIsEditing('workFromHome')} isEmpty={!hasData(data.workFromHome)}>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                            <div><span className="text-gray-500">Method:</span> {data.workFromHome?.method}</div>
+                        <div className="space-y-1">
+                            <FieldRow label="Method" value={data.workFromHome?.method} />
+
+                            <h4 className="font-semibold mt-4 mb-1 border-b pb-1 dark:border-gray-700">{t.enrollment.workFromHome.utilities.title}</h4>
+                            {data.workFromHome?.utilities && Object.entries(data.workFromHome.utilities).map(([key, value]) => {
+                                const labelKey = key as keyof typeof t.enrollment.workFromHome.utilities;
+                                const label = t.enrollment.workFromHome.utilities[labelKey] || key;
+                                return <FieldRow key={key} label={label} value={value as string | number} />;
+                            })}
+
+                            <h4 className="font-semibold mt-4 mb-1 border-b pb-1 dark:border-gray-700">{t.enrollment.workFromHome.maintenance.title}</h4>
+                            {data.workFromHome?.maintenance && Object.entries(data.workFromHome.maintenance).map(([key, value]) => {
+                                const labelKey = key as keyof typeof t.enrollment.workFromHome.maintenance;
+                                const label = t.enrollment.workFromHome.maintenance[labelKey] || key;
+                                return <FieldRow key={key} label={label} value={value as string | number} />;
+                            })}
+
+                            <h4 className="font-semibold mt-4 mb-1 border-b pb-1 dark:border-gray-700">{t.enrollment.workFromHome.communication.title}</h4>
+                            {data.workFromHome?.communication && Object.entries(data.workFromHome.communication).map(([key, value]) => {
+                                const labelKey = key as keyof typeof t.enrollment.workFromHome.communication;
+                                const label = t.enrollment.workFromHome.communication[labelKey] || key;
+                                return <FieldRow key={key} label={label} value={value as string | number} />;
+                            })}
                         </div>
                     </Section>
                 )

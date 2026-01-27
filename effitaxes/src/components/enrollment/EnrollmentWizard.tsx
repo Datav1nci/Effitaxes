@@ -198,16 +198,24 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
     const [isSubmitted, setIsSubmitted] = useState(false);
     const confirmed = watch("confirmed");
 
-    const onSubmit: SubmitHandler<EnrollmentFormData> = async (data) => {
-        const result = await submitEnrollment(data);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
-        if (result.success) {
-            localStorage.removeItem("enrollment_draft");
-            setIsSubmitted(true);
-            window.scrollTo(0, 0);
-        } else {
-            console.error(result.error);
-            // In a real app we'd set a general error state here
+    const onSubmit: SubmitHandler<EnrollmentFormData> = async (data) => {
+        setSubmitError(null);
+        try {
+            const result = await submitEnrollment(data);
+
+            if (result.success) {
+                localStorage.removeItem("enrollment_draft");
+                setIsSubmitted(true);
+                window.scrollTo(0, 0);
+            } else {
+                console.error(result.error);
+                setSubmitError(result.error || t.auth.errorUpdate);
+            }
+        } catch (e) {
+            console.error(e);
+            setSubmitError(t.auth.errorUpdate);
         }
     };
 
@@ -308,6 +316,11 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
                             )
                         )}
                     </div>
+                    {submitError && (
+                        <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm text-center">
+                            {submitError}
+                        </div>
+                    )}
                 </form>
             </div>
         </FormProvider>
