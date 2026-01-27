@@ -44,7 +44,8 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
     const schema = useMemo(() => createEnrollmentSchema(t), [t]);
 
     const methods = useForm<EnrollmentFormData>({
-        resolver: zodResolver(schema),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        resolver: zodResolver(schema) as any,
         mode: "onChange",
         defaultValues: {
             incomeSources: profile?.tax_data?.incomeSources || [],
