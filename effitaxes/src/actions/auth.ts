@@ -62,7 +62,7 @@ export async function login(formData: FormData) {
                 .single();
 
             const currentCount = (attempt?.count || 0) + 1;
-            const updateData: any = {
+            const updateData: { email: string; count: number; last_attempt: string; locked_until?: string } = {
                 email,
                 count: currentCount,
                 last_attempt: new Date().toISOString(),
@@ -159,7 +159,6 @@ export async function signOut() {
 export async function forgotPassword(formData: FormData) {
     const email = formData.get("email") as string;
     const supabase = await createClient();
-    const adminSupabase = getAdminClient();
     const origin = (await headers()).get("origin");
 
     if (!email) {

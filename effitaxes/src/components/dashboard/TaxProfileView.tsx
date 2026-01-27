@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createEnrollmentSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
+import { ZodSchema } from "zod";
 import { Dictionary } from "@/lib/dictionary";
 import { updateTaxData } from "@/actions/updateTaxData";
 import { StepPersonal } from "@/components/enrollment/StepPersonal";
@@ -15,8 +16,7 @@ import { StepWorkFromHome } from "@/components/enrollment/StepWorkFromHome";
 import { useRouter } from "next/navigation";
 
 type TaxProfileViewProps = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    profile: any;
+    profile: { tax_data: EnrollmentFormData };
     t: Dictionary;
 };
 
@@ -41,6 +41,17 @@ const Section = ({ title, children, onEdit, isEmpty = false }: { title: string; 
     </div>
 );
 
+interface SectionEditorProps {
+    title: string;
+    component: React.ComponentType<{ t: Dictionary }>;
+    defaultValues: Partial<EnrollmentFormData>;
+    t: Dictionary;
+    onCancel: () => void;
+    onSave: (data: EnrollmentFormData) => Promise<void>;
+    schema: ZodSchema;
+    fieldNames: string[] | string;
+}
+
 const SectionEditor = ({
     title,
     component: Component,
@@ -50,16 +61,7 @@ const SectionEditor = ({
     onSave,
     schema,
     fieldNames
-}: {
-    title: string;
-    component: React.ComponentType<any>;
-    defaultValues: any;
-    t: Dictionary;
-    onCancel: () => void;
-    onSave: (data: any) => Promise<void>;
-    schema: any;
-    fieldNames: string[] | string;
-}) => {
+}: SectionEditorProps) => {
     const methods = useForm<EnrollmentFormData>({
         resolver: zodResolver(schema),
         defaultValues: defaultValues,
@@ -119,7 +121,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
 
     const schema = createEnrollmentSchema(t);
 
-    const handleSave = async (newData: any) => {
+    const handleSave = async (newData: EnrollmentFormData) => {
         const result = await updateTaxData(newData);
         if (result.success) {
             setData(newData);
@@ -130,10 +132,10 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
         }
     };
 
-    const incomeSources = data.incomeSources || [];
+    const incomeSources = (data.incomeSources as string[]) || [];
 
     // Helper to check if a section has data (naive check)
-    const hasData = (obj: any) => obj && Object.keys(obj).length > 0;
+    const hasData = (obj: Record<string, unknown> | undefined | null) => obj && Object.keys(obj).length > 0;
 
     return (
         <div className="max-w-4xl mx-auto py-8 px-4">
