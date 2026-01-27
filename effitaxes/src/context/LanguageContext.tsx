@@ -24,20 +24,29 @@ export function LanguageProvider({ children, initialLocale = "fr" }: { children:
     const router = useRouter();
 
     const toggleLanguage = () => {
-        const newLang = language === "fr" ? "en" : "fr";
-        // setLanguage(newLang); // Let navigation update it via useEffect
-        // localStorage.setItem("language", newLang); // Optional, maybe middleware handles default?
-
-        // Redirect: Replace current locale in path
-        // pathname is like "/fr/about" or "/fr"
+        // Derive current language strictly from the URL to handle any state desync
         const segments = pathname.split('/');
         // segments[0] is empty, segments[1] is locale
-        if (segments[1] === 'fr' || segments[1] === 'en') {
+        const currentUrlLocale = segments[1];
+
+        let newLang: Language;
+
+        // If the URL starts with 'en' or 'fr', switch to the other one
+        if (currentUrlLocale === 'fr') {
+            newLang = 'en';
+        } else if (currentUrlLocale === 'en') {
+            newLang = 'fr';
+        } else {
+            // Default fallback if no locale in path (e.g. root), toggle based on current state or default to 'fr' -> 'en'
+            newLang = language === 'fr' ? 'en' : 'fr';
+        }
+
+        if (currentUrlLocale === 'fr' || currentUrlLocale === 'en') {
             segments[1] = newLang;
             const newPath = segments.join('/');
             router.push(newPath);
         } else {
-            // Fallback if no locale in path (should not happen with middleware)
+            // Fallback: prepend new locale to current path
             router.push(`/${newLang}${pathname}`);
         }
     };
