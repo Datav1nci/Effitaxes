@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createEnrollmentSchema, createDashboardSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
+import { createDashboardSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
 import { ZodType } from "zod";
 import { Dictionary } from "@/lib/dictionary";
 import { updateTaxData } from "@/actions/updateTaxData";

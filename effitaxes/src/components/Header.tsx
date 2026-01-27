@@ -50,7 +50,7 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [initialUser]);
 
   const links = [
     { href: `/${language}/#hero`, label: t.nav.home },
