@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createEnrollmentSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
-import { ZodSchema } from "zod";
+import { ZodSchema, ZodType } from "zod";
 import { Dictionary } from "@/lib/dictionary";
 import { updateTaxData } from "@/actions/updateTaxData";
 import { StepPersonal } from "@/components/enrollment/StepPersonal";
@@ -48,7 +48,7 @@ interface SectionEditorProps {
     t: Dictionary;
     onCancel: () => void;
     onSave: (data: EnrollmentFormData) => Promise<void>;
-    schema: ZodSchema;
+    schema: ZodType<any, any, any>;
     fieldNames: string[] | string;
 }
 

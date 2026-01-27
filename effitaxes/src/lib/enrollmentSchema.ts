@@ -38,6 +38,7 @@ export const createEnrollmentSchema = (t: T) => {
     const selfEmployedSchema = z.object({
         businessName: z.string().min(1, t.enrollment.errors.required),
         businessPhone: z.string().optional(),
+        gstHstNumber: z.string().optional(),
         creationDate: z.string().optional(),
         isActive: z.enum(["yes", "no"]),
         productType: z.string().min(1, t.enrollment.errors.required),
@@ -58,18 +59,9 @@ export const createEnrollmentSchema = (t: T) => {
             other: z.coerce.number().optional(),
             otherDescription: z.string().optional(),
         }),
-        homeOffice: z.object({
-            totalArea: z.coerce.number().optional(),
-            businessArea: z.coerce.number().optional(),
-            electricity: z.coerce.number().optional(),
-            heating: z.coerce.number().optional(),
-            insurance: z.coerce.number().optional(),
-            maintenance: z.coerce.number().optional(),
-            mortgageInterest: z.coerce.number().optional(),
-            propertyTaxes: z.coerce.number().optional(),
-            other: z.coerce.number().optional(),
-        }).optional(),
     });
+
+
 
     // ... (keeping carSchema and rentalSchema separate for clarity in diff if needed, but I must match exact target content)
     // I will just replace the top part and end part separately or ensure the middle matches.
@@ -116,6 +108,7 @@ export const createEnrollmentSchema = (t: T) => {
     });
 
     const workFromHomeSchema = z.object({
+        method: z.enum(["detailed", "flatRate"]).optional(),
         utilities: z.object({
             electricity: z.coerce.number().optional(),
             heating: z.coerce.number().optional(),
@@ -201,4 +194,4 @@ export const createEnrollmentSchema = (t: T) => {
     });
 };
 
-export type EnrollmentFormData = z.input<ReturnType<typeof createEnrollmentSchema>>;
+export type EnrollmentFormData = z.infer<ReturnType<typeof createEnrollmentSchema>>;
