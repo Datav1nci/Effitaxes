@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { createClient } from "@/utils/supabase/server";
 
 import JsonLd from "@/components/JsonLd";
 import { dictionary } from "@/lib/dictionary";
@@ -48,6 +49,8 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   return (
     <html lang={locale} suppressHydrationWarning className={`${inter.variable} scroll-smooth`}>
@@ -55,7 +58,7 @@ export default async function RootLayout({
         <JsonLd locale={locale} />
         <ThemeProvider>
           <LanguageProvider initialLocale={locale === 'en' ? 'en' : 'fr'}>
-            <Header />
+            <Header initialUser={user} />
             <main className="mx-auto max-w-7xl px-4">{children}</main>
             <Footer />
             <ConsentBanner />

@@ -19,11 +19,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function Header() {
+export default function Header({ initialUser }: { initialUser?: User | null }) {
   const { t, language, toggleLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(initialUser || null);
 
   const { theme, setTheme, resolvedTheme } = useTheme();
   // const isDark = resolvedTheme === "dark";
@@ -32,10 +32,12 @@ export default function Header() {
     setMounted(true);
     const supabase = createClient();
 
-    // Initial fetch
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
+    // If initialUser was not provided, or to ensure we are up to date client-side
+    if (!initialUser) {
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        setUser(user);
+      });
+    }
 
     // Listen for changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {

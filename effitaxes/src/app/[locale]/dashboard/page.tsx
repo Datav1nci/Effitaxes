@@ -34,9 +34,9 @@ export default async function DashboardPage(props: {
 
     return (
         <div className="flex flex-col items-center justify-center p-24">
-            <p className="text-xl mb-4">
+            <h1 className="text-3xl font-bold mb-8 text-center">
                 {t.auth.welcome} {profile?.first_name ? profile.first_name : user.email}!
-            </p>
+            </h1>
 
             <ProfileForm user={user} profile={profile} />
 

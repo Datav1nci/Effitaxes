@@ -20,7 +20,7 @@ type TaxProfileViewProps = {
     t: Dictionary;
 };
 
-const Section = ({ title, children, onEdit, isEmpty = false }: { title: string; children: React.ReactNode; onEdit: () => void, isEmpty?: boolean }) => (
+const Section = ({ title, children, onEdit, isEmpty = false, t }: { title: string; children: React.ReactNode; onEdit: () => void, isEmpty?: boolean, t: Dictionary }) => (
     <div className={`bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6 border ${isEmpty ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-700'}`}>
         <div className="flex justify-between items-center mb-4 border-b pb-2">
             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{title}</h3>
@@ -28,12 +28,12 @@ const Section = ({ title, children, onEdit, isEmpty = false }: { title: string; 
                 onClick={onEdit}
                 className="text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium"
             >
-                Edit
+                {t.common.edit}
             </button>
         </div>
         <div>
             {isEmpty ? (
-                <div className="text-amber-600 dark:text-amber-400 font-medium">Information missing. Please click Edit to complete this section.</div>
+                <div className="text-amber-600 dark:text-amber-400 font-medium">{t.common.missingInfo}</div>
             ) : (
                 children
             )}
@@ -88,7 +88,7 @@ const SectionEditor = ({
     return (
         <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6 border border-blue-200 dark:border-blue-900 ring-2 ring-blue-500 ring-opacity-50">
             <div className="border-b pb-4 mb-4">
-                <h3 className="text-xl font-medium text-gray-900 dark:text-white">Editing: {title}</h3>
+                <h3 className="text-xl font-medium text-gray-900 dark:text-white">{t.common.editSection} {title}</h3>
             </div>
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -167,7 +167,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                     fieldNames={['personal']}
                 />
             ) : (
-                <Section title={t.enrollment.steps.personal} onEdit={() => setIsEditing('personal')} isEmpty={!hasData(data.personal)}>
+                <Section title={t.enrollment.steps.personal} onEdit={() => setIsEditing('personal')} isEmpty={!hasData(data.personal)} t={t}>
                     <div className="space-y-1">
                         <FieldRow label={t.enrollment.personal.firstName} value={data.personal?.firstName} />
                         <FieldRow label={t.enrollment.personal.lastName} value={data.personal?.lastName} />
@@ -206,7 +206,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                     fieldNames={['incomeSources']}
                 />
             ) : (
-                <Section title={t.enrollment.steps.selection} onEdit={() => setIsEditing('selection')} isEmpty={!incomeSources.length}>
+                <Section title={t.enrollment.steps.selection} onEdit={() => setIsEditing('selection')} isEmpty={!incomeSources.length} t={t}>
                     <div className="flex flex-wrap gap-2">
                         {incomeSources.map((source: string) => (
                             <span key={source} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
@@ -231,7 +231,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         fieldNames={['selfEmployed']}
                     />
                 ) : (
-                    <Section title={t.enrollment.steps.selfEmployed} onEdit={() => setIsEditing('selfEmployed')} isEmpty={!hasData(data.selfEmployed)}>
+                    <Section title={t.enrollment.steps.selfEmployed} onEdit={() => setIsEditing('selfEmployed')} isEmpty={!hasData(data.selfEmployed)} t={t}>
                         <div className="space-y-1">
                             <h4 className="font-semibold mt-2 mb-1 border-b pb-1 dark:border-gray-700">General</h4>
                             <FieldRow label={t.enrollment.selfEmployed.businessName} value={data.selfEmployed?.businessName} />
@@ -267,7 +267,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         fieldNames={['car']}
                     />
                 ) : (
-                    <Section title={t.enrollment.steps.car} onEdit={() => setIsEditing('car')} isEmpty={!hasData(data.car)}>
+                    <Section title={t.enrollment.steps.car} onEdit={() => setIsEditing('car')} isEmpty={!hasData(data.car)} t={t}>
                         <div className="space-y-1">
                             <FieldRow label={t.enrollment.car.makeModel} value={data.car?.makeModel} />
                             <FieldRow label={t.enrollment.car.businessKm} value={data.car?.businessKm} />
@@ -299,7 +299,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         fieldNames={['rental']}
                     />
                 ) : (
-                    <Section title={t.enrollment.steps.rental} onEdit={() => setIsEditing('rental')} isEmpty={!hasData(data.rental)}>
+                    <Section title={t.enrollment.steps.rental} onEdit={() => setIsEditing('rental')} isEmpty={!hasData(data.rental)} t={t}>
                         <div className="space-y-1">
                             <FieldRow label={t.enrollment.rental.address} value={data.rental?.address} />
                             <FieldRow label={t.enrollment.rental.grossIncome} value={data.rental?.grossIncome} />
@@ -330,7 +330,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         fieldNames={['workFromHome']}
                     />
                 ) : (
-                    <Section title={t.enrollment.workFromHome.title} onEdit={() => setIsEditing('workFromHome')} isEmpty={!hasData(data.workFromHome)}>
+                    <Section title={t.enrollment.workFromHome.title} onEdit={() => setIsEditing('workFromHome')} isEmpty={!hasData(data.workFromHome)} t={t}>
                         <div className="space-y-1">
                             <FieldRow label="Method" value={data.workFromHome?.method} />
 
