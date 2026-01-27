@@ -128,7 +128,7 @@ export const createEnrollmentSchema = (t: T) => {
     });
 
     // Base Schema linking everything
-    return z.object({
+    const baseSchema = z.object({
         personal: personalSchema,
         incomeSources: z.array(z.string()).default([]), // ["employee", "selfEmployed", ...]
 
@@ -138,7 +138,9 @@ export const createEnrollmentSchema = (t: T) => {
         rental: rentalSchema.optional(),
         workFromHome: workFromHomeSchema.optional(),
         confirmed: z.boolean().default(false),
-    }).superRefine((data, ctx) => {
+    });
+
+    return baseSchema.superRefine((data, ctx) => {
         // Conditional Validation Logic
 
         // 1. If Self-Employed selected, validate selfEmployed section
@@ -193,5 +195,19 @@ export const createEnrollmentSchema = (t: T) => {
         }
     });
 };
+
+export const createDashboardSchema = (t: T) => {
+    // Re-use logic or duplicate lightly to avoid complexity?
+    // The previous function scoped all sub-schemas locally.
+    // I should refactor to expose the base object or just duplicate the object definition for safety/speed.
+    // Since I cannot easily extract the sub-schemas without major refactor (they are consts inside `createEnrollmentSchema`),
+    // I will use a trick: `createEnrollmentSchema` returns a ZodEffect (superRefine).
+    // I can't easily unwrap it.
+    // I will refactor the structure slightly to return both or allow a flag.
+    return createEnrollmentSchema(t, true);
+};
+
+// I need to change signature of createEnrollmentSchema to accept a flag
+
 
 export type EnrollmentFormData = z.infer<ReturnType<typeof createEnrollmentSchema>>;

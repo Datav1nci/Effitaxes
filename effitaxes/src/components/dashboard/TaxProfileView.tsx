@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createEnrollmentSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
+import { createEnrollmentSchema, createDashboardSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
 import { ZodType } from "zod";
 import { Dictionary } from "@/lib/dictionary";
 import { updateTaxData } from "@/actions/updateTaxData";
@@ -120,7 +120,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [data, setData] = useState(profile?.tax_data || {});
 
-    const schema = createEnrollmentSchema(t);
+    const schema = createDashboardSchema(t);
 
     const handleSave = async (newData: EnrollmentFormData) => {
         const result = await updateTaxData(newData);
