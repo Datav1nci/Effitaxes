@@ -35,6 +35,19 @@ begin
 end;
 $$ language plpgsql security definer;
 
-create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- Create a table for tracking login attempts
+create table login_attempts (
+  email text primary key,
+  count int default 0,
+  last_attempt timestamp with time zone default now(),
+  locked_until timestamp with time zone
+);
+
+alter table login_attempts enable row level security;
+
+-- Only service role (server actions) should access this
+create policy "Service role can do all on login_attempts" on login_attempts
+  for all using (true) with check (true);

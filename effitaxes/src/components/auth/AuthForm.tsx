@@ -7,7 +7,7 @@ import { SignInButtons } from "@/components/auth/SignInButtons";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function AuthForm() {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [isLogin, setIsLogin] = useState(true);
 
     return (
@@ -105,6 +105,18 @@ export default function AuthForm() {
                     </div>
                 </div>
 
+                {
+                    isLogin && (
+                        <div className="flex items-center justify-end">
+                            <div className="text-sm">
+                                <a href={`/${language}/forgot-password`} className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+                                    {t.auth.forgotPassword}
+                                </a>
+                            </div>
+                        </div>
+                    )
+                }
+
                 <div>
                     {isLogin ? (
                         <Button
@@ -122,7 +134,7 @@ export default function AuthForm() {
                         </Button>
                     )}
                 </div>
-            </form>
+            </form >
 
             <div className="mt-4 text-center">
                 <button
@@ -150,6 +162,6 @@ export default function AuthForm() {
                     <SignInButtons />
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

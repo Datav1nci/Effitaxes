@@ -100,6 +100,15 @@ export const dictionary = {
             errorUpdate: "Erreur lors de la mise à jour.",
             updateTaxProfile: "Modifier vos infos fiscales",
             backDashboard: "Retour au tableau de bord",
+            forgotPassword: "Mot de passe oublié ?",
+            resetPassword: "Réinitialiser le mot de passe",
+            sendResetLink: "Envoyer le lien",
+            backToSignIn: "Retour à la connexion",
+            enterEmailReset: "Entrez votre courriel pour recevoir le lien de réinitialisation.",
+            newPassword: "Nouveau mot de passe",
+            confirmPassword: "Confirmer le mot de passe",
+            updatePassword: "Mettre à jour",
+            passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
         },
         enrollment: {
             title: "Inscription Impôts 2025",
@@ -459,7 +468,8 @@ export const dictionary = {
             accept: "Accepter",
             decline: "Refuser",
             learnMore: "En savoir plus",
-        }
+        },
+
     },
     en: {
         nav: {
@@ -560,6 +570,15 @@ export const dictionary = {
             errorUpdate: "Error updating profile.",
             updateTaxProfile: "Update Tax Profile",
             backDashboard: "Back to Dashboard",
+            forgotPassword: "Forgot password?",
+            resetPassword: "Reset Password",
+            sendResetLink: "Send Reset Link",
+            backToSignIn: "Back to Sign In",
+            enterEmailReset: "Enter your email to receive the reset link.",
+            newPassword: "New Password",
+            confirmPassword: "Confirm Password",
+            updatePassword: "Update Password",
+            passwordsDoNotMatch: "Passwords do not match",
         },
         enrollment: {
             title: "2025 Tax Enrollment",
