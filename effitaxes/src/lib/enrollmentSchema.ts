@@ -3,7 +3,7 @@ import { dictionary } from "./dictionary";
 
 type T = typeof dictionary.en;
 
-export const createEnrollmentSchema = (t: T) => {
+export const createEnrollmentSchema = (t: T, isDashboard: boolean = false) => {
     const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
 
     const personalSchema = z.object({
@@ -59,6 +59,17 @@ export const createEnrollmentSchema = (t: T) => {
             other: z.coerce.number().optional(),
             otherDescription: z.string().optional(),
         }),
+        homeOffice: z.object({
+            totalArea: z.coerce.number().optional(),
+            businessArea: z.coerce.number().optional(),
+            electricity: z.coerce.number().optional(),
+            heating: z.coerce.number().optional(),
+            insurance: z.coerce.number().optional(),
+            maintenance: z.coerce.number().optional(),
+            mortgageInterest: z.coerce.number().optional(),
+            propertyTaxes: z.coerce.number().optional(),
+            other: z.coerce.number().optional(),
+        }).optional(),
     });
 
 

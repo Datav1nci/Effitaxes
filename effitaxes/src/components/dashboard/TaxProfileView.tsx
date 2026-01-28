@@ -248,6 +248,21 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                                 const label = t.enrollment.selfEmployed.expenses[labelKey] || key;
                                 return <FieldRow key={key} label={label} value={value as string | number} />;
                             })}
+
+                            {data.selfEmployed?.homeOffice && (
+                                <>
+                                    <h4 className="font-semibold mt-4 mb-1 border-b pb-1 dark:border-gray-700">{t.enrollment.selfEmployed.homeOffice.title}</h4>
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.totalArea} value={data.selfEmployed.homeOffice.totalArea} />
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.businessArea} value={data.selfEmployed.homeOffice.businessArea} />
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.electricity} value={data.selfEmployed.homeOffice.electricity} />
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.heating} value={data.selfEmployed.homeOffice.heating} />
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.insurance} value={data.selfEmployed.homeOffice.insurance} />
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.maintenance} value={data.selfEmployed.homeOffice.maintenance} />
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.mortgageInterest} value={data.selfEmployed.homeOffice.mortgageInterest} />
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.propertyTaxes} value={data.selfEmployed.homeOffice.propertyTaxes} />
+                                    <FieldRow label={t.enrollment.selfEmployed.homeOffice.other} value={data.selfEmployed.homeOffice.other} />
+                                </>
+                            )}
                         </div>
                     </Section>
                 )
