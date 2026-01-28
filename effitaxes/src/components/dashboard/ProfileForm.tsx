@@ -126,7 +126,7 @@ export default function ProfileForm({ user, profile }: ProfileFormProps) {
                     </div>
                     <div className="grid grid-cols-3 gap-4 border-b pb-2">
                         <span className="font-medium text-gray-500">{t.auth.email}</span>
-                        <span className="col-span-2 text-gray-900 dark:text-gray-100">{user.email}</span>
+                        <span className="col-span-2 text-gray-900 dark:text-gray-100">{profile?.email || user.email}</span>
                     </div>
                     <div className="grid grid-cols-3 gap-4 border-b pb-2">
                         <span className="font-medium text-gray-500">{t.auth.phone}</span>

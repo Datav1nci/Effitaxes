@@ -27,6 +27,40 @@ export async function updateTaxData(data: any): Promise<{ success: boolean; erro
             return { success: false, error: `Failed to save profile data: ${dbError.message} ${dbError.details || ''}` };
         }
 
+        // Sync Personal Info to Main Profile and Auth Metadata
+        if (data.personal) {
+            const { firstName, lastName, email, phone } = data.personal;
+
+            // 1. Update Main Profile Table Columns
+            const { error: profileError } = await supabase
+                .from("profiles")
+                .update({
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email, // Sync contact email
+                    phone: phone,
+                })
+                .eq("id", user.id);
+
+            if (profileError) {
+                console.error("Failed to sync main profile:", profileError);
+            }
+
+            // 2. Update Auth Metadata (for Header/Nav)
+            const { error: authError } = await supabase.auth.updateUser({
+                data: {
+                    first_name: firstName,
+                    last_name: lastName,
+                    phone: phone,
+                    // We don't update the auth email itself as that changes login credentials and requires verification
+                }
+            });
+
+            if (authError) {
+                console.error("Failed to sync auth metadata:", authError);
+            }
+        }
+
         // Send Email Notification
         if (process.env.RESEND_API_KEY) {
             try {
