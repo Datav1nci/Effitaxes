@@ -3,7 +3,7 @@ import { dictionary } from "./dictionary";
 
 type T = typeof dictionary.en;
 
-export const createEnrollmentSchema = (t: T, isDashboard: boolean = false) => {
+export const createEnrollmentSchema = (t: T) => {
     const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
 
     const personalSchema = z.object({
@@ -215,7 +215,7 @@ export const createDashboardSchema = (t: T) => {
     // I will use a trick: `createEnrollmentSchema` returns a ZodEffect (superRefine).
     // I can't easily unwrap it.
     // I will refactor the structure slightly to return both or allow a flag.
-    return createEnrollmentSchema(t, true);
+    return createEnrollmentSchema(t);
 };
 
 // I need to change signature of createEnrollmentSchema to accept a flag
