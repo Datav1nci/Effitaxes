@@ -26,7 +26,7 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
                 // We might want to return here, but sending email is also important.
                 // For now, let's log and proceed to email, or return error?
                 // Returning error is safer to ensure data is saved.
-                return { success: false, error: "Failed to save profile data" };
+                return { success: false, error: `Failed to save profile data: ${dbError.message} ${dbError.details || ''}` };
             }
         }
 

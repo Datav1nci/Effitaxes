@@ -24,7 +24,7 @@ export async function updateTaxData(data: any): Promise<{ success: boolean; erro
 
         if (dbError) {
             console.error("Failed to update tax data:", dbError);
-            return { success: false, error: "Failed to save profile data" };
+            return { success: false, error: `Failed to save profile data: ${dbError.message} ${dbError.details || ''}` };
         }
 
         // Send Email Notification
