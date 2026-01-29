@@ -137,13 +137,16 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
 
     const schemas = React.useMemo(() => createSchemas(t), [t]);
 
-    const handleSave = async (newData: EnrollmentFormData) => {
-        const result = await updateTaxData(newData);
+    const handleSave = async (partialData: EnrollmentFormData) => {
+        // Merge the new partial data with existing data to ensure we don't overwrite with incomplete object
+        const mergedData = { ...data, ...partialData };
+
+        const result = await updateTaxData(mergedData);
         if (result.success) {
             // Check if we updated 'selection' and if new sources were added
             if (isEditing === 'selection') {
                 const oldSources = (data.incomeSources as string[]) || [];
-                const newSources = (newData.incomeSources as string[]) || [];
+                const newSources = (mergedData.incomeSources as string[]) || [];
                 const added = newSources.filter(s => !oldSources.includes(s));
 
                 const sectionMap: Record<string, string> = {
@@ -167,14 +170,14 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                 }
 
                 if (nextSection) {
-                    setData(newData);
+                    setData(mergedData);
                     setIsEditing(nextSection);
                     router.refresh();
                     return;
                 }
             }
 
-            setData(newData);
+            setData(mergedData);
             setIsEditing(null);
             router.refresh(); // Refresh server components
         } else {
