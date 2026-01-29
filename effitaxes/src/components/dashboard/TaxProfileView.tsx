@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createSchemas, EnrollmentFormData } from "@/lib/enrollmentSchema";
-import { ZodType } from "zod";
+import { z, ZodType } from "zod";
 import { Dictionary } from "@/lib/dictionary";
 import { updateTaxData } from "@/actions/updateTaxData";
 import { StepPersonal } from "@/components/enrollment/StepPersonal";
@@ -215,7 +215,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                     t={t}
                     onCancel={() => setIsEditing(null)}
                     onSave={handleSave}
-                    schema={schemas.personal}
+                    schema={z.object({ personal: schemas.personal })}
                     fieldNames={['personal']}
                 />
             ) : (
@@ -254,7 +254,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                     t={t}
                     onCancel={() => setIsEditing(null)}
                     onSave={handleSave}
-                    schema={schemas.incomeSources}
+                    schema={z.object({ incomeSources: schemas.incomeSources.shape.incomeSources })}
                     fieldNames={['incomeSources']}
                 />
             ) : (
@@ -279,7 +279,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         t={t}
                         onCancel={() => setIsEditing(null)}
                         onSave={handleSave}
-                        schema={schemas.selfEmployed}
+                        schema={z.object({ selfEmployed: schemas.selfEmployed })}
                         fieldNames={['selfEmployed']}
                     />
                 ) : (
@@ -330,7 +330,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         t={t}
                         onCancel={() => setIsEditing(null)}
                         onSave={handleSave}
-                        schema={schemas.car}
+                        schema={z.object({ car: schemas.car })}
                         fieldNames={['car']}
                     />
                 ) : (
@@ -362,7 +362,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         t={t}
                         onCancel={() => setIsEditing(null)}
                         onSave={handleSave}
-                        schema={schemas.rental}
+                        schema={z.object({ rental: schemas.rental })}
                         fieldNames={['rental']}
                     />
                 ) : (
@@ -393,7 +393,7 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         t={t}
                         onCancel={() => setIsEditing(null)}
                         onSave={handleSave}
-                        schema={schemas.workFromHome}
+                        schema={z.object({ workFromHome: schemas.workFromHome })}
                         fieldNames={['workFromHome']}
                     />
                 ) : (
