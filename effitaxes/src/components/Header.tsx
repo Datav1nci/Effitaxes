@@ -200,7 +200,7 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
                     }}
                     className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-red-600 hover:bg-slate-100 dark:text-red-400 dark:hover:bg-gray-800"
                   >
-                    Log out
+                    {t.auth.signOut}
                   </button>
                 </>
               ) : (
