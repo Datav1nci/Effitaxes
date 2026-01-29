@@ -61,8 +61,6 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 name="personal.email"
                 type="email"
                 placeholder={t.contact.form.emailPlaceholder}
-                readOnly
-                className="bg-gray-100 cursor-not-allowed text-gray-500"
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

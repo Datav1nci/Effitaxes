@@ -16,7 +16,10 @@ import { StepWorkFromHome } from "@/components/enrollment/StepWorkFromHome";
 import { useRouter } from "next/navigation";
 
 type TaxProfileViewProps = {
-    profile: { tax_data: EnrollmentFormData };
+    profile: {
+        tax_data: EnrollmentFormData;
+        email?: string | null;
+    };
     t: Dictionary;
 };
 
@@ -118,7 +121,18 @@ const SectionEditor = ({
 export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
     const router = useRouter();
     const [isEditing, setIsEditing] = useState<string | null>(null);
-    const [data, setData] = useState(profile?.tax_data || {});
+    const [data, setData] = useState<Partial<EnrollmentFormData>>(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const initialData = (profile?.tax_data || {}) as any;
+        // Pre-fill email from profile if missing in tax data
+        if (!initialData.personal) {
+            initialData.personal = {};
+        }
+        if (!initialData.personal.email && profile?.email) {
+            initialData.personal.email = profile.email;
+        }
+        return initialData;
+    });
 
     const schema = createDashboardSchema(t);
 

@@ -35,10 +35,8 @@ export default async function DashboardPage(props: {
     return (
         <div className="flex flex-col items-center justify-center p-24">
             <h1 className="text-3xl font-bold mb-8 text-center">
-                {t.auth.welcome} {profile?.first_name ? profile.first_name : user.email}!
+                {profile?.first_name ? `${t.auth.welcome} ${profile.first_name}!` : t.auth.welcome}
             </h1>
-
-            <ProfileForm user={user} profile={profile} />
 
             <div className="mt-8 w-full">
                 <TaxProfileView profile={profile} t={t} />
