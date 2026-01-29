@@ -11,7 +11,6 @@ export default function AuthForm() {
     const [isLogin, setIsLogin] = useState(true);
 
     return (
-    return (
         <div className="bg-white px-4 py-8 shadow-2xl sm:rounded-xl sm:px-10 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
             <form className="space-y-6">
                 {!isLogin && (
