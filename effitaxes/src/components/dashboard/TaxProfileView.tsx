@@ -24,7 +24,7 @@ type TaxProfileViewProps = {
 };
 
 const Section = ({ title, children, onEdit, isEmpty = false, t }: { title: string; children: React.ReactNode; onEdit: () => void, isEmpty?: boolean, t: Dictionary }) => (
-    <div className={`bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6 border ${isEmpty ? 'border-red-300 dark:border-red-700' : 'border-gray-200 dark:border-gray-700'}`}>
+    <div className={`bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6 border ${isEmpty ? 'border-amber-300 dark:border-amber-700' : 'border-gray-200 dark:border-gray-700'}`}>
         <div className="flex justify-between items-center mb-4 border-b pb-2">
             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{title}</h3>
             <button
@@ -43,6 +43,7 @@ const Section = ({ title, children, onEdit, isEmpty = false, t }: { title: strin
         </div>
     </div>
 );
+
 
 interface SectionEditorProps {
     title: string;
@@ -139,6 +140,40 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
     const handleSave = async (newData: EnrollmentFormData) => {
         const result = await updateTaxData(newData);
         if (result.success) {
+            // Check if we updated 'selection' and if new sources were added
+            if (isEditing === 'selection') {
+                const oldSources = (data.incomeSources as string[]) || [];
+                const newSources = (newData.incomeSources as string[]) || [];
+                const added = newSources.filter(s => !oldSources.includes(s));
+
+                const sectionMap: Record<string, string> = {
+                    selfEmployed: 'selfEmployed',
+                    rental: 'rental',
+                    workFromHome: 'workFromHome',
+                    carExpenses: 'car',
+                    studentCarExpenses: 'car',
+                    selfEmployedCarExpenses: 'car',
+                    employeeCarExpenses: 'car',
+                };
+
+                // Find the first added section that needs filling
+                let nextSection = null;
+                for (const s of added) {
+                    if (sectionMap[s]) {
+                        nextSection = sectionMap[s];
+                        // If we found a mapped section, prioritize it
+                        break;
+                    }
+                }
+
+                if (nextSection) {
+                    setData(newData);
+                    setIsEditing(nextSection);
+                    router.refresh();
+                    return;
+                }
+            }
+
             setData(newData);
             setIsEditing(null);
             router.refresh(); // Refresh server components
