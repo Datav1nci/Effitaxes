@@ -3,7 +3,7 @@ import { dictionary } from "./dictionary";
 
 type T = typeof dictionary.en;
 
-export const createEnrollmentSchema = (t: T) => {
+export const createSchemas = (t: T) => {
     const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
 
     const personalSchema = z.object({
@@ -31,8 +31,6 @@ export const createEnrollmentSchema = (t: T) => {
         privateDrugInsurance: z.enum(["yes", "no"]),
         insuranceMonths: z.string().optional(),
         additionalInfo: z.string().optional(),
-    }).refine(() => {
-        return true;
     });
 
     const selfEmployedSchema = z.object({
@@ -71,22 +69,6 @@ export const createEnrollmentSchema = (t: T) => {
             other: z.coerce.number().optional(),
         }).optional(),
     });
-
-
-
-    // ... (keeping carSchema and rentalSchema separate for clarity in diff if needed, but I must match exact target content)
-    // I will just replace the top part and end part separately or ensure the middle matches.
-    // The tool works best with contiguous blocks.
-    // I will replace the first block (Main Schema) and the Export type.
-    // BUT the schemas are nested variables.
-
-    // I'll do 2 chunks.
-    // Chunk 1: personalSchema definition
-    // Chunk 2: export type
-
-    // actually, simply replacing lines 16-36 is sufficient for the first part.
-    // And 169 for the second.
-
 
     const carSchema = z.object({
         makeModel: z.string().min(1, t.enrollment.errors.required),
@@ -138,16 +120,33 @@ export const createEnrollmentSchema = (t: T) => {
         }),
     });
 
+    const incomeSourcesSchema = z.object({
+        incomeSources: z.array(z.string()).default([]),
+    });
+
+    return {
+        personal: personalSchema,
+        selfEmployed: selfEmployedSchema,
+        car: carSchema,
+        rental: rentalSchema,
+        workFromHome: workFromHomeSchema,
+        incomeSources: incomeSourcesSchema,
+    };
+};
+
+export const createEnrollmentSchema = (t: T) => {
+    const schemas = createSchemas(t);
+
     // Base Schema linking everything
     const baseSchema = z.object({
-        personal: personalSchema,
-        incomeSources: z.array(z.string()).default([]), // ["employee", "selfEmployed", ...]
+        personal: schemas.personal,
+        incomeSources: schemas.incomeSources.shape.incomeSources, // Access shape to get the array schema directly
 
         // Detailed sections are optional but will be validated via refinements if selected
-        selfEmployed: selfEmployedSchema.optional(), // We'll make it optional here so it doesn't block the initial steps
-        car: carSchema.optional(),
-        rental: rentalSchema.optional(),
-        workFromHome: workFromHomeSchema.optional(),
+        selfEmployed: schemas.selfEmployed.optional(),
+        car: schemas.car.optional(),
+        rental: schemas.rental.optional(),
+        workFromHome: schemas.workFromHome.optional(),
         confirmed: z.boolean().default(false),
     });
 
@@ -162,16 +161,6 @@ export const createEnrollmentSchema = (t: T) => {
                     message: t.enrollment.errors.required, // "Required"
                     path: ["selfEmployed"]
                 });
-            } else {
-                // Re-run the safe parse on the sub-schema to add issues to context?
-                // Or just trust the types? Zod superRefine doesn't automatically recurse if defined as optional.
-                // When we define `selfEmployed: selfEmployedSchema.optional()`, Zod validates it IF it exists.
-                // If it exists (is not undefined), it runs `selfEmployedSchema`.
-                // So we mostly need to check if it's MISSING when it SHOULD be there.
-                // But wait, if the user picks "Self Employed", our Form UI should initialize the object.
-                // If it's initialized, Zod validates it.
-                // So checking `!data.selfEmployed` is enough to catch "Not started" steps.
-                // But we must mostly ensure the UI initializes it or we force it here.
             }
         }
 
