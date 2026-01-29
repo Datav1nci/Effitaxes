@@ -195,9 +195,9 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
         let displayValue = value;
         if (typeof value === "boolean") displayValue = value ? t.common.yes : t.common.no;
         return (
-            <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 py-1 border-b border-gray-100 dark:border-gray-700 last:border-0">
-                <span className="sm:col-span-2 font-medium text-gray-500 dark:text-gray-400">{label}</span>
-                <span className="sm:col-span-3 text-gray-900 dark:text-gray-100 break-words">{String(displayValue)}</span>
+            <div className="grid grid-cols-1 sm:grid-cols-[45%_1fr] gap-2 py-1 border-b border-gray-100 dark:border-gray-700 last:border-0">
+                <span className="font-medium text-gray-500 dark:text-gray-400">{label}</span>
+                <span className="text-gray-900 dark:text-gray-100 break-words">{String(displayValue)}</span>
             </div>
         );
     };
@@ -235,9 +235,9 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
                         <FieldRow label={t.enrollment.personal.privateDrugInsurance} value={data.personal?.privateDrugInsurance === "yes" ? t.common.yes : (data.personal?.privateDrugInsurance === "no" ? t.common.no : "")} />
                         <FieldRow label={t.enrollment.personal.insuranceMonths} value={data.personal?.insuranceMonths} />
                         <FieldRow label={t.enrollment.personal.additionalInfo} value={data.personal?.additionalInfo} />
-                        <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 py-1 border-b border-gray-100 dark:border-gray-700 last:border-0">
-                            <span className="sm:col-span-2 font-medium text-gray-500 dark:text-gray-400">{t.contact.address}</span>
-                            <span className="sm:col-span-3 text-gray-900 dark:text-gray-100">
+                        <div className="grid grid-cols-1 sm:grid-cols-[45%_1fr] gap-2 py-1 border-b border-gray-100 dark:border-gray-700 last:border-0">
+                            <span className="font-medium text-gray-500 dark:text-gray-400">{t.contact.address}</span>
+                            <span className="text-gray-900 dark:text-gray-100">
                                 {data.personal?.addressNumber} {data.personal?.addressName}, {data.personal?.addressApp ? `#${data.personal.addressApp}, ` : ""}{data.personal?.addressCity}
                             </span>
                         </div>
