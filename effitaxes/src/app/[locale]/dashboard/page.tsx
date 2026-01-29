@@ -5,7 +5,6 @@ import { signOut } from "@/actions/auth";
 
 import { dictionary } from "@/lib/dictionary";
 import type { Language } from "@/lib/dictionary";
-import ProfileForm from "@/components/dashboard/ProfileForm";
 import TaxProfileView from "@/components/dashboard/TaxProfileView";
 
 export default async function DashboardPage(props: {
@@ -35,7 +34,7 @@ export default async function DashboardPage(props: {
     return (
         <div className="flex flex-col items-center justify-center p-24">
             <h1 className="text-3xl font-bold mb-8 text-center">
-                {profile?.first_name ? `${t.auth.welcome} ${profile.first_name}!` : t.auth.welcome}
+                {t.auth.welcome}!
             </h1>
 
             <div className="mt-8 w-full">
