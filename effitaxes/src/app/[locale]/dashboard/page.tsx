@@ -32,7 +32,7 @@ export default async function DashboardPage(props: {
         .single();
 
     return (
-        <div className="flex flex-col items-center justify-center p-24">
+        <div className="flex flex-col items-center justify-center p-4 md:p-24">
             <h1 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">
                 {t.auth.welcome} {profile?.first_name || ""}!
             </h1>
