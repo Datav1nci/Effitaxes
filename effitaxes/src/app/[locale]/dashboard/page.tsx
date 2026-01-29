@@ -33,8 +33,8 @@ export default async function DashboardPage(props: {
 
     return (
         <div className="flex flex-col items-center justify-center p-24">
-            <h1 className="text-3xl font-bold mb-8 text-center">
-                {t.auth.welcome}!
+            <h1 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">
+                {t.auth.welcome} {profile?.first_name || ""}!
             </h1>
 
             <div className="mt-8 w-full">

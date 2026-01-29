@@ -60,6 +60,7 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 label={t.enrollment.personal.email}
                 name="personal.email"
                 type="email"
+                disabled
                 placeholder={t.contact.form.emailPlaceholder}
             />
 

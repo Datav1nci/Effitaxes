@@ -10,7 +10,7 @@ export function SignInButtons() {
         <div className="flex flex-col gap-4 w-full">
             <Button
                 variant="outline"
-                className="w-full flex items-center justify-center gap-2"
+                className="w-full flex items-center justify-center gap-2 py-2.5 border-gray-300 shadow-sm hover:bg-gray-50 hover:text-red-600 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
                 onClick={() => signInWithProvider("google")}
             >
                 <svg
@@ -33,7 +33,7 @@ export function SignInButtons() {
 
             <Button
                 variant="outline"
-                className="w-full flex items-center justify-center gap-2"
+                className="w-full flex items-center justify-center gap-2 py-2.5 border-gray-300 shadow-sm hover:bg-gray-50 hover:text-blue-600 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
                 onClick={() => signInWithProvider("facebook")}
             >
                 <svg
