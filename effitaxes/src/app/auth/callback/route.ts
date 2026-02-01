@@ -5,10 +5,8 @@ export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
     // if "next" is in param, use it as the redirect URL
-    // BUT for security hardening, we might want to force login after verification regardless of "next".
-    // Let's default to login with a success message.
-    const defaultNext = "/login?success=verified";
-    const next = searchParams.get("next") ?? defaultNext;
+    // We don't use 'next' anymore because we force a redirect to login for security hardening
+    // const next = searchParams.get("next") ?? "/dashboard";
 
     if (code) {
         const supabase = await createClient();
