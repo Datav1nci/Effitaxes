@@ -2,6 +2,7 @@
 
 import { contactSchema } from "@/lib/schemas";
 import { headers } from "next/headers";
+import { sendContactFormNotification, sendContactFormReceipt } from "@/lib/mail";
 
 // Simple in-memory rate limiting (Note: resets on server restart/cold boot)
 const rateLimit = new Map<string, number>();
@@ -67,32 +68,18 @@ export async function submitContactForm(
         return { success: true, message: "Message envoyé avec succès !" };
     }
 
-    // 4. Send Email via Resend
+    // 4. Send Email via Centralized Service
     try {
-        const { Resend } = await import("resend");
-        const resend = new Resend(process.env.RESEND_API_KEY);
+        const contactData = { name, email, phone, message };
 
-        const { error } = await resend.emails.send({
-            from: "Effitaxes Website <no-reply@effitaxes.com>",
-            to: ["youssef@effitaxes.com"], // Your email address from ContactSection
-            subject: `Nouveau message de ${name}`,
-            replyTo: email,
-            text: `
-        Nouveau message reçu via le site web Effitaxes :
-        
-        Nom: ${name}
-        Email: ${email}
-        Téléphone: ${phone || "Non fourni"}
-        
-        Message:
-        ${message}
-      `,
-        });
-
-        if (error) {
-            console.error("Resend API Error:", error);
+        // Notify Admin
+        const { success: adminSuccess } = await sendContactFormNotification(contactData);
+        if (!adminSuccess) {
             return { success: false, message: "Erreur technique lors de l'envoi." };
         }
+
+        // Send Receipt to Customer
+        await sendContactFormReceipt(email, name);
 
         return {
             success: true,

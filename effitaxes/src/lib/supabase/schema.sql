@@ -16,21 +16,28 @@ create table profiles (
 -- See https://supabase.com/docs/guides/auth/row-level-security
 alter table profiles enable row level security;
 
-create policy "Public profiles are viewable by everyone." on profiles
-  for select using (true);
+create policy "Users can view own profile." on profiles
+  for select using ((select auth.uid()) = id);
 
 create policy "Users can insert their own profile." on profiles
   for insert with check ((select auth.uid()) = id);
 
 create policy "Users can update own profile." on profiles
-  for update using ((select auth.uid()) = id);
+  for update using ((select auth.uid()) = id) with check ((select auth.uid()) = id);
 
 -- This trigger automatically creates a profile entry when a new user signs up via Supabase Auth.
 create function public.handle_new_user()
 returns trigger as $$
 begin
   insert into public.profiles (id, email, first_name, last_name, phone)
-  values (new.id, new.email, new.raw_user_meta_data->>'first_name', new.raw_user_meta_data->>'last_name', new.raw_user_meta_data->>'phone');
+  values (
+    new.id,
+    new.email,
+    nullif(new.raw_user_meta_data->>'first_name', ''),
+    nullif(new.raw_user_meta_data->>'last_name', ''),
+    nullif(new.raw_user_meta_data->>'phone', '')
+  )
+  on conflict (id) do nothing;
   return new;
 end;
 $$ language plpgsql security definer;
@@ -50,4 +57,6 @@ alter table login_attempts enable row level security;
 
 -- Only service role (server actions) should access this
 create policy "Service role can do all on login_attempts" on login_attempts
-  for all using (true) with check (true);
+  for all
+  to service_role
+  using (true) with check (true);

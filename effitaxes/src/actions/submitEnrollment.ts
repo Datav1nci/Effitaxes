@@ -1,8 +1,6 @@
 "use server";
 
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendEnrollmentNotification, sendEnrollmentReceipt } from "@/lib/mail";
 import { createClient } from "@/utils/supabase/server";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,49 +21,24 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
 
             if (dbError) {
                 console.error("Failed to save to database:", dbError);
-                // We might want to return here, but sending email is also important.
-                // For now, let's log and proceed to email, or return error?
-                // Returning error is safer to ensure data is saved.
-                return { success: false, error: `Failed to save profile data: ${dbError.message} ${dbError.details || ''}` };
+                return { success: false, error: `Failed to save profile data: ${dbError.message}` };
             }
         }
 
-        if (!process.env.RESEND_API_KEY) {
-            console.error("Missing RESEND_API_KEY");
-            return { success: false, error: "Configuration Error: Missing API Key" };
+        // 1. Notify Admin
+        const { success: adminSuccess, error: adminError } = await sendEnrollmentNotification(data);
+        if (!adminSuccess) {
+            console.error("Failed to send admin notification:", adminError);
+            // We can decide to just log this, or return error. 
+            // Usually valid submission + db save is success for the user, even if admin email fails (rare).
         }
 
-        const subject = `New Tax Enrollment: ${data.personal.firstName} ${data.personal.lastName}`;
-
-        // Simple HTML construction
-        const htmlBody = `
-            <h1>Tax Enrollment Form 2025</h1>
-            <h2>Personal Info</h2>
-            <pre>${JSON.stringify(data.personal, null, 2)}</pre>
-            
-            <h2>Income Sources</h2>
-            <p>${data.incomeSources.join(', ')}</p>
-            
-            ${data.selfEmployed ? `<h2>Self-Employed</h2><pre>${JSON.stringify(data.selfEmployed, null, 2)}</pre>` : ''}
-            ${data.car ? `<h2>Car Expenses</h2><pre>${JSON.stringify(data.car, null, 2)}</pre>` : ''}
-            ${data.rental ? `<h2>Rental Income</h2><pre>${JSON.stringify(data.rental, null, 2)}</pre>` : ''}
-            ${data.workFromHome ? `<h2>Work From Home</h2><pre>${JSON.stringify(data.workFromHome, null, 2)}</pre>` : ''}
-        `;
-
-        const { data: emailData, error } = await resend.emails.send({
-            from: "Effitaxes Enrollment <onboarding@resend.dev>",
-            to: ["effitaxes@gmail.com"], // Hardcoded for now per user context or general default? I'll use a placeholder variable.
-            // keeping it simple for dev. Ideally process.env.CONTACT_EMAIL
-            subject: subject,
-            html: htmlBody,
-        });
-
-        if (error) {
-            console.error("Resend API Failed:", error);
-            return { success: false, error: error.message };
+        // 2. Receipt to Customer
+        if (data.personal?.email && data.personal?.firstName) {
+            await sendEnrollmentReceipt(data.personal.email, data.personal.firstName);
         }
 
-        console.log("Email sent successfully. ID:", emailData?.id);
+        console.log("Enrollment submitted successfully.");
         return { success: true };
     } catch (error) {
         console.error("Failed to submit enrollment:", error);
