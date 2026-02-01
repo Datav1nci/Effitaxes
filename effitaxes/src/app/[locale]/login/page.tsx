@@ -56,6 +56,22 @@ export default async function LoginPage(props: {
                         </div>
                     </div>
                 )}
+                {success === 'verified' && (
+                    <div className="mt-4 rounded-md bg-blue-50 p-4 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800">
+                        <div className="flex">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                                    {t.auth.emailVerified}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {message && (
                     <div className="mt-4 rounded-md bg-red-50 p-4 dark:bg-red-900/20">
                         <p className="text-center text-sm text-red-800 dark:text-red-200">{message}</p>

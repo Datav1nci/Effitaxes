@@ -112,6 +112,7 @@ export const dictionary = {
             confirmPassword: "Confirmer le mot de passe",
             updatePassword: "Mettre à jour",
             passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
+            emailVerified: "Merci ! Votre courriel est confirmé. Veuillez vous connecter.",
         },
         enrollment: {
             title: "Inscription Impôts 2025",
@@ -585,6 +586,7 @@ export const dictionary = {
             confirmPassword: "Confirm Password",
             updatePassword: "Update Password",
             passwordsDoNotMatch: "Passwords do not match",
+            emailVerified: "Thank you! Your email is confirmed. Please sign in.",
         },
         enrollment: {
             title: "2025 Tax Enrollment",
