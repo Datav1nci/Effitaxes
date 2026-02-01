@@ -25,10 +25,10 @@ interface PersonalInfo {
 interface EnrollmentData {
     personal: PersonalInfo;
     incomeSources: string[];
-    selfEmployed?: any;
-    car?: any;
-    rental?: any;
-    workFromHome?: any;
+    selfEmployed?: Record<string, unknown>;
+    car?: Record<string, unknown>;
+    rental?: Record<string, unknown>;
+    workFromHome?: Record<string, unknown>;
 }
 
 interface ContactFormData {
@@ -132,7 +132,7 @@ export async function sendContactFormNotification(data: ContactFormData) {
     });
 }
 
-export async function sendProfileUpdateNotification(data: any) {
+export async function sendProfileUpdateNotification(data: Partial<EnrollmentData>) {
     const firstName = data.personal?.firstName || "Unknown";
     const lastName = data.personal?.lastName || "Client";
     const subject = `Updated Tax Profile: ${firstName} ${lastName}`;
