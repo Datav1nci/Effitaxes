@@ -29,13 +29,19 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
 
   const { theme, setTheme, resolvedTheme } = useTheme();
 
-  useEffect(() => {
-    setUser(initialUser || null);
-  }, [initialUser]);
+
 
   useEffect(() => {
     setMounted(true);
     const supabase = createClient();
+
+    // Check active session on mount to ensure client-side state is accurate
+    // This overrides potential stale initialUser from server if they differ
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user !== initialUser) {
+        setUser(user);
+      }
+    });
 
     // Listen for changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
