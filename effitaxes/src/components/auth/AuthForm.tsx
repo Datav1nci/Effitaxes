@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { login, signup } from "@/actions/auth";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { SignInButtons } from "@/components/auth/SignInButtons";
 import { useLanguage } from "@/context/LanguageContext";
@@ -9,6 +11,16 @@ import { useLanguage } from "@/context/LanguageContext";
 export default function AuthForm() {
     const { t, language } = useLanguage();
     const [isLogin, setIsLogin] = useState(true);
+    const router = useRouter();
+
+    useEffect(() => {
+        const supabase = createClient();
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            if (user) {
+                router.replace(`/${language}/dashboard`);
+            }
+        });
+    }, [language, router]);
 
     return (
         <div className="bg-white px-4 py-8 shadow-2xl sm:rounded-xl sm:px-10 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">

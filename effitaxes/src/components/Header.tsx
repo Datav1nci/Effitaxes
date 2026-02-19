@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Menu, Moon, Sun, X, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
@@ -24,33 +25,39 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<User | null>(initialUser || null);
+  const router = useRouter();
 
   const { theme, setTheme, resolvedTheme } = useTheme();
-  // const isDark = resolvedTheme === "dark";
+
+  useEffect(() => {
+    setUser(initialUser || null);
+  }, [initialUser]);
 
   useEffect(() => {
     setMounted(true);
     const supabase = createClient();
-
-    // If initialUser was not provided, or to ensure we are up to date client-side
-    if (!initialUser) {
-      supabase.auth.getUser().then(({ data: { user } }) => {
-        setUser(user);
-      });
-    }
 
     // Listen for changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (_event === 'SIGNED_OUT') {
         setUser(null);
+        router.refresh();
       }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [initialUser]);
+  }, [router]);
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+    await signOut(); // Server action
+    router.refresh();
+  };
 
   const links = [
     { href: `/${language}/#hero`, label: t.nav.home },
@@ -129,7 +136,7 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
                     <Link href={`/${language}/dashboard`}>{t.auth.dashboard}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => signOut()}>
+                  <DropdownMenuItem onClick={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>{t.auth.signOut}</span>
                   </DropdownMenuItem>
@@ -195,7 +202,7 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
                   </Link>
                   <button
                     onClick={() => {
-                      signOut();
+                      handleSignOut();
                       setOpen(false);
                     }}
                     className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-red-600 hover:bg-slate-100 dark:text-red-400 dark:hover:bg-gray-800"
