@@ -5,7 +5,9 @@ import { motion } from "framer-motion";
 import BrandName from "@/components/BrandName";
 import { Dictionary } from "@/lib/dictionary";
 
-export default function Hero({ t }: { t: Dictionary }) {
+import { type User } from "@supabase/supabase-js";
+
+export default function Hero({ t, user }: { t: Dictionary; user?: User | null }) {
   return (
     <section
       id="accueil"
@@ -54,10 +56,10 @@ export default function Hero({ t }: { t: Dictionary }) {
           viewport={{ once: true }}
         >
           <Link
-            href="/inscription"
+            href={user ? "/dashboard" : "/inscription"}
             className="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-lg transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
           >
-            {t.hero.cta}
+            {user ? t.auth.dashboard : t.hero.cta}
           </Link>
         </motion.div>
       </div>
