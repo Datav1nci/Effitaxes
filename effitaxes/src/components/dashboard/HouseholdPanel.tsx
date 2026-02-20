@@ -19,16 +19,46 @@ type HouseholdPanelProps = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function HouseholdPanel({ household, members = [], t }: HouseholdPanelProps) {
+export default function HouseholdPanel({ household, members: initialMembers = [], t }: HouseholdPanelProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
+    const [clientMembers, setClientMembers] = useState<HouseholdMember[]>(initialMembers || []);
+
+    // Sync initialMembers if they change (e.g. after revalidatePath)
+    React.useEffect(() => {
+        if (initialMembers && initialMembers.length > 0) {
+            setClientMembers(initialMembers);
+        } else {
+            // If server returns empty, try fetching client side to verify
+            fetchMembers();
+        }
+    }, [initialMembers]);
+
+    const fetchMembers = async () => {
+        // We need a client-side supabase client, but for now we can rely on a server action or just re-trigger
+        // Actually, let's use the browser client if available or just a simple fetch to an API route? 
+        // We don't have API routes set up for this, but we can use the server action 'getHousehold' we created!
+
+        // Wait, 'getHousehold' is a server action. We can call it directly.
+        const { getHousehold } = await import("@/actions/household");
+        const res = await getHousehold();
+        if (res.success && res.members) {
+            setClientMembers(res.members);
+            console.log("Client-side fetch members:", res.members);
+        }
+    };
 
     const handleDelete = async (id: string) => {
         if (confirm("Are you sure?")) {
             setIsDeleting(id);
             await removeHouseholdMember(id);
+            await fetchMembers(); // Refresh local state
             setIsDeleting(null);
         }
+    };
+
+    const handleMembersAdded = (newMembers: HouseholdMember[]) => {
+        setClientMembers(current => [...current, ...newMembers]);
     };
 
     return (
@@ -44,10 +74,10 @@ export default function HouseholdPanel({ household, members = [], t }: Household
             </div>
 
             <div className="space-y-4">
-                {(!members || members.length === 0) ? (
+                {(!clientMembers || clientMembers.length === 0) ? (
                     <div className="text-gray-500 italic">{t.household.noMembers}</div>
                 ) : (
-                    members.map(member => (
+                    clientMembers.map(member => (
                         <div key={member.id} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-700">
                             <div>
                                 <div className="font-medium text-gray-900 dark:text-gray-100">
@@ -77,7 +107,8 @@ export default function HouseholdPanel({ household, members = [], t }: Household
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 t={t}
-                existingMembers={members}
+                existingMembers={clientMembers}
+                onMembersAdded={handleMembersAdded}
             />
         </div>
     );

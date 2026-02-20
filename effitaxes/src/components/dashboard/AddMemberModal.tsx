@@ -13,6 +13,7 @@ type AddMemberModalProps = {
     onClose: () => void;
     t: Dictionary;
     existingMembers?: HouseholdMember[] | null;
+    onMembersAdded: (members: HouseholdMember[]) => void;
 };
 
 type BatchSelection = {
@@ -23,7 +24,7 @@ type BatchSelection = {
     partnerType?: "SPOUSE" | "PARTNER";
 };
 
-export default function AddMemberModal({ isOpen, onClose, t, existingMembers = [] }: AddMemberModalProps) {
+export default function AddMemberModal({ isOpen, onClose, t, existingMembers = [], onMembersAdded }: AddMemberModalProps) {
     const router = useRouter();
     // Steps: 0 = Selection, 1+ = Member Details Loop
     const [step, setStep] = useState(0);
@@ -138,9 +139,11 @@ export default function AddMemberModal({ isOpen, onClose, t, existingMembers = [
             // Check if members were returned (verifies RLS)
             if (res.members && res.members.length > 0) {
                 console.log("Verified members inserted:", res.members);
+                onMembersAdded(res.members);
             } else {
                 console.warn("Success returned but no members in response. Possible RLS issue?");
-                // alert("Members added but not visible? Please refresh the page.");
+                // Still call with empty if needed or just let fetch handle it
+                // onMembersAdded([]); 
             }
         } else {
             alert(res.error || t.auth.errorUpdate);
