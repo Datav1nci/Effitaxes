@@ -59,14 +59,29 @@ export async function addHouseholdMember(data: MemberFormData) {
     if (!user) return { success: false, error: "Unauthorized" };
 
     // Ensure household exists
-    const { data: household, error: householdError } = await supabase
+    const { data: initialHousehold, error: householdError } = await supabase
         .from("households")
         .select("id")
         .eq("primary_person_id", user.id)
         .single();
 
-    if (householdError || !household) {
-        return { success: false, error: "Household not found" };
+    let household = initialHousehold;
+
+    if (!household) {
+        // Create household if not exists
+        const { data: newHousehold, error: createError } = await supabase
+            .from("households")
+            .insert({ primary_person_id: user.id })
+            .select("id")
+            .single();
+
+        if (createError || !newHousehold) {
+            console.error("Error creating household:", createError);
+            return { success: false, error: "Failed to create household" };
+        }
+        household = newHousehold;
+    } else if (householdError && householdError.code !== 'PGRST116') {
+        return { success: false, error: "Error fetching household" };
     }
 
     const { error } = await supabase
