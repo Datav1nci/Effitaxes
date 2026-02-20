@@ -2,6 +2,7 @@
 
 import { sendEnrollmentNotification, sendEnrollmentReceipt } from "@/lib/mail";
 import { createClient } from "@/utils/supabase/server";
+import { HouseholdMember } from "@/lib/householdTypes";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function submitEnrollment(data: any): Promise<{ success: boolean; error?: string }> {
@@ -25,8 +26,34 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
             }
         }
 
-        // 1. Notify Admin
-        const { success: adminSuccess, error: adminError } = await sendEnrollmentNotification(data);
+        // 1. Fetch Household Members
+        let householdMembers: HouseholdMember[] = [];
+        if (user) {
+            try {
+                const { data: household } = await supabase
+                    .from("households")
+                    .select("id")
+                    .eq("primary_person_id", user.id)
+                    .single();
+
+                if (household) {
+                    const { data: members } = await supabase
+                        .from("household_members")
+                        .select("*")
+                        .eq("household_id", household.id);
+
+                    if (members) householdMembers = members;
+                }
+            } catch (err) {
+                console.error("Error fetching household for notification:", err);
+            }
+        }
+
+        // 2. Notify Admin
+        const { success: adminSuccess, error: adminError } = await sendEnrollmentNotification({
+            ...data,
+            household: householdMembers
+        });
         if (!adminSuccess) {
             console.error("Failed to send admin notification:", adminError);
             // We can decide to just log this, or return error. 

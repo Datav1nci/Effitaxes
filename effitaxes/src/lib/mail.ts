@@ -13,6 +13,8 @@ const EMAILS = {
     SENDER_ONBOARDING: "Effitaxes Enrollment <onboarding@effitaxes.com>" // Or use no-reply if domain not verified
 };
 
+import { HouseholdMember } from "@/lib/householdTypes";
+
 // --- Types ---
 
 interface PersonalInfo {
@@ -29,6 +31,7 @@ interface EnrollmentData {
     car?: Record<string, unknown>;
     rental?: Record<string, unknown>;
     workFromHome?: Record<string, unknown>;
+    household?: HouseholdMember[];
 }
 
 interface ContactFormData {
@@ -100,6 +103,19 @@ export async function sendEnrollmentNotification(data: EnrollmentData) {
         ${data.car ? `<h2>Car Expenses</h2><pre>${JSON.stringify(data.car, null, 2)}</pre>` : ''}
         ${data.rental ? `<h2>Rental Income</h2><pre>${JSON.stringify(data.rental, null, 2)}</pre>` : ''}
         ${data.workFromHome ? `<h2>Work From Home</h2><pre>${JSON.stringify(data.workFromHome, null, 2)}</pre>` : ''}
+        
+        <h2>Household Members</h2>
+        ${data.household && data.household.length > 0 ?
+            `<ul>
+                ${data.household.map(m => `
+                    <li>
+                        <strong>${m.first_name} ${m.last_name}</strong> (${m.relationship})<br/>
+                        DOB: ${m.date_of_birth || 'N/A'}<br/>
+                        Notes: <pre>${JSON.stringify(m.tax_data, null, 2)}</pre>
+                    </li>
+                `).join('')}
+            </ul>`
+            : '<p>No household members added.</p>'}
     `;
 
     return sendEmail({
@@ -143,6 +159,19 @@ export async function sendProfileUpdateNotification(data: Partial<EnrollmentData
         
         <h2>New Data</h2>
         <pre>${JSON.stringify(data, null, 2)}</pre>
+
+        <h2>Household Members</h2>
+        ${data.household && data.household.length > 0 ?
+            `<ul>
+                ${data.household.map(m => `
+                    <li>
+                        <strong>${m.first_name} ${m.last_name}</strong> (${m.relationship})<br/>
+                        DOB: ${m.date_of_birth || 'N/A'}<br/>
+                        Notes: <pre>${JSON.stringify(m.tax_data, null, 2)}</pre>
+                    </li>
+                `).join('')}
+            </ul>`
+            : '<p>No household members added.</p>'}
     `;
 
     return sendEmail({
