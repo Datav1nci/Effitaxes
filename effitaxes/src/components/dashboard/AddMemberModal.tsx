@@ -134,6 +134,14 @@ export default function AddMemberModal({ isOpen, onClose, t, existingMembers = [
             // Reset state
             setStep(0);
             setSelection({ addSpouse: false, childCount: 0, dependantCount: 0, otherCount: 0, partnerType: "SPOUSE" });
+
+            // Check if members were returned (verifies RLS)
+            if (res.members && res.members.length > 0) {
+                console.log("Verified members inserted:", res.members);
+            } else {
+                console.warn("Success returned but no members in response. Possible RLS issue?");
+                // alert("Members added but not visible? Please refresh the page.");
+            }
         } else {
             alert(res.error || t.auth.errorUpdate);
         }

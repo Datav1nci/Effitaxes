@@ -36,20 +36,34 @@ export default async function TaxProfilePage(props: {
     let members = [];
 
     if (profile) {
-        const { data: hh } = await supabase
+        // console.log("Fetching household for user:", user.id);
+        const { data: hh, error: hhError } = await supabase
             .from("households")
             .select("*")
             .eq("primary_person_id", user.id)
             .single();
 
+        if (hhError && hhError.code !== 'PGRST116') {
+            console.error("Error fetching household in page:", hhError);
+        }
+
         household = hh;
 
         if (hh) {
-            const { data: mm } = await supabase
+            // console.log("Household found:", hh.id);
+            const { data: mm, error: mmError } = await supabase
                 .from("household_members")
                 .select("*")
                 .eq("household_id", hh.id);
+
+            if (mmError) {
+                console.error("Error fetching members in page:", mmError);
+            }
+
             members = mm || [];
+            // console.log("Members found:", members.length);
+        } else {
+            // console.log("No household found for user");
         }
     }
 

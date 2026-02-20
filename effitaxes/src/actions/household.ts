@@ -149,17 +149,20 @@ export async function addHouseholdMembers(members: MemberFormData[]) {
         tax_data: data.dependencyDetails || {},
     }));
 
-    const { error } = await supabase
+    const { data: insertedMembers, error } = await supabase
         .from("household_members")
-        .insert(records);
+        .insert(records)
+        .select();
 
     if (error) {
         console.error("Error adding members:", error);
         return { success: false, error: "Failed to add members" };
     }
 
+    console.log(`Successfully added ${insertedMembers.length} members to household ${household.id}`);
     revalidatePath("/[locale]/dashboard/tax-profile", "page");
-    return { success: true };
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { success: true, members: insertedMembers };
 }
 
 export async function removeHouseholdMember(memberId: string) {
@@ -180,5 +183,6 @@ export async function removeHouseholdMember(memberId: string) {
     }
 
     revalidatePath("/[locale]/dashboard/tax-profile", "page");
+    revalidatePath("/[locale]/dashboard", "layout");
     return { success: true };
 }
