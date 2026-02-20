@@ -15,6 +15,6 @@ export interface HouseholdMember {
     date_of_birth?: string | null;
     lives_with_primary: boolean;
     is_dependent: boolean;
-    tax_data: Record<string, any>;
+    tax_data: Record<string, unknown>;
     created_at?: string;
 }
