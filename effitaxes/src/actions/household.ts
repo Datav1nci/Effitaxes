@@ -1,9 +1,10 @@
-
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { MemberFormData } from "@/lib/householdSchema";
+import { sendProfileUpdateNotification } from "@/lib/mail";
+import { HouseholdMember } from "@/lib/householdTypes";
 
 export async function getHousehold() {
     const supabase = await createClient();
@@ -102,6 +103,8 @@ export async function addHouseholdMember(data: MemberFormData) {
         return { success: false, error: "Failed to add member" };
     }
 
+    await notifyAdminOfHouseholdChange(user.id);
+
     revalidatePath("/[locale]/dashboard/tax-profile", "page");
     return { success: true };
 }
@@ -160,6 +163,9 @@ export async function addHouseholdMembers(members: MemberFormData[]) {
     }
 
     console.log(`Successfully added ${insertedMembers.length} members to household ${household.id}`);
+
+    await notifyAdminOfHouseholdChange(user.id);
+
     revalidatePath("/[locale]/dashboard/tax-profile", "page");
     revalidatePath("/[locale]/dashboard", "layout");
     return { success: true, members: insertedMembers };
@@ -182,7 +188,49 @@ export async function removeHouseholdMember(memberId: string) {
         return { success: false, error: "Failed to remove member" };
     }
 
+    await notifyAdminOfHouseholdChange(user.id);
+
     revalidatePath("/[locale]/dashboard/tax-profile", "page");
     revalidatePath("/[locale]/dashboard", "layout");
     return { success: true };
+}
+
+async function notifyAdminOfHouseholdChange(userId: string) {
+    const supabase = await createClient();
+
+    // 1. Fetch Profile for Name/Email
+    const { data: profile } = await supabase
+        .from("profiles")
+        .select("first_name, last_name, email")
+        .eq("id", userId)
+        .single();
+
+    if (!profile) return;
+
+    // 2. Fetch Household & Members
+    const { data: household } = await supabase
+        .from("households")
+        .select("id")
+        .eq("primary_person_id", userId)
+        .single();
+
+    let householdMembers: HouseholdMember[] = [];
+    if (household) {
+        const { data: members } = await supabase
+            .from("household_members")
+            .select("*")
+            .eq("household_id", household.id);
+
+        if (members) householdMembers = members;
+    }
+
+    // 3. Send Notification
+    await sendProfileUpdateNotification({
+        personal: {
+            firstName: profile.first_name,
+            lastName: profile.last_name,
+            email: profile.email
+        },
+        household: householdMembers
+    });
 }
