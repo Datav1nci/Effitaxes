@@ -15,14 +15,15 @@ import { StepRental } from "@/components/enrollment/StepRental";
 import { StepWorkFromHome } from "@/components/enrollment/StepWorkFromHome";
 import { useRouter } from "next/navigation";
 import HouseholdPanel from "./HouseholdPanel";
+import { Household, HouseholdMember } from "@/lib/householdTypes";
 
 type TaxProfileViewProps = {
     profile: {
         tax_data: EnrollmentFormData;
         email?: string | null;
     };
-    household?: any;
-    members?: any[];
+    household?: Household | null;
+    members?: HouseholdMember[] | null;
     t: Dictionary;
 };
 

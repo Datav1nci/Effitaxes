@@ -12,11 +12,13 @@ export async function getHousehold() {
     if (!user) return { success: false, error: "Unauthorized" };
 
     // Get or Create Household
-    let { data: household, error } = await supabase
+    const { data: initialHousehold, error } = await supabase
         .from("households")
         .select("*")
         .eq("primary_person_id", user.id)
         .single();
+
+    let household = initialHousehold;
 
     if (!household && !error) {
         // If no household exists, create one

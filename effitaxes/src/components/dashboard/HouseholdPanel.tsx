@@ -6,25 +6,19 @@ import { Dictionary } from "@/lib/dictionary";
 import AddMemberModal from "./AddMemberModal";
 import { removeHouseholdMember } from "@/actions/household";
 
+import { Household, HouseholdMember } from "@/lib/householdTypes";
+
 // Define a type for the household and members since we don't have a shared type file yet
 // Ideally this should come from generated Supabase types
-type Member = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    relationship: "SPOUSE" | "PARTNER" | "CHILD" | "DEPENDANT" | "OTHER";
-    date_of_birth?: string;
-    is_dependent?: boolean;
-};
+// type Member = { ... } // Replaced by import
 
 type HouseholdPanelProps = {
-    household?: {
-        display_name?: string | null;
-    } | null;
-    members?: Member[] | null;
+    household?: Household | null;
+    members?: HouseholdMember[] | null;
     t: Dictionary;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function HouseholdPanel({ household, members = [], t }: HouseholdPanelProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);

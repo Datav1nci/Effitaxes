@@ -55,7 +55,7 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [router]);
+  }, [router, initialUser]);
 
   const handleSignOut = async () => {
     const supabase = createClient();
