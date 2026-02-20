@@ -106,6 +106,62 @@ export async function addHouseholdMember(data: MemberFormData) {
     return { success: true };
 }
 
+export async function addHouseholdMembers(members: MemberFormData[]) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Unauthorized" };
+
+    // Ensure household exists
+    const { data: initialHousehold, error: householdError } = await supabase
+        .from("households")
+        .select("id")
+        .eq("primary_person_id", user.id)
+        .single();
+
+    let household = initialHousehold;
+
+    if (!household) {
+        // Create household if not exists
+        const { data: newHousehold, error: createError } = await supabase
+            .from("households")
+            .insert({ primary_person_id: user.id })
+            .select("id")
+            .single();
+
+        if (createError || !newHousehold) {
+            console.error("Error creating household:", createError);
+            return { success: false, error: "Failed to create household" };
+        }
+        household = newHousehold;
+    } else if (householdError && householdError.code !== 'PGRST116') {
+        return { success: false, error: "Error fetching household" };
+    }
+
+    const records = members.map(data => ({
+        household_id: household.id,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        relationship: data.relationship,
+        date_of_birth: data.dateOfBirth || null,
+        lives_with_primary: data.livesWithPrimary,
+        is_dependent: data.isDependent,
+        tax_data: data.dependencyDetails || {},
+    }));
+
+    const { error } = await supabase
+        .from("household_members")
+        .insert(records);
+
+    if (error) {
+        console.error("Error adding members:", error);
+        return { success: false, error: "Failed to add members" };
+    }
+
+    revalidatePath("/[locale]/dashboard/tax-profile", "page");
+    return { success: true };
+}
+
 export async function removeHouseholdMember(memberId: string) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();

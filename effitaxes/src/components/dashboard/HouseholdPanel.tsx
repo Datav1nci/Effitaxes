@@ -77,6 +77,7 @@ export default function HouseholdPanel({ household, members = [], t }: Household
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 t={t}
+                existingMembers={members}
             />
         </div>
     );

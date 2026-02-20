@@ -77,8 +77,16 @@ export const dictionary = {
         },
         household: {
             title: "Famille / Ménage",
-            addMember: "Ajouter un membre",
+            addMember: "Ajouter des membres",
             noMembers: "Aucun membre de la famille ajouté.",
+            setup: {
+                title: "Qui ajoutez-vous ?",
+                spouseLabel: "Ajouter un époux / conjoint de fait",
+                childCount: "Nombre d'enfants",
+                dependantCount: "Nombre de personnes à charge",
+                otherCount: "Autres",
+                start: "Commencer"
+            },
             relationships: {
                 SPOUSE: "Époux / Épouse",
                 PARTNER: "Conjoint(e) de fait",
@@ -87,6 +95,8 @@ export const dictionary = {
                 OTHER: "Autre",
             },
             form: {
+                stepTitle: "Ajout de : {role} ({current}/{total})",
+                saveAll: "Tout enregistrer",
                 firstName: "Prénom",
                 lastName: "Nom",
                 relationship: "Relation",
@@ -574,8 +584,16 @@ export const dictionary = {
         },
         household: {
             title: "Family / Household",
-            addMember: "Add Family Member",
+            addMember: "Add Family Members",
             noMembers: "No family members added.",
+            setup: {
+                title: "Who are you adding?",
+                spouseLabel: "Add Spouse / Partner",
+                childCount: "Number of Children",
+                dependantCount: "Number of Dependants",
+                otherCount: "Others",
+                start: "Start"
+            },
             relationships: {
                 SPOUSE: "Spouse",
                 PARTNER: "Partner",
@@ -584,6 +602,8 @@ export const dictionary = {
                 OTHER: "Other",
             },
             form: {
+                stepTitle: "Adding: {role} ({current}/{total})",
+                saveAll: "Save All",
                 firstName: "First Name",
                 lastName: "Last Name",
                 relationship: "Relationship",
