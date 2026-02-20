@@ -27,6 +27,32 @@ export default async function TaxProfilePage(props: {
         .eq("id", user.id)
         .single();
 
+    // Fetch household data
+    // We duplicate the fetch logic here or import the action. 
+    // Since actions are for mutations usually, and we want data fetching in RSC, we can use supabase directly or the action.
+    // Using the action helper might easier if we export the fetch logic, but let's just do it directly for efficiency/simplicity in RSC
+
+    let household = null;
+    let members = [];
+
+    if (profile) {
+        const { data: hh } = await supabase
+            .from("households")
+            .select("*")
+            .eq("primary_person_id", user.id)
+            .single();
+
+        household = hh;
+
+        if (hh) {
+            const { data: mm } = await supabase
+                .from("household_members")
+                .select("*")
+                .eq("household_id", hh.id);
+            members = mm || [];
+        }
+    }
+
     const isEnrollmentCompleted = profile?.enrollment_status === "completed" || (profile?.tax_data && Object.keys(profile.tax_data).length > 0);
 
     return (
@@ -38,7 +64,7 @@ export default async function TaxProfilePage(props: {
             </div>
 
             {isEnrollmentCompleted ? (
-                <TaxProfileView profile={profile} t={t} />
+                <TaxProfileView profile={profile} household={household} members={members} t={t} />
             ) : (
                 <EnrollmentWizard user={user} profile={profile} />
             )}

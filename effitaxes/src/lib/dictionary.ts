@@ -75,6 +75,29 @@ export const dictionary = {
             missingInfo: "Informations manquantes. Veuillez cliquer sur Modifier pour compléter cette section.",
             editSection: "Modification :",
         },
+        household: {
+            title: "Famille / Ménage",
+            addMember: "Ajouter un membre",
+            noMembers: "Aucun membre de la famille ajouté.",
+            relationships: {
+                SPOUSE: "Époux / Épouse",
+                PARTNER: "Conjoint(e) de fait",
+                CHILD: "Enfant",
+                DEPENDANT: "Personne à charge",
+                OTHER: "Autre",
+            },
+            form: {
+                firstName: "Prénom",
+                lastName: "Nom",
+                relationship: "Relation",
+                dob: "Date de naissance",
+                livesWithPrimary: "Vit avec vous ?",
+                isDependent: "Est une personne à charge ?",
+                disability: "Handicap / Invalidité ?",
+                financialDependency: "Dépendance financière totale ?",
+                notes: "Notes supplémentaires"
+            }
+        },
         auth: {
             signIn: "Se connecter",
             signUp: "S'inscrire",
@@ -548,6 +571,29 @@ export const dictionary = {
             edit: "Edit",
             missingInfo: "Information missing. Please click Edit to complete this section.",
             editSection: "Editing:",
+        },
+        household: {
+            title: "Family / Household",
+            addMember: "Add Family Member",
+            noMembers: "No family members added.",
+            relationships: {
+                SPOUSE: "Spouse",
+                PARTNER: "Partner",
+                CHILD: "Child",
+                DEPENDANT: "Dependant",
+                OTHER: "Other",
+            },
+            form: {
+                firstName: "First Name",
+                lastName: "Last Name",
+                relationship: "Relationship",
+                dob: "Date of Birth",
+                livesWithPrimary: "Lives with you?",
+                isDependent: "Is a dependant?",
+                disability: "Disability?",
+                financialDependency: "Full financial dependency?",
+                notes: "Additional Notes"
+            }
         },
         auth: {
             signIn: "Sign In",

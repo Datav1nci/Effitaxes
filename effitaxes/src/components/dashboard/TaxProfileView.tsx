@@ -14,12 +14,15 @@ import { StepCarExpenses } from "@/components/enrollment/StepCarExpenses";
 import { StepRental } from "@/components/enrollment/StepRental";
 import { StepWorkFromHome } from "@/components/enrollment/StepWorkFromHome";
 import { useRouter } from "next/navigation";
+import HouseholdPanel from "./HouseholdPanel";
 
 type TaxProfileViewProps = {
     profile: {
         tax_data: EnrollmentFormData;
         email?: string | null;
     };
+    household?: any;
+    members?: any[];
     t: Dictionary;
 };
 
@@ -119,7 +122,7 @@ const SectionEditor = ({
     );
 };
 
-export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
+export default function TaxProfileView({ profile, household, members, t }: TaxProfileViewProps) {
     const router = useRouter();
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [data, setData] = useState<Partial<EnrollmentFormData>>(() => {
@@ -205,6 +208,9 @@ export default function TaxProfileView({ profile, t }: TaxProfileViewProps) {
     return (
         <div className="max-w-6xl mx-auto py-8 px-4">
             <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{t.auth.yourProfile}</h2>
+
+            {/* Household Panel */}
+            <HouseholdPanel household={household} members={members} t={t} />
 
             {/* Personal Section */}
             {isEditing === 'personal' ? (
