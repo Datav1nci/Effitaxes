@@ -49,7 +49,7 @@ export default function HouseholdPanel({ household, members: initialMembers = []
     };
 
     const handleDelete = async (id: string) => {
-        if (confirm("Are you sure?")) {
+        if (confirm(t.household.confirmDelete)) {
             setIsDeleting(id);
             await removeHouseholdMember(id);
             await fetchMembers(); // Refresh local state
@@ -95,7 +95,7 @@ export default function HouseholdPanel({ household, members: initialMembers = []
                                     disabled={isDeleting === member.id}
                                     className="text-xs text-red-500 hover:text-red-700 disabled:opacity-50"
                                 >
-                                    {isDeleting === member.id ? "..." : "Remove"}
+                                    {isDeleting === member.id ? "..." : t.household.remove}
                                 </button>
                             </div>
                         </div>

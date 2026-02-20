@@ -78,6 +78,8 @@ export const dictionary = {
         household: {
             title: "Famille / Ménage",
             addMember: "Ajouter des membres",
+            remove: "Retirer",
+            confirmDelete: "Êtes-vous sûr de vouloir retirer ce membre ?",
             noMembers: "Aucun membre de la famille ajouté.",
             setup: {
                 title: "Qui ajoutez-vous ?",
@@ -585,6 +587,8 @@ export const dictionary = {
         household: {
             title: "Family / Household",
             addMember: "Add Family Members",
+            remove: "Remove",
+            confirmDelete: "Are you sure you want to remove this member?",
             noMembers: "No family members added.",
             setup: {
                 title: "Who are you adding?",
