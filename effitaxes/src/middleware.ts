@@ -6,8 +6,14 @@ const locales = ["fr", "en"];
 const defaultLocale = "fr";
 
 export async function middleware(request: NextRequest) {
-    // 1. Check if there is any supported locale in the pathname
     const { pathname } = request.nextUrl;
+
+    // Skip localization for API routes
+    if (pathname.startsWith('/api')) {
+        return await updateSession(request);
+    }
+
+    // 1. Check if there is any supported locale in the pathname
     const pathnameHasLocale = locales.some(
         (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
     );
