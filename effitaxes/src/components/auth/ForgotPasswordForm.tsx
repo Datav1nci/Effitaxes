@@ -18,13 +18,16 @@ export default function ForgotPasswordForm() {
         const supabase = createClient();
         const origin = window.location.origin;
 
-        // Called from the browser so the PKCE verifier is stored in accessible
-        // (non-httpOnly) cookies that the browser SDK can read back during exchange.
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${origin}/auth/callback?type=recovery&next=/${language}/reset-password`,
-        });
+        // Use a bare callback URL (no query params with slashes) to avoid
+        // Supabase allowlist matching issues. The callback route always
+        // redirects to reset-password after a successful code exchange.
+        const redirectTo = `${origin}/auth/callback`;
+        console.log("[ForgotPasswordForm] redirectTo:", redirectTo);
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
 
         if (error) {
+            console.error("[ForgotPasswordForm] error:", error);
             setErrorMsg(error.message || "Could not send reset link. Please try again.");
             setStatus("error");
         } else {

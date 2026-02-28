@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { useLanguage } from "@/context/LanguageContext";
@@ -16,11 +16,13 @@ export default function ResetPasswordPage() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
+    const exchangeAttempted = useRef(false);
+
     useEffect(() => {
         const code = searchParams.get("code");
 
         if (!code) {
-            // No code — check if user already has a recovery session (e.g. arrived via direct link)
+            // No code — check if user already has a recovery session
             const supabase = createClient();
             supabase.auth.getSession().then(({ data: { session } }) => {
                 if (session) {
@@ -33,18 +35,27 @@ export default function ResetPasswordPage() {
             return;
         }
 
-        // Exchange the PKCE code client-side (the browser has the verifier)
+        // Guard against double-invocation (React strict mode / re-renders)
+        if (exchangeAttempted.current) return;
+        exchangeAttempted.current = true;
+
         const supabase = createClient();
-        supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-            if (error) {
-                console.error("Code exchange failed:", error.message);
-                setErrorMsg("This reset link has expired or already been used. Please request a new one.");
-                setStatus("error");
-            } else {
+        supabase.auth.exchangeCodeForSession(code).then(async ({ error }) => {
+            // Even if the exchange errored (e.g. code already consumed on prev render),
+            // check whether a session was established — if so, show the form.
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
                 setStatus("ready");
+                return;
+            }
+            if (error) {
+                console.error("Code exchange failed:", error.message, error.status);
+                setErrorMsg(`Reset link error: ${error.message}`);
+                setStatus("error");
             }
         });
     }, [searchParams]);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
