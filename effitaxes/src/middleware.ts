@@ -7,6 +7,15 @@ const defaultLocale = "fr";
 
 export async function middleware(request: NextRequest) {
     const { pathname, searchParams, origin } = request.nextUrl;
+    const host = request.headers.get('host') || '';
+
+    // Normalize non-www to www so the PKCE verifier cookie (stored on www.effitaxes.com)
+    // is always accessible during the code exchange on the reset-password page.
+    if (host === 'effitaxes.com') {
+        const wwwUrl = new URL(request.url);
+        wwwUrl.host = 'www.effitaxes.com';
+        return NextResponse.redirect(wwwUrl.toString(), { status: 301 });
+    }
 
     // Skip localization for API and auth routes
     if (pathname.startsWith('/api') || pathname.startsWith('/auth')) {
