@@ -84,7 +84,10 @@ export const createSchemas = (t: T) => {
         notes: z.string().optional(),
     });
 
-    const rentalSchema = z.object({
+    const rentalPropertySchema = z.object({
+        propertyType: z.enum(["apartment", "duplex", "triplex", "house", "other"], {
+            message: t.enrollment.errors.required,
+        }),
         address: z.string().min(1, t.enrollment.errors.required),
         grossIncome: z.coerce.number().min(0, t.enrollment.errors.required),
         ownershipPercentage: z.coerce.number().min(0).max(100),
@@ -98,6 +101,10 @@ export const createSchemas = (t: T) => {
             managementFees: z.coerce.number().optional(),
             other: z.coerce.number().optional(),
         }),
+    });
+
+    const rentalSchema = z.object({
+        properties: z.array(rentalPropertySchema).min(1, t.enrollment.errors.required),
     });
 
     const workFromHomeSchema = z.object({

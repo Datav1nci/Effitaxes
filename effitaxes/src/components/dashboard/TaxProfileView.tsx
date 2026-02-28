@@ -166,9 +166,12 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
                 if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
             } else {
                 console.error("Failed to notify admin of batch:", await res.text());
+                // Fallback: clear it so the UI isn't stuck forever, but log it
+                setPendingBatchId(null);
             }
         } catch (e) {
             console.error("Error submitting batch:", e);
+            setPendingBatchId(null);
         } finally {
             setIsSubmittingBatch(false);
         }
@@ -459,7 +462,7 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
             )}
 
             {/* Rental */}
-            {(incomeSources.includes("rental") || hasData(data.rental)) && (
+            {(incomeSources.includes("rental") || (data.rental?.properties && data.rental.properties.length > 0)) && (
                 isEditing === 'rental' ? (
                     <SectionEditor
                         title={t.enrollment.steps.rental}
@@ -472,18 +475,26 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
                         fieldNames={['rental']}
                     />
                 ) : (
-                    <Section title={t.enrollment.steps.rental} onEdit={() => setIsEditing('rental')} isEmpty={!hasData(data.rental)} t={t}>
-                        <div className="space-y-1">
-                            <FieldRow label={t.enrollment.rental.address} value={data.rental?.address} />
-                            <FieldRow label={t.enrollment.rental.grossIncome} value={data.rental?.grossIncome} />
-                            <FieldRow label={t.enrollment.rental.ownershipPercentage} value={data.rental?.ownershipPercentage} />
+                    <Section title={t.enrollment.steps.rental} onEdit={() => setIsEditing('rental')} isEmpty={!(data.rental?.properties && data.rental.properties.length > 0)} t={t}>
+                        <div className="space-y-6">
+                            {data.rental?.properties?.map((property, idx) => (
+                                <div key={idx} className="space-y-1 pb-6 border-b border-gray-100 dark:border-gray-800 last:border-0 last:pb-0">
+                                    <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                                        {t.enrollment.rental.propertyLabel} {idx + 1}
+                                    </h4>
+                                    <FieldRow label={t.enrollment.rental.propertyType} value={property.propertyType ? t.enrollment.rental.propertyTypeOptions[property.propertyType as keyof typeof t.enrollment.rental.propertyTypeOptions] : ""} />
+                                    <FieldRow label={t.enrollment.rental.address} value={property.address} />
+                                    <FieldRow label={t.enrollment.rental.grossIncome} value={property.grossIncome} />
+                                    <FieldRow label={t.enrollment.rental.ownershipPercentage} value={property.ownershipPercentage} />
 
-                            <h4 className="font-semibold mt-4 mb-1 border-b pb-1 dark:border-gray-700">Expenses</h4>
-                            {data.rental?.expenses && Object.entries(data.rental.expenses).map(([key, value]) => {
-                                const labelKey = key as keyof typeof t.enrollment.rental.expenses;
-                                const label = t.enrollment.rental.expenses[labelKey] || key;
-                                return <FieldRow key={key} label={label} value={value as string | number} />;
-                            })}
+                                    <h5 className="font-medium mt-3 mb-1 text-sm text-gray-700 dark:text-gray-300">Expenses</h5>
+                                    {property.expenses && Object.entries(property.expenses).map(([key, value]) => {
+                                        const labelKey = key as keyof typeof t.enrollment.rental.expenses;
+                                        const label = t.enrollment.rental.expenses[labelKey] || key;
+                                        return <FieldRow key={key} label={label} value={value as string | number} />;
+                                    })}
+                                </div>
+                            ))}
                         </div>
                     </Section>
                 )
