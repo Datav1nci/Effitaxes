@@ -2,8 +2,6 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-import { sendProfileUpdateNotification } from "@/lib/mail";
-import { HouseholdMember } from "@/lib/householdTypes";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateTaxData(data: any): Promise<{ success: boolean; error?: string }> {
@@ -61,37 +59,7 @@ export async function updateTaxData(data: any): Promise<{ success: boolean; erro
                 console.error("Failed to sync auth metadata:", authError);
             }
         }
-
-        // Fetch Household for Notification
-        let householdMembers: HouseholdMember[] = [];
-        try {
-            const { data: household } = await supabase
-                .from("households")
-                .select("id")
-                .eq("primary_person_id", user.id)
-                .single();
-
-            if (household) {
-                const { data: members } = await supabase
-                    .from("household_members")
-                    .select("*")
-                    .eq("household_id", household.id);
-
-                if (members) householdMembers = members;
-            }
-        } catch (err) {
-            console.error("Error fetching household for notification:", err);
-        }
-
-        // Send Email Notification
-        const { error: emailError } = await sendProfileUpdateNotification({
-            ...data,
-            household: householdMembers
-        });
-        if (emailError) {
-            console.error("Failed to send update email:", emailError);
-            // Don't fail the request if email fails, but log it
-        }
+        // Removed Send Email Notification to rely on explicit/debounced /api/notify-admin route
 
         revalidatePath("/[locale]/dashboard", "page");
         revalidatePath("/[locale]/dashboard/tax-profile", "page");

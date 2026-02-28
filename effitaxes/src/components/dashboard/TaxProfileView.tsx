@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createSchemas, EnrollmentFormData } from "@/lib/enrollmentSchema";
@@ -139,7 +139,77 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
         return initialData;
     });
 
+    const [pendingBatchId, setPendingBatchId] = useState<string | null>(null);
+    const [isSubmittingBatch, setIsSubmittingBatch] = useState(false);
+    const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const currentBatchIdRef = useRef<string | null>(null);
+
+    // Keep ref updated for the beacon
+    useEffect(() => {
+        currentBatchIdRef.current = pendingBatchId;
+    }, [pendingBatchId]);
+
     const schemas = React.useMemo(() => createSchemas(t), [t]);
+
+    // Handle Manual or Timer Submission
+    const submitBatchUpdates = useCallback(async (batchIdToSubmit: string) => {
+        if (!batchIdToSubmit || isSubmittingBatch) return;
+        setIsSubmittingBatch(true);
+        try {
+            const res = await fetch("/api/notify-admin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ batchId: batchIdToSubmit }),
+            });
+            if (res.ok) {
+                setPendingBatchId(null);
+                if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+            } else {
+                console.error("Failed to notify admin of batch:", await res.text());
+            }
+        } catch (e) {
+            console.error("Error submitting batch:", e);
+        } finally {
+            setIsSubmittingBatch(false);
+        }
+    }, [isSubmittingBatch]);
+
+    // 3-Minute Debounce Timer
+    useEffect(() => {
+        if (pendingBatchId) {
+            if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+            debounceTimerRef.current = setTimeout(() => {
+                submitBatchUpdates(pendingBatchId);
+            }, 3 * 60 * 1000); // 3 minutes
+        }
+        return () => {
+            if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+        };
+    }, [pendingBatchId, submitBatchUpdates]);
+
+    // Visibility Change Beacon (reliable unmount/tab close)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "hidden" && currentBatchIdRef.current) {
+                // Send beacon guarantees delivery on tab close without blocking
+                navigator.sendBeacon(
+                    "/api/notify-admin",
+                    JSON.stringify({ batchId: currentBatchIdRef.current })
+                );
+                // We don't await beacon, just assume it fired.
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, []);
+
+    // Called whenever a local change happens (save section or household update)
+    const triggerPendingState = () => {
+        setPendingBatchId(prev => prev || crypto.randomUUID());
+    };
 
     const handleSave = async (partialData: EnrollmentFormData) => {
         // Merge the new partial data with existing data to ensure we don't overwrite with incomplete object
@@ -147,6 +217,7 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
 
         const result = await updateTaxData(mergedData);
         if (result.success) {
+            triggerPendingState();
             // Check if we updated 'selection' and if new sources were added
             if (isEditing === 'selection') {
                 const oldSources = (data.incomeSources as string[]) || [];
@@ -210,8 +281,36 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
         <div className="max-w-6xl mx-auto py-8 px-4">
             <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">{t.auth.yourProfile}</h2>
 
+            {/* Pending Updates Banner */}
+            {pendingBatchId && (
+                <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in slide-in-from-top-4 fade-in duration-300 shadow-sm dark:bg-blue-900/20 dark:border-blue-800">
+                    <div className="flex items-start gap-3">
+                        <div className="text-blue-500 mt-0.5">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 className="font-semibold text-blue-900 dark:text-blue-200">
+                                {t.common.submitUpdatesBtn || "Submit Profile Updates"}
+                            </h4>
+                            <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                                {t.common.submitUpdatesHelpText || "We'll email your updates to the admin in a few minutes unless you submit now."}
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => submitBatchUpdates(pendingBatchId!)}
+                        disabled={isSubmittingBatch}
+                        className="whitespace-nowrap w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isSubmittingBatch ? "..." : (t.common.submitUpdatesBtn || "Submit Updates")}
+                    </button>
+                </div>
+            )}
+
             {/* Household Panel */}
-            <HouseholdPanel household={household} members={members} t={t} />
+            <HouseholdPanel household={household} members={members} t={t} onUpdate={triggerPendingState} />
 
             {/* Personal Section */}
             {isEditing === 'personal' ? (

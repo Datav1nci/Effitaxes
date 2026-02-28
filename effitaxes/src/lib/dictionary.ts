@@ -74,6 +74,8 @@ export const dictionary = {
             edit: "Modifier",
             missingInfo: "Informations manquantes. Veuillez cliquer sur Modifier pour compléter cette section.",
             editSection: "Modification :",
+            submitUpdatesBtn: "Soumettre les mises à jour",
+            submitUpdatesHelpText: "Nous enverrons vos mises à jour à l'administrateur dans quelques minutes à moins que vous ne les soumettiez maintenant.",
         },
         household: {
             title: "Famille / Ménage",
@@ -583,6 +585,8 @@ export const dictionary = {
             edit: "Edit",
             missingInfo: "Information missing. Please click Edit to complete this section.",
             editSection: "Editing:",
+            submitUpdatesBtn: "Submit Profile Updates",
+            submitUpdatesHelpText: "We'll email your updates to the admin in a few minutes unless you submit now.",
         },
         household: {
             title: "Family / Household",

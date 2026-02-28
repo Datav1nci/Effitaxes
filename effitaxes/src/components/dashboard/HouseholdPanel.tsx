@@ -16,10 +16,11 @@ type HouseholdPanelProps = {
     household?: Household | null;
     members?: HouseholdMember[] | null;
     t: Dictionary;
+    onUpdate?: () => void;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function HouseholdPanel({ household, members: initialMembers = [], t }: HouseholdPanelProps) {
+export default function HouseholdPanel({ household, members: initialMembers = [], t, onUpdate }: HouseholdPanelProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [clientMembers, setClientMembers] = useState<HouseholdMember[]>(initialMembers || []);
@@ -54,11 +55,13 @@ export default function HouseholdPanel({ household, members: initialMembers = []
             await removeHouseholdMember(id);
             await fetchMembers(); // Refresh local state
             setIsDeleting(null);
+            if (onUpdate) onUpdate();
         }
     };
 
     const handleMembersAdded = (newMembers: HouseholdMember[]) => {
         setClientMembers(current => [...current, ...newMembers]);
+        if (onUpdate) onUpdate();
     };
 
     return (
