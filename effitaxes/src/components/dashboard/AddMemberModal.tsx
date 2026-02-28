@@ -29,6 +29,7 @@ export default function AddMemberModal({ isOpen, onClose, t, existingMembers = [
     // Steps: 0 = Selection, 1+ = Member Details Loop
     const [step, setStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     // Batch Selection State
     const [selection, setSelection] = useState<BatchSelection>({
@@ -127,26 +128,23 @@ export default function AddMemberModal({ isOpen, onClose, t, existingMembers = [
 
     const submitAll = async (allData: MemberFormData[]) => {
         setIsSubmitting(true);
+        setSubmitError(null);
         const res = await addHouseholdMembers(allData);
         setIsSubmitting(false);
         if (res.success) {
-            router.refresh(); // Refresh Client Component data
+            router.refresh();
             onClose();
-            // Reset state
             setStep(0);
             setSelection({ addSpouse: false, childCount: 0, dependantCount: 0, otherCount: 0, partnerType: "SPOUSE" });
 
-            // Check if members were returned (verifies RLS)
             if (res.members && res.members.length > 0) {
                 console.log("Verified members inserted:", res.members);
                 onMembersAdded(res.members);
             } else {
                 console.warn("Success returned but no members in response. Possible RLS issue?");
-                // Still call with empty if needed or just let fetch handle it
-                // onMembersAdded([]); 
             }
         } else {
-            alert(res.error || t.auth.errorUpdate);
+            setSubmitError(res.error || t.auth.errorUpdate);
         }
     };
 
@@ -270,10 +268,20 @@ export default function AddMemberModal({ isOpen, onClose, t, existingMembers = [
                                 </div>
                             )}
 
-                            <div className="mt-6 flex justify-end">
-                                <button type="submit" disabled={isSubmitting} className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none disabled:opacity-50">
-                                    {isSubmitting ? "Saving..." : (currentMemberIndex === memberQueue.length - 1 ? t.household.form.saveAll : t.enrollment.buttons.next)}
-                                </button>
+                            <div className="mt-6 flex flex-col gap-3">
+                                {submitError && (
+                                    <div className="flex items-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+                                        <svg className="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <p className="text-sm text-red-700 dark:text-red-300">{submitError}</p>
+                                    </div>
+                                )}
+                                <div className="flex justify-end">
+                                    <button type="submit" disabled={isSubmitting} className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none disabled:opacity-50">
+                                        {isSubmitting ? "Saving..." : (currentMemberIndex === memberQueue.length - 1 ? t.household.form.saveAll : t.enrollment.buttons.next)}
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     )}

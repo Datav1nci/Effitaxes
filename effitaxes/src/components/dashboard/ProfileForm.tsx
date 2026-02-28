@@ -22,6 +22,7 @@ export default function ProfileForm({ user, profile }: ProfileFormProps) {
     const { t } = useLanguage();
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
 
     // Fallback to empty string to avoid "uncontrolled to controlled" warning
     const [firstName, setFirstName] = useState(profile?.first_name || "");
@@ -30,12 +31,13 @@ export default function ProfileForm({ user, profile }: ProfileFormProps) {
 
     async function handleSave(formData: FormData) {
         setIsSaving(true);
+        setSaveError(null);
         try {
             await updateProfile(formData);
             setIsEditing(false);
         } catch (error) {
             console.error(error);
-            alert(t.auth.errorUpdate);
+            setSaveError(t.auth.errorUpdate);
         } finally {
             setIsSaving(false);
         }
@@ -105,13 +107,23 @@ export default function ProfileForm({ user, profile }: ProfileFormProps) {
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-2 pt-2">
-                        <Button type="button" variant="ghost" onClick={() => setIsEditing(false)}>
-                            {t.auth.cancel}
-                        </Button>
-                        <Button type="submit" disabled={isSaving}>
-                            {isSaving ? "..." : t.auth.save}
-                        </Button>
+                    <div className="flex flex-col gap-3 pt-2">
+                        {saveError && (
+                            <div className="flex items-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+                                <svg className="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <p className="text-sm text-red-700 dark:text-red-300">{saveError}</p>
+                            </div>
+                        )}
+                        <div className="flex justify-end gap-2">
+                            <Button type="button" variant="ghost" onClick={() => { setIsEditing(false); setSaveError(null); }}>
+                                {t.auth.cancel}
+                            </Button>
+                            <Button type="submit" disabled={isSaving}>
+                                {isSaving ? "..." : t.auth.save}
+                            </Button>
+                        </div>
                     </div>
                 </form>
             ) : (
