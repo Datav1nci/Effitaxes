@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Menu, Moon, Sun, X, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
@@ -26,6 +26,14 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<User | null>(initialUser || null);
   const router = useRouter();
+  const pathname = usePathname();
+
+  // On auth/recovery pages, don't show the user as logged in.
+  // The recovery session is temporary and shouldn't count as authenticated.
+  const isAuthPage = pathname?.includes('/reset-password') ||
+    pathname?.includes('/login') ||
+    pathname?.includes('/forgot-password');
+  const visibleUser = isAuthPage ? null : user;
 
   const { theme, setTheme, resolvedTheme } = useTheme();
 
@@ -115,14 +123,14 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
           </button>
 
           {mounted && (
-            user ? (
+            visibleUser ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full bg-slate-200 dark:bg-slate-700">
                     <span className="font-medium text-sm">
-                      {user.user_metadata?.first_name
-                        ? `${user.user_metadata.first_name[0]}${user.user_metadata.last_name?.[0] || ''}`.toUpperCase()
-                        : user.email?.[0].toUpperCase()}
+                      {visibleUser.user_metadata?.first_name
+                        ? `${visibleUser.user_metadata.first_name[0]}${visibleUser.user_metadata.last_name?.[0] || ''}`.toUpperCase()
+                        : visibleUser.email?.[0].toUpperCase()}
                     </span>
                   </Button>
                 </DropdownMenuTrigger>
@@ -130,11 +138,11 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">
-                        {user.user_metadata?.first_name
-                          ? `${user.user_metadata.first_name} ${user.user_metadata.last_name || ''}`
+                        {visibleUser.user_metadata?.first_name
+                          ? `${visibleUser.user_metadata.first_name} ${visibleUser.user_metadata.last_name || ''}`
                           : 'User'}
                       </p>
-                      <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{visibleUser.email}</p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -197,14 +205,14 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
             ))}
             {/* Mobile Auth Links */}
             {mounted && (
-              user ? (
+              visibleUser ? (
                 <>
                   <Link
                     href={`/${language}/dashboard`}
                     onClick={() => setOpen(false)}
                     className="block rounded-md px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
                   >
-                    Dashboard ({user.email})
+                    Dashboard ({visibleUser.email})
                   </Link>
                   <button
                     onClick={() => {
