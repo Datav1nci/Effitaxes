@@ -14,17 +14,17 @@ export async function middleware(request: NextRequest) {
     }
 
     // Safety net: if Supabase falls back to the site URL (e.g. https://effitaxes.com?code=XXX)
-    // because the redirectTo URL was rejected by the allowlist, intercept the code here
-    // and forward it to /auth/callback with the correct type and next params.
+    // because the redirectTo URL was rejected by the allowlist, intercept the code here and
+    // route it directly to the reset-password page. The client-side component on that page
+    // will exchange the PKCE code in the browser (where the verifier is stored).
     const code = searchParams.get("code");
     const type = searchParams.get("type");
-    if (code && !pathname.startsWith("/auth/callback")) {
-        const callbackUrl = new URL(`${origin}/auth/callback`);
-        callbackUrl.searchParams.set("code", code);
-        // Preserve type if present, otherwise assume recovery (OAuth codes land at /auth/callback directly)
-        callbackUrl.searchParams.set("type", type ?? "recovery");
-        callbackUrl.searchParams.set("next", `/${defaultLocale}/reset-password`);
-        return NextResponse.redirect(callbackUrl.toString());
+    const isOnResetPage = pathname.includes("/reset-password");
+    if (code && (type === "recovery" || !pathname.startsWith("/auth/callback")) && !isOnResetPage) {
+        const locale = locales.find(l => pathname.startsWith(`/${l}`)) ?? defaultLocale;
+        const resetUrl = new URL(`${origin}/${locale}/reset-password`);
+        resetUrl.searchParams.set("code", code);
+        return NextResponse.redirect(resetUrl.toString());
     }
 
     // 1. Check if there is any supported locale in the pathname

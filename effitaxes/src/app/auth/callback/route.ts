@@ -24,6 +24,6 @@ export async function GET(request: Request) {
         }
     }
 
-    // return the user to an error page with instructions
-    return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+    // return the user to the forgot-password page with an error message
+    return NextResponse.redirect(`${origin}/fr/forgot-password?message=Reset link is invalid or has expired. Please request a new one.`);
 }
