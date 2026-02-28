@@ -17,10 +17,15 @@ export async function GET(request: Request) {
                 return NextResponse.redirect(`${origin}${next}`);
             }
 
-            // For all other flows (e.g., email confirmation): sign out immediately
+            // For email confirmation flows (type === "signup"), sign out immediately
             // to force the user to log in manually with their new credentials.
-            await supabase.auth.signOut();
-            return NextResponse.redirect(`${origin}/login?success=verified`);
+            if (type === "signup") {
+                await supabase.auth.signOut();
+                return NextResponse.redirect(`${origin}/login?success=verified`);
+            }
+
+            // For OAuth flows (Google, Facebook, etc.) — go straight to dashboard.
+            return NextResponse.redirect(`${origin}/dashboard`);
         }
     }
 
