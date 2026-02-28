@@ -8,8 +8,8 @@ const defaultLocale = "fr";
 export async function middleware(request: NextRequest) {
     const { pathname, searchParams, origin } = request.nextUrl;
 
-    // Skip localization for API routes
-    if (pathname.startsWith('/api')) {
+    // Skip localization for API and auth routes
+    if (pathname.startsWith('/api') || pathname.startsWith('/auth')) {
         return await updateSession(request);
     }
 
