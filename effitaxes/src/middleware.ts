@@ -6,11 +6,25 @@ const locales = ["fr", "en"];
 const defaultLocale = "fr";
 
 export async function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
+    const { pathname, searchParams, origin } = request.nextUrl;
 
     // Skip localization for API routes
     if (pathname.startsWith('/api')) {
         return await updateSession(request);
+    }
+
+    // Safety net: if Supabase falls back to the site URL (e.g. https://effitaxes.com?code=XXX)
+    // because the redirectTo URL was rejected by the allowlist, intercept the code here
+    // and forward it to /auth/callback with the correct type and next params.
+    const code = searchParams.get("code");
+    const type = searchParams.get("type");
+    if (code && !pathname.startsWith("/auth/callback")) {
+        const callbackUrl = new URL(`${origin}/auth/callback`);
+        callbackUrl.searchParams.set("code", code);
+        // Preserve type if present, otherwise assume recovery (OAuth codes land at /auth/callback directly)
+        callbackUrl.searchParams.set("type", type ?? "recovery");
+        callbackUrl.searchParams.set("next", `/${defaultLocale}/reset-password`);
+        return NextResponse.redirect(callbackUrl.toString());
     }
 
     // 1. Check if there is any supported locale in the pathname

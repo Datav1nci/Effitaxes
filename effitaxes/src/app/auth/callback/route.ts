@@ -4,18 +4,22 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
-    // if "next" is in param, use it as the redirect URL
-    // We don't use 'next' anymore because we force a redirect to login for security hardening
-    // const next = searchParams.get("next") ?? "/dashboard";
+    const next = searchParams.get("next");
+    const type = searchParams.get("type");
 
     if (code) {
         const supabase = await createClient();
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!error) {
-            // Hardening: Sign out immediately to force manual login with password
-            await supabase.auth.signOut();
+            // For password recovery flows, keep the session alive so the user
+            // can update their password on the reset-password page.
+            if (type === "recovery" && next) {
+                return NextResponse.redirect(`${origin}${next}`);
+            }
 
-            // Force redirect to login page with verified message
+            // For all other flows (e.g., email confirmation): sign out immediately
+            // to force the user to log in manually with their new credentials.
+            await supabase.auth.signOut();
             return NextResponse.redirect(`${origin}/login?success=verified`);
         }
     }

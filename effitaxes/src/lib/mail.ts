@@ -268,6 +268,12 @@ export async function sendProfileUpdateNotification(data: Partial<EnrollmentData
                 ${renderDataBlock(data.workFromHome as Record<string, unknown>, 'Work From Home')}
 
                 ${householdBlock}
+
+                <!-- Raw JSON Data -->
+                <div style="margin-top:32px;border-top:2px dashed #e2e8f0;padding-top:24px;">
+                    <h3 style="margin:0 0 10px 0;font-size:13px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">📎 Raw Data (JSON — for processing)</h3>
+                    <pre style="margin:0;font-size:11.5px;line-height:1.6;background:#0f172a;color:#e2e8f0;padding:16px;border-radius:8px;overflow:auto;white-space:pre-wrap;word-break:break-word;">${JSON.stringify({ ...data, updatedSections: undefined }, null, 2)}</pre>
+                </div>
             </div>
 
             <!-- Footer -->

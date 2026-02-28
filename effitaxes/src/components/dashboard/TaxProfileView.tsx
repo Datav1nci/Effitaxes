@@ -345,7 +345,7 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
             )}
 
             {/* Household Panel */}
-            <HouseholdPanel household={household} members={members} t={t} onUpdate={triggerPendingState} />
+            <HouseholdPanel household={household} members={members} t={t} onUpdate={() => triggerPendingState("household")} />
 
             {/* Personal Section */}
             {isEditing === 'personal' ? (
