@@ -6,7 +6,7 @@ import { HouseholdMember } from "@/lib/householdTypes";
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { batchId } = body;
+        const { batchId, updatedSections } = body;
 
         if (!batchId) {
             return NextResponse.json({ success: false, error: "Missing batchId" }, { status: 400 });
@@ -88,7 +88,8 @@ export async function POST(req: NextRequest) {
         // 5. Send Unified Email
         const { success: emailSuccess, error: emailError } = await sendProfileUpdateNotification({
             ...finalPayload,
-            household: householdMembers
+            household: householdMembers,
+            updatedSections: Array.isArray(updatedSections) ? updatedSections : [],
         });
 
         if (!emailSuccess) {

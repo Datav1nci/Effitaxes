@@ -141,13 +141,19 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
 
     const [pendingBatchId, setPendingBatchId] = useState<string | null>(null);
     const [isSubmittingBatch, setIsSubmittingBatch] = useState(false);
+    const [updatedSections, setUpdatedSections] = useState<Set<string>>(new Set());
     const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
     const currentBatchIdRef = useRef<string | null>(null);
+    const updatedSectionsRef = useRef<Set<string>>(new Set());
 
-    // Keep ref updated for the beacon
+    // Keep refs updated for the beacon
     useEffect(() => {
         currentBatchIdRef.current = pendingBatchId;
     }, [pendingBatchId]);
+
+    useEffect(() => {
+        updatedSectionsRef.current = updatedSections;
+    }, [updatedSections]);
 
     const schemas = React.useMemo(() => createSchemas(t), [t]);
 
@@ -155,14 +161,16 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
     const submitBatchUpdates = useCallback(async (batchIdToSubmit: string) => {
         if (!batchIdToSubmit || isSubmittingBatch) return;
         setIsSubmittingBatch(true);
+        const sectionsSnapshot = Array.from(updatedSectionsRef.current);
         try {
             const res = await fetch("/api/notify-admin", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ batchId: batchIdToSubmit }),
+                body: JSON.stringify({ batchId: batchIdToSubmit, updatedSections: sectionsSnapshot }),
             });
             if (res.ok) {
                 setPendingBatchId(null);
+                setUpdatedSections(new Set());
                 if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
             } else {
                 console.error("Failed to notify admin of batch:", await res.text());
@@ -194,12 +202,11 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.visibilityState === "hidden" && currentBatchIdRef.current) {
-                // Send beacon guarantees delivery on tab close without blocking
-                navigator.sendBeacon(
-                    "/api/notify-admin",
-                    JSON.stringify({ batchId: currentBatchIdRef.current })
-                );
-                // We don't await beacon, just assume it fired.
+                const payload = JSON.stringify({
+                    batchId: currentBatchIdRef.current,
+                    updatedSections: Array.from(updatedSectionsRef.current),
+                });
+                navigator.sendBeacon("/api/notify-admin", payload);
             }
         };
 
@@ -210,8 +217,12 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
     }, []);
 
     // Called whenever a local change happens (save section or household update)
-    const triggerPendingState = () => {
+    const triggerPendingState = (sectionName?: string) => {
         setPendingBatchId(prev => prev || crypto.randomUUID());
+        if (sectionName) {
+            setUpdatedSections(prev => new Set(prev).add(sectionName));
+            updatedSectionsRef.current = new Set(updatedSectionsRef.current).add(sectionName);
+        }
     };
 
     const handleSave = async (partialData: EnrollmentFormData) => {
@@ -220,7 +231,7 @@ export default function TaxProfileView({ profile, household, members, t }: TaxPr
 
         const result = await updateTaxData(mergedData);
         if (result.success) {
-            triggerPendingState();
+            triggerPendingState(isEditing || undefined);
             // Check if we updated 'selection' and if new sources were added
             if (isEditing === 'selection') {
                 const oldSources = (data.incomeSources as string[]) || [];
