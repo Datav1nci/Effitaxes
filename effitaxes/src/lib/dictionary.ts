@@ -76,6 +76,9 @@ export const dictionary = {
             editSection: "Modification :",
             submitUpdatesBtn: "Soumettre les mises à jour",
             submitUpdatesHelpText: "Nous enverrons vos mises à jour à l'administrateur dans quelques minutes à moins que vous ne les soumettiez maintenant.",
+            cancel: "Annuler",
+            saveChanges: "Enregistrer les modifications",
+            saving: "Enregistrement...",
         },
         household: {
             title: "Famille / Ménage",
@@ -587,6 +590,9 @@ export const dictionary = {
             editSection: "Editing:",
             submitUpdatesBtn: "Submit Profile Updates",
             submitUpdatesHelpText: "We'll email your updates to the admin in a few minutes unless you submit now.",
+            cancel: "Cancel",
+            saveChanges: "Save Changes",
+            saving: "Saving...",
         },
         household: {
             title: "Family / Household",
