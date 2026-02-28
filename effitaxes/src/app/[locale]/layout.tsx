@@ -10,6 +10,7 @@ import { createClient } from "@/utils/supabase/server";
 import JsonLd from "@/components/JsonLd";
 import { dictionary } from "@/lib/dictionary";
 import ConsentBanner from "@/components/ConsentBanner";
+import InactivityGuard from "@/components/InactivityGuard";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -62,6 +63,7 @@ export default async function RootLayout({
             <main className="mx-auto max-w-7xl px-4">{children}</main>
             <Footer />
             <ConsentBanner />
+            <InactivityGuard />
           </LanguageProvider>
         </ThemeProvider>
       </body>
