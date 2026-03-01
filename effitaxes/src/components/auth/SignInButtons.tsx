@@ -31,6 +31,7 @@ export function SignInButtons() {
                 {t.auth.signInGoogle}
             </Button>
 
+            {/* Facebook sign-in — hidden until configured
             <Button
                 variant="outline"
                 className="w-full flex items-center justify-center gap-2 py-2.5 border-gray-300 shadow-sm hover:bg-gray-50 hover:text-blue-600 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
@@ -48,6 +49,7 @@ export function SignInButtons() {
                 </svg>
                 {t.auth.signInFacebook}
             </Button>
+            */}
         </div>
     );
 }
