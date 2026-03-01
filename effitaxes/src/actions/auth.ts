@@ -93,6 +93,24 @@ export async function login(formData: FormData) {
         await adminSupabase.from("login_attempts").delete().eq("email", email);
     }
 
+    // 4. Check enrollment status — redirect new users to the enrollment wizard
+    const { data: { user: loggedInUser } } = await supabase.auth.getUser();
+    if (loggedInUser) {
+        const { data: profile } = await supabase
+            .from("profiles")
+            .select("enrollment_status")
+            .eq("id", loggedInUser.id)
+            .single();
+
+        if (profile?.enrollment_status !== "completed") {
+            // Detect locale from the Referer header (e.g. /fr/login → fr)
+            const referer = (await headers()).get("referer") || "";
+            const localeMatch = referer.match(/\/([a-z]{2})\//);
+            const locale = localeMatch ? localeMatch[1] : "fr";
+            return redirect(`/${locale}/inscription`);
+        }
+    }
+
     return redirect("/dashboard");
 }
 

@@ -31,6 +31,11 @@ export default async function DashboardPage(props: {
         .eq("id", user.id)
         .single();
 
+    // Guard: unenrolled users must complete the enrollment wizard first
+    if (profile?.enrollment_status !== "completed") {
+        return redirect(`/${locale}/inscription`);
+    }
+
     return (
         <div className="flex flex-col items-center justify-center p-4 md:p-24">
             <h1 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">
