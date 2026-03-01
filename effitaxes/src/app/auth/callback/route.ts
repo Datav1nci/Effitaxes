@@ -28,6 +28,16 @@ export async function GET(request: Request) {
         }
     }
 
+    // Handle token-verified flows (e.g. email confirmation via PKCE token):
+    // Supabase verifies the token server-side and sets a session cookie — no ?code= in the URL.
+    // We detect this by checking if a valid session already exists.
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+        await supabase.auth.signOut();
+        return NextResponse.redirect(`${origin}/fr/login?success=verified`);
+    }
+
     // return the user to the forgot-password page with an error message
     return NextResponse.redirect(`${origin}/fr/forgot-password?message=Reset link is invalid or has expired. Please request a new one.`);
 }
