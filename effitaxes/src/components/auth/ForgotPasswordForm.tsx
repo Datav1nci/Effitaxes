@@ -18,10 +18,11 @@ export default function ForgotPasswordForm() {
         const supabase = createClient();
         const origin = window.location.origin;
 
-        // Use a bare callback URL (no query params with slashes) to avoid
-        // Supabase allowlist matching issues. The callback route always
-        // redirects to reset-password after a successful code exchange.
-        const redirectTo = `${origin}/auth/callback`;
+        // Use the dedicated recovery callback URL so the callback handler
+        // knows unambiguously this is a password reset flow.
+        // IMPORTANT: this URL must be in your Supabase Redirect URLs allowlist:
+        //   https://www.effitaxes.com/auth/callback/recovery
+        const redirectTo = `${origin}/auth/callback/recovery`;
         console.log("[ForgotPasswordForm] redirectTo:", redirectTo);
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });

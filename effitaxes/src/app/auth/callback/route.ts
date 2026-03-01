@@ -11,10 +11,9 @@ export async function GET(request: Request) {
         const supabase = await createClient();
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!error) {
-            // For password recovery flows, keep the session alive so the user
-            // can update their password on the reset-password page.
-            if (type === "recovery" && next) {
-                return NextResponse.redirect(`${origin}${next}`);
+            // Backward-compat: if an old recovery link encoded type=recovery, honor it.
+            if (type === "recovery") {
+                return NextResponse.redirect(`${origin}${next || "/fr/reset-password"}`);
             }
 
             // For email confirmation flows (type === "signup"), sign out immediately
