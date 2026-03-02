@@ -11,26 +11,36 @@ export async function GET(request: Request) {
         const supabase = await createClient();
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!error) {
-            // Backward-compat: if an old recovery link encoded type=recovery, honor it.
+            // Password reset flow
             if (type === "recovery") {
                 return NextResponse.redirect(`${origin}${next || "/fr/reset-password"}`);
             }
 
-            // For email confirmation flows (type === "signup"), sign out immediately
-            // to force the user to log in manually with their new credentials.
+            // Email confirmation flow — sign out so the user logs in manually
             if (type === "signup") {
                 await supabase.auth.signOut();
                 return NextResponse.redirect(`${origin}/login?success=verified`);
             }
 
-            // For OAuth flows (Google, Facebook, etc.) — go straight to dashboard.
+            // OAuth (Google, etc.) — go straight to dashboard
             return NextResponse.redirect(`${origin}/dashboard`);
+
+        } else {
+            // Code exchange failed — send to the right page based on what was attempted.
+            // IMPORTANT: never send signup failures to the forgot-password page.
+            if (type === "recovery") {
+                return NextResponse.redirect(
+                    `${origin}/fr/forgot-password?message=Reset link is invalid or has expired. Please request a new one.`
+                );
+            }
+            // Signup verification failed (e.g. link already used, Safe Links pre-fetch, etc.)
+            return NextResponse.redirect(
+                `${origin}/fr/login?message=Email verification failed. Please try signing up again or contact support.`
+            );
         }
     }
 
-    // Handle token-verified flows (e.g. email confirmation via PKCE token):
-    // Supabase verifies the token server-side and sets a session cookie — no ?code= in the URL.
-    // We detect this by checking if a valid session already exists.
+    // No ?code= in URL — handle PKCE token-verified flows where Supabase sets the session directly.
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
@@ -38,6 +48,13 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${origin}/fr/login?success=verified`);
     }
 
-    // return the user to the forgot-password page with an error message
-    return NextResponse.redirect(`${origin}/fr/forgot-password?message=Reset link is invalid or has expired. Please request a new one.`);
+    // Final fallback — no code, no session. Show the right error for the right flow.
+    if (type === "recovery") {
+        return NextResponse.redirect(
+            `${origin}/fr/forgot-password?message=Reset link is invalid or has expired. Please request a new one.`
+        );
+    }
+    return NextResponse.redirect(
+        `${origin}/fr/login?message=Verification link is invalid or has expired. Please try again.`
+    );
 }
