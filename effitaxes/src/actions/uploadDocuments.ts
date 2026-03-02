@@ -78,10 +78,13 @@ export async function recordDocuments(
         );
 
         // Notify admin with download links
+        const firstName = profile?.first_name || user.user_metadata?.first_name || user.email?.split("@")[0] || "Unknown";
+        const lastName = profile?.last_name || user.user_metadata?.last_name || "";
+
         await sendDocumentUploadNotification({
-            firstName: profile?.first_name || "Unknown",
-            lastName: profile?.last_name || "Client",
-            email: profile?.email || "",
+            firstName,
+            lastName: lastName || "Client",
+            email: profile?.email || user.email || "",
             files: filesWithUrls,
         });
 
