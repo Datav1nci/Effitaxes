@@ -6,15 +6,19 @@ import { revalidatePath } from "next/cache";
 
 const BUCKET = "user-documents";
 
-const ALLOWED_MIME_TYPES = [
+const ALLOWED_NON_IMAGE_MIME_TYPES = [
     "application/pdf",
-    "image/jpeg",
-    "image/png",
-    "image/heic",
     "application/vnd.ms-excel",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "text/csv",
 ];
+
+// Accept any image type (iOS delivers heic/heif/jpg/jpeg/png with varying MIME strings)
+// Non-image types must match the explicit allowlist above
+function isAllowedMimeType(mime: string): boolean {
+    if (mime.startsWith("image/")) return true;
+    return ALLOWED_NON_IMAGE_MIME_TYPES.includes(mime);
+}
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 MB
 
@@ -41,7 +45,7 @@ export async function uploadDocuments(
 
         // Validate all files before uploading any
         for (const file of files) {
-            if (!ALLOWED_MIME_TYPES.includes(file.mimeType)) {
+            if (!isAllowedMimeType(file.mimeType)) {
                 return { success: false, error: `Invalid file type: ${file.mimeType}` };
             }
             if (file.fileSize > MAX_FILE_SIZE) {
@@ -49,7 +53,7 @@ export async function uploadDocuments(
             }
         }
 
-        const uploadedFiles: { fileName: string; label?: string }[] = [];
+        const uploadedFiles: { fileName: string; label?: string; base64: string; mimeType: string }[] = [];
 
         for (const file of files) {
             // Decode base64 to binary
@@ -90,7 +94,7 @@ export async function uploadDocuments(
                 return { success: false, error: `Failed to record ${file.fileName}: ${dbError.message}` };
             }
 
-            uploadedFiles.push({ fileName: file.fileName, label: file.label });
+            uploadedFiles.push({ fileName: file.fileName, label: file.label, base64: file.base64, mimeType: file.mimeType });
         }
 
         // Fetch user profile for notification
