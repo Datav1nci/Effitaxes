@@ -4,34 +4,21 @@ import { createClient } from "@/utils/supabase/server";
 import { sendDocumentUploadNotification } from "@/lib/mail";
 import { revalidatePath } from "next/cache";
 
-const BUCKET = "user-documents";
+/**
+ * Lightweight server action: records metadata in user_documents table + notifies admin.
+ * File upload is handled client-side directly to Supabase Storage (bypasses Vercel payload limits).
+ */
 
-const ALLOWED_NON_IMAGE_MIME_TYPES = [
-    "application/pdf",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "text/csv",
-];
-
-// Accept any image type (iOS delivers heic/heif/jpg/jpeg/png with varying MIME strings)
-// Non-image types must match the explicit allowlist above
-function isAllowedMimeType(mime: string): boolean {
-    if (mime.startsWith("image/")) return true;
-    return ALLOWED_NON_IMAGE_MIME_TYPES.includes(mime);
-}
-
-const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 MB
-
-export interface UploadedDocumentInput {
+export interface DocumentMetadataInput {
     fileName: string;
     mimeType: string;
     fileSize: number;
+    storagePath: string; // already uploaded by the client
     label?: string;
-    base64: string; // base64-encoded file content
 }
 
-export async function uploadDocuments(
-    files: UploadedDocumentInput[]
+export async function recordDocuments(
+    files: DocumentMetadataInput[]
 ): Promise<{ success: boolean; error?: string }> {
     try {
         const supabase = await createClient();
@@ -43,58 +30,28 @@ export async function uploadDocuments(
             return { success: false, error: "Unauthorized" };
         }
 
-        // Validate all files before uploading any
+        // Verify each storage path belongs to this user
         for (const file of files) {
-            if (!isAllowedMimeType(file.mimeType)) {
-                return { success: false, error: `Invalid file type: ${file.mimeType}` };
-            }
-            if (file.fileSize > MAX_FILE_SIZE) {
-                return { success: false, error: `File too large: ${file.fileName}` };
+            if (!file.storagePath.startsWith(user.id + "/")) {
+                return { success: false, error: "Invalid storage path" };
             }
         }
 
-        const uploadedFiles: { fileName: string; label?: string; base64: string; mimeType: string }[] = [];
+        // Insert metadata rows
+        const rows = files.map(f => ({
+            user_id: user.id,
+            file_name: f.fileName,
+            storage_path: f.storagePath,
+            file_size: f.fileSize,
+            mime_type: f.mimeType,
+            label: f.label || null,
+        }));
 
-        for (const file of files) {
-            // Decode base64 to binary
-            const buffer = Buffer.from(file.base64, "base64");
+        const { error: dbError } = await supabase.from("user_documents").insert(rows);
 
-            // Unique storage path per user
-            const timestamp = Date.now();
-            const sanitizedName = file.fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
-            const storagePath = `${user.id}/${timestamp}_${sanitizedName}`;
-
-            // Upload to Supabase Storage
-            const { error: storageError } = await supabase.storage
-                .from(BUCKET)
-                .upload(storagePath, buffer, {
-                    contentType: file.mimeType,
-                    upsert: false,
-                });
-
-            if (storageError) {
-                console.error("Storage upload error:", storageError);
-                return { success: false, error: `Failed to upload ${file.fileName}: ${storageError.message}` };
-            }
-
-            // Insert metadata into user_documents
-            const { error: dbError } = await supabase.from("user_documents").insert({
-                user_id: user.id,
-                file_name: file.fileName,
-                storage_path: storagePath,
-                file_size: file.fileSize,
-                mime_type: file.mimeType,
-                label: file.label || null,
-            });
-
-            if (dbError) {
-                console.error("DB insert error:", dbError);
-                // Attempt cleanup of uploaded file
-                await supabase.storage.from(BUCKET).remove([storagePath]);
-                return { success: false, error: `Failed to record ${file.fileName}: ${dbError.message}` };
-            }
-
-            uploadedFiles.push({ fileName: file.fileName, label: file.label, base64: file.base64, mimeType: file.mimeType });
+        if (dbError) {
+            console.error("DB insert error:", dbError);
+            return { success: false, error: `Failed to record documents: ${dbError.message}` };
         }
 
         // Fetch user profile for notification
@@ -104,20 +61,20 @@ export async function uploadDocuments(
             .eq("id", user.id)
             .single();
 
-        // Notify admin
+        // Notify admin (no file content — just names and labels)
         await sendDocumentUploadNotification({
             firstName: profile?.first_name || "Unknown",
             lastName: profile?.last_name || "Client",
             email: profile?.email || "",
-            files: uploadedFiles,
+            files: files.map(f => ({ fileName: f.fileName, label: f.label })),
         });
 
         revalidatePath("/[locale]/dashboard", "page");
 
         return { success: true };
     } catch (error) {
-        console.error("Upload error:", error);
-        return { success: false, error: "An unexpected error occurred during upload." };
+        console.error("Record documents error:", error);
+        return { success: false, error: "An unexpected error occurred." };
     }
 }
 
@@ -135,7 +92,7 @@ export async function deleteDocument(
 
         // Remove from storage
         const { error: storageError } = await supabase.storage
-            .from(BUCKET)
+            .from("user-documents")
             .remove([storagePath]);
 
         if (storageError) {
