@@ -299,53 +299,36 @@ export async function sendDocumentUploadNotification(data: {
     firstName: string;
     lastName: string;
     email: string;
-    files: { fileName: string; label?: string; base64?: string; mimeType?: string }[];
+    files: { fileName: string; label?: string; downloadUrl?: string }[];
 }) {
-    const MAX_BATCH_BYTES = 35 * 1024 * 1024; // 35 MB — safe buffer under Resend's 40 MB limit
+    const subject = `New Document Upload: ${data.firstName} ${data.lastName}`;
     const timestamp = new Date().toLocaleDateString('en-CA', {
         year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
     });
 
-    // Full file table rows (shown in every email for context)
-    const allFileRows = data.files.map(f =>
+    const fileRows = data.files.map(f =>
         `<tr>
-            <td style="padding:6px 12px;font-size:13px;color:#0f172a;border-bottom:1px solid #f1f5f9;">${f.fileName}</td>
-            <td style="padding:6px 12px;font-size:13px;color:#64748b;border-bottom:1px solid #f1f5f9;">${f.label || '—'}</td>
+            <td style="padding:10px 12px;font-size:13px;color:#0f172a;border-bottom:1px solid #f1f5f9;">
+                ${f.fileName}
+                ${f.label ? `<br/><span style="font-size:11px;color:#64748b;">${f.label}</span>` : ''}
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;text-align:center;">
+                ${f.downloadUrl
+            ? `<a href="${f.downloadUrl}" style="display:inline-block;padding:6px 16px;background:#4f46e5;color:#fff;font-size:12px;font-weight:700;text-decoration:none;border-radius:8px;">⬇ Download</a>`
+            : '<span style="font-size:12px;color:#94a3b8;">—</span>'
+        }
+            </td>
         </tr>`
     ).join('');
 
-    // Split files with content into size-bounded batches
-    const withContent = data.files.filter(f => f.base64);
-    const batches: typeof withContent[] = [];
-    let currentBatch: typeof withContent = [];
-    let currentSize = 0;
-
-    for (const f of withContent) {
-        // base64 string length × 0.75 ≈ actual byte size
-        const fileBytes = Math.ceil(f.base64!.length * 0.75);
-        if (currentBatch.length > 0 && currentSize + fileBytes > MAX_BATCH_BYTES) {
-            batches.push(currentBatch);
-            currentBatch = [];
-            currentSize = 0;
-        }
-        currentBatch.push(f);
-        currentSize += fileBytes;
-    }
-    if (currentBatch.length > 0) batches.push(currentBatch);
-
-    // If no attachable files, send one email without attachments
-    if (batches.length === 0) batches.push([]);
-
-    const totalBatches = batches.length;
-
-    const buildHtml = (partLabel: string) => `
+    const html = `
     <!DOCTYPE html>
     <html><head><meta charset="utf-8"/></head>
     <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;margin:0;padding:24px;">
         <div style="max-width:640px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.08);">
             <!-- Header -->
             <div style="background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);padding:28px 32px;">
-                <h1 style="margin:0;font-size:22px;color:#fff;font-weight:700;">📎 New Document Upload${totalBatches > 1 ? ` <span style="font-size:16px;opacity:0.85;">${partLabel}</span>` : ''}</h1>
+                <h1 style="margin:0;font-size:22px;color:#fff;font-weight:700;">📎 New Document Upload</h1>
                 <p style="margin:6px 0 0;font-size:14px;color:#c7d2fe;">
                     ${data.firstName} ${data.lastName} &mdash; ${timestamp}
                 </p>
@@ -357,20 +340,19 @@ export async function sendDocumentUploadNotification(data: {
                         ✅ &nbsp;${data.files.length} file${data.files.length !== 1 ? 's' : ''} uploaded by ${data.firstName} ${data.lastName}
                     </p>
                     ${data.email ? `<p style="margin:4px 0 0;font-size:13px;color:#15803d;">${data.email}</p>` : ''}
-                    ${totalBatches > 1 ? `<p style="margin:6px 0 0;font-size:12px;color:#15803d;">📬 Large upload — attachments split across ${totalBatches} emails. ${partLabel}.</p>` : ''}
                 </div>
 
                 <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
                     <thead>
                         <tr style="background:#f8fafc;">
-                            <th style="padding:8px 12px;font-size:12px;font-weight:700;color:#64748b;text-align:left;text-transform:uppercase;letter-spacing:0.05em;">File Name</th>
-                            <th style="padding:8px 12px;font-size:12px;font-weight:700;color:#64748b;text-align:left;text-transform:uppercase;letter-spacing:0.05em;">Label / Description</th>
+                            <th style="padding:8px 12px;font-size:12px;font-weight:700;color:#64748b;text-align:left;text-transform:uppercase;letter-spacing:0.05em;">File</th>
+                            <th style="padding:8px 12px;font-size:12px;font-weight:700;color:#64748b;text-align:center;text-transform:uppercase;letter-spacing:0.05em;">Download</th>
                         </tr>
                     </thead>
-                    <tbody>${allFileRows}</tbody>
+                    <tbody>${fileRows}</tbody>
                 </table>
 
-                <p style="margin:20px 0 0;font-size:12px;color:#94a3b8;">📎 Files are attached to this email.</p>
+                <p style="margin:20px 0 0;font-size:12px;color:#94a3b8;">🔒 Download links expire in 7 days. Files are stored securely in Supabase Storage.</p>
             </div>
             <!-- Footer -->
             <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;">
@@ -380,32 +362,12 @@ export async function sendDocumentUploadNotification(data: {
     </body></html>
     `;
 
-    // Send one email per batch
-    const results = await Promise.all(
-        batches.map((batch, i) => {
-            const partLabel = totalBatches > 1 ? `Part ${i + 1} of ${totalBatches}` : '';
-            const subject = totalBatches > 1
-                ? `New Document Upload (${partLabel}): ${data.firstName} ${data.lastName}`
-                : `New Document Upload: ${data.firstName} ${data.lastName}`;
-
-            const attachments = batch.map(f => ({
-                filename: f.fileName,
-                content: f.base64 as string,
-            }));
-
-            return sendEmail({
-                to: EMAILS.ADMIN,
-                subject,
-                html: buildHtml(partLabel),
-                from: EMAILS.SENDER_SUPPORT,
-                attachments,
-            });
-        })
-    );
-
-    // Return success only if all batches sent
-    const failed = results.find(r => !r.success);
-    return failed ?? { success: true };
+    return sendEmail({
+        to: EMAILS.ADMIN,
+        subject,
+        html,
+        from: EMAILS.SENDER_SUPPORT,
+    });
 }
 
 // --- Customer Receipts ---

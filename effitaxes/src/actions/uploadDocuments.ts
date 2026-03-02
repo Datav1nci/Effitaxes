@@ -61,12 +61,27 @@ export async function recordDocuments(
             .eq("id", user.id)
             .single();
 
-        // Notify admin (no file content — just names and labels)
+        // Generate signed download URLs (expire in 7 days)
+        const SEVEN_DAYS = 7 * 24 * 60 * 60;
+        const filesWithUrls = await Promise.all(
+            files.map(async f => {
+                const { data: signedData } = await supabase.storage
+                    .from("user-documents")
+                    .createSignedUrl(f.storagePath, SEVEN_DAYS);
+                return {
+                    fileName: f.fileName,
+                    label: f.label,
+                    downloadUrl: signedData?.signedUrl || undefined,
+                };
+            })
+        );
+
+        // Notify admin with download links
         await sendDocumentUploadNotification({
             firstName: profile?.first_name || "Unknown",
             lastName: profile?.last_name || "Client",
             email: profile?.email || "",
-            files: files.map(f => ({ fileName: f.fileName, label: f.label })),
+            files: filesWithUrls,
         });
 
         revalidatePath("/[locale]/dashboard", "page");
