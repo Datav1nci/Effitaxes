@@ -14,6 +14,7 @@ import { StepCarExpenses } from "./StepCarExpenses";
 import { StepRental } from "./StepRental";
 import { StepWorkFromHome } from "./StepWorkFromHome";
 import { StepReview } from "./StepReview";
+import { StepDocuments } from "./StepDocuments";
 
 import { User } from "@supabase/supabase-js";
 
@@ -150,6 +151,15 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
                 fields: ["workFromHome"]
             });
         }
+
+        // Documents step — always shown, optional upload
+        baseSteps.push({
+            id: "documents",
+            title: t.documents.stepTitle,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            component: StepDocuments as any,
+            fields: [] // no validation required
+        });
 
         baseSteps.push({
             id: "submit",
