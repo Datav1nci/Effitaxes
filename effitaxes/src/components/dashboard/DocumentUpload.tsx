@@ -141,8 +141,10 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
             } else {
                 setUploadError(result.error || d.errorUpload);
             }
-        } catch {
-            setUploadError(d.errorUpload);
+        } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            console.error("Upload error:", msg);
+            setUploadError(`${d.errorUpload} (${msg})`);
         } finally {
             setIsUploading(false);
         }
