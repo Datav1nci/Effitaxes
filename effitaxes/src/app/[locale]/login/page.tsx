@@ -74,7 +74,7 @@ export default async function LoginPage(props: {
                 )}
                 {message && (
                     <div className="mt-4 rounded-md bg-red-50 p-4 dark:bg-red-900/20">
-                        <p className="text-center text-sm text-red-800 dark:text-red-200">{message}</p>
+                        <p className="text-center text-sm text-red-800 dark:text-red-200">{(t.auth as Record<string, string>)[message] ?? message}</p>
                     </div>
                 )}
             </div>

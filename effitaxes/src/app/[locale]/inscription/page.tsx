@@ -12,7 +12,7 @@ export default async function InscriptionPage(props: {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-        return redirect(`/${locale}/login?message=Please sign in to start enrollment`);
+        return redirect(`/${locale}/login?message=signInToEnroll`);
     }
 
     // Fetch profile to pre-fill

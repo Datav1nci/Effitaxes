@@ -153,6 +153,7 @@ export const dictionary = {
             updatePassword: "Mettre à jour",
             passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
             emailVerified: "Merci ! Votre courriel est confirmé. Veuillez vous connecter.",
+            signInToEnroll: "Veuillez vous connecter pour démarrer l'inscription.",
         },
         enrollment: {
             title: "Inscription Impôts 2025",
@@ -678,6 +679,7 @@ export const dictionary = {
             updatePassword: "Update Password",
             passwordsDoNotMatch: "Passwords do not match",
             emailVerified: "Thank you! Your email is confirmed. Please sign in.",
+            signInToEnroll: "Please sign in to start enrollment.",
         },
         enrollment: {
             title: "2025 Tax Enrollment",
