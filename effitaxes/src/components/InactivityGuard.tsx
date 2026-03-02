@@ -26,7 +26,9 @@ export default function InactivityGuard() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return; // Already signed out
             await supabase.auth.signOut();
-            router.push("/fr/login?message=Session expired due to inactivity.");
+            const localeMatch = pathname?.match(/^\/([a-z]{2})\//);
+            const locale = localeMatch ? localeMatch[1] : "fr";
+            router.push(`/${locale}/login?message=sessionExpiredInactivity`);
         };
 
         const resetTimer = () => {

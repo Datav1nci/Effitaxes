@@ -30,12 +30,12 @@ export async function GET(request: Request) {
             // IMPORTANT: never send signup failures to the forgot-password page.
             if (type === "recovery") {
                 return NextResponse.redirect(
-                    `${origin}/fr/forgot-password?message=Reset link is invalid or has expired. Please request a new one.`
+                    `${origin}/fr/forgot-password?message=resetLinkInvalid`
                 );
             }
             // Signup verification failed (e.g. link already used, Safe Links pre-fetch, etc.)
             return NextResponse.redirect(
-                `${origin}/fr/login?message=Email verification failed. Please try signing up again or contact support.`
+                `${origin}/fr/login?message=emailVerificationFailed`
             );
         }
     }
@@ -51,10 +51,10 @@ export async function GET(request: Request) {
     // Final fallback — no code, no session. Show the right error for the right flow.
     if (type === "recovery") {
         return NextResponse.redirect(
-            `${origin}/fr/forgot-password?message=Reset link is invalid or has expired. Please request a new one.`
+            `${origin}/fr/forgot-password?message=resetLinkInvalid`
         );
     }
     return NextResponse.redirect(
-        `${origin}/fr/login?message=Verification link is invalid or has expired. Please try again.`
+        `${origin}/fr/login?message=verificationLinkInvalid`
     );
 }

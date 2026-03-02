@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
                 if (session) {
                     setStatus("ready");
                 } else {
-                    setErrorMsg("No reset code found. Please request a new password reset link.");
+                    setErrorMsg(t.auth.noResetCode);
                     setStatus("error");
                 }
             });
@@ -50,7 +50,7 @@ export default function ResetPasswordPage() {
             }
             if (error) {
                 console.error("Code exchange failed:", error.message, error.status);
-                setErrorMsg(`Reset link error: ${error.message}`);
+                setErrorMsg(`${t.auth.resetLinkInvalid} (${error.message})`);
                 setStatus("error");
             }
         });
@@ -61,11 +61,11 @@ export default function ResetPasswordPage() {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            setErrorMsg("Passwords do not match.");
+            setErrorMsg(t.auth.passwordsDoNotMatch);
             return;
         }
         if (password.length < 6) {
-            setErrorMsg("Password must be at least 6 characters.");
+            setErrorMsg(t.auth.passwordMinLength);
             return;
         }
 
@@ -98,7 +98,7 @@ export default function ResetPasswordPage() {
         setStatus("success");
 
         setTimeout(() => {
-            router.push(`/${language}/login?message=Password updated successfully. Please sign in.`);
+            router.push(`/${language}/login?message=passwordUpdated`);
         }, 2000);
     };
 
@@ -112,7 +112,7 @@ export default function ResetPasswordPage() {
                 {/* Loading */}
                 {status === "loading" && (
                     <div className="text-center text-gray-500 dark:text-gray-400">
-                        <p>Verifying reset link…</p>
+                        <p>{t.auth.verifyingResetLink}</p>
                     </div>
                 )}
 
@@ -125,7 +125,7 @@ export default function ResetPasswordPage() {
                                 href={`/${language}/forgot-password`}
                                 className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 text-sm font-medium"
                             >
-                                Request a new reset link
+                                {t.auth.requestNewResetLink}
                             </a>
                         </div>
                     </div>
@@ -135,7 +135,7 @@ export default function ResetPasswordPage() {
                 {status === "success" && (
                     <div className="rounded-md bg-green-50 p-4 dark:bg-green-900/20">
                         <p className="text-sm text-green-700 dark:text-green-200 text-center">
-                            Password updated! Redirecting to login…
+                            {t.auth.passwordUpdatedRedirecting}
                         </p>
                     </div>
                 )}
@@ -180,7 +180,7 @@ export default function ResetPasswordPage() {
                                 disabled={submitting}
                                 className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
                             >
-                                {submitting ? "Updating…" : t.auth.updatePassword}
+                                {submitting ? t.auth.updating : t.auth.updatePassword}
                             </button>
                         </div>
                     </form>

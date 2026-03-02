@@ -40,7 +40,7 @@ export async function login(formData: FormData) {
         if (attempt) {
             // Check if locked
             if (attempt.locked_until && new Date(attempt.locked_until) > new Date()) {
-                return redirect("/login?message=Account locked. Contact 450-259-1829 or reset login.");
+                return redirect("/login?message=accountLocked");
             }
         }
     }
@@ -81,11 +81,11 @@ export async function login(formData: FormData) {
             await adminSupabase.from("login_attempts").upsert(updateData);
 
             if (currentCount > 5) {
-                return redirect("/login?message=Account locked. Contact 450-259-1829.");
+                return redirect("/login?message=accountLocked");
             }
         }
 
-        return redirect("/login?message=Could not authenticate user");
+        return redirect("/login?message=errorAuth");
     }
 
     // 3. Success - Clear Attempts
@@ -140,7 +140,7 @@ export async function signup(formData: FormData) {
     if (error) {
         console.log(error);
         if (error.code === "user_already_exists" || error.message.includes("already registered")) {
-            return redirect("/login?message=User already registered. Please sign in.");
+            return redirect("/login?message=userExists");
         }
         return redirect(`/login?message=${encodeURIComponent(error.message)}`);
     }
@@ -160,7 +160,7 @@ export async function signInWithProvider(provider: Provider) {
     });
 
     if (error) {
-        return redirect("/login?message=Could not authenticate user");
+        return redirect("/login?message=errorAuth");
     }
 
     if (data.url) {
@@ -181,7 +181,7 @@ export async function forgotPassword(formData: FormData) {
     const origin = (await headers()).get("origin");
 
     if (!email) {
-        return redirect(`/${locale}/forgot-password?message=Email is required`);
+        return redirect(`/${locale}/forgot-password?message=emailRequired`);
     }
 
     // Unlock account if locked (Reset flow implicitly unlocks by proving ownership via email)
@@ -200,7 +200,7 @@ export async function forgotPassword(formData: FormData) {
     if (error) {
         console.error("Forgot Password Error:", error);
         // Don't reveal if user exists or not for security, but Supabase might error.
-        return redirect(`/${locale}/forgot-password?message=Could not send reset link. Try again.`);
+        return redirect(`/${locale}/forgot-password?message=couldNotSendResetLink`);
     }
 
     return redirect(`/${locale}/forgot-password?success=true`);
@@ -211,7 +211,7 @@ export async function resetPassword(formData: FormData) {
     const confirmPassword = formData.get("confirmPassword") as string;
 
     if (password !== confirmPassword) {
-        return redirect("/reset-password?message=Passwords do not match");
+        return redirect("/reset-password?message=passwordsDoNotMatch");
     }
 
     const supabase = await createClient();
@@ -220,7 +220,7 @@ export async function resetPassword(formData: FormData) {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-        return redirect("/login?message=Session expired. Please request a new reset link.");
+        return redirect("/login?message=sessionExpiredReset");
     }
 
     const { error } = await supabase.auth.updateUser({
@@ -228,7 +228,7 @@ export async function resetPassword(formData: FormData) {
     });
 
     if (error) {
-        return redirect("/reset-password?message=Failed to update password");
+        return redirect("/reset-password?message=failedUpdatePassword");
     }
 
     // Clear any lock
@@ -236,5 +236,5 @@ export async function resetPassword(formData: FormData) {
         await adminSupabase.from("login_attempts").delete().eq("email", user.email);
     }
 
-    return redirect("/login?message=Password updated successfully. Please sign in.");
+    return redirect("/login?message=passwordUpdated");
 }

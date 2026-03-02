@@ -26,6 +26,6 @@ export async function GET(request: Request) {
 
     // Code missing or exchange failed — tell the user to request a new link.
     return NextResponse.redirect(
-        `${origin}/fr/forgot-password?message=Reset link is invalid or has expired. Please request a new one.`
+        `${origin}/fr/forgot-password?message=resetLinkInvalid`
     );
 }

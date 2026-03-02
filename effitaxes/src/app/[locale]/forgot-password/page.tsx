@@ -27,7 +27,7 @@ export default async function ForgotPasswordPage(props: {
                 {/* Error from callback (e.g. expired link) */}
                 {message && (
                     <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
-                        <p className="text-sm text-red-700 dark:text-red-200 text-center">{message}</p>
+                        <p className="text-sm text-red-700 dark:text-red-200 text-center">{(t.auth as Record<string, string>)[message] ?? message}</p>
                     </div>
                 )}
 
