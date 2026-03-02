@@ -30,9 +30,10 @@ export async function recordDocuments(
             return { success: false, error: "Unauthorized" };
         }
 
-        // Verify each storage path belongs to this user
+        // Verify each storage path contains this user's ID (supporting Name_uuid/ format)
         for (const file of files) {
-            if (!file.storagePath.startsWith(user.id + "/")) {
+            const folder = file.storagePath.split("/")[0];
+            if (!folder.includes(user.id)) {
                 return { success: false, error: "Invalid storage path" };
             }
         }

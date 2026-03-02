@@ -87,11 +87,21 @@ export function StepDocuments({ t, onUploadComplete }: StepDocumentsProps) {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error("Not authenticated");
 
+            // Fetch user name for human-readable folder names
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("first_name, last_name")
+                .eq("id", user.id)
+                .single();
+            const folderName = profile
+                ? `${sanitizeName(profile.first_name || "")}${sanitizeName(profile.last_name || "")}_${user.id}`
+                : user.id;
+
             // 1. Upload each file directly to Supabase Storage from the browser
             const metadataList: DocumentMetadataInput[] = [];
             for (const p of valid) {
                 const timestamp = Date.now();
-                const storagePath = `${user.id}/${timestamp}_${sanitizeName(p.file.name)}`;
+                const storagePath = `${folderName}/${timestamp}_${sanitizeName(p.file.name)}`;
 
                 const { error: uploadErr } = await supabase.storage
                     .from(BUCKET)
@@ -225,8 +235,8 @@ export function StepDocuments({ t, onUploadComplete }: StepDocumentsProps) {
                         <div
                             key={p.id}
                             className={`group flex items-center gap-3 p-3 rounded-xl border transition-all ${p.error
-                                    ? "border-red-200 bg-red-50 dark:bg-red-950/50 dark:border-red-800"
-                                    : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
+                                ? "border-red-200 bg-red-50 dark:bg-red-950/50 dark:border-red-800"
+                                : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
                                 }`}
                         >
                             <span className="text-2xl flex-shrink-0">{getMimeIcon(p.file.type)}</span>
