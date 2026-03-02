@@ -1,20 +1,13 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
-import { uploadDocuments, deleteDocument, UploadedDocumentInput } from "@/actions/uploadDocuments";
+import { createClient } from "@/utils/supabase/client";
+import { recordDocuments, deleteDocument, DocumentMetadataInput } from "@/actions/uploadDocuments";
 
-const ALLOWED_MIME_TYPES = [
-    "image/*",                 // covers all iOS camera/library formats (HEIC, JPEG, etc.)
-    "application/pdf",
-    "image/jpeg",
-    "image/png",
-    "image/heic",
-    "application/vnd.ms-excel",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "text/csv",
-];
+const ACCEPTED_TYPES = "image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv";
 const MAX_FILE_SIZE = 15 * 1024 * 1024;
 const MAX_FILES = 10;
+const BUCKET = "user-documents";
 
 interface DocumentRecord {
     id: string;
@@ -60,6 +53,10 @@ function getMimeIcon(mime: string | null): string {
     return "📄";
 }
 
+function sanitizeName(name: string) {
+    return name.replace(/[^a-zA-Z0-9._-]/g, "_");
+}
+
 export default function DocumentUpload({ t, initialDocuments }: DocumentUploadProps) {
     const d = t.documents;
 
@@ -74,8 +71,11 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const validate = (file: File): string | undefined => {
-        if (!ALLOWED_MIME_TYPES.includes(file.type)) return d.errorType;
         if (file.size > MAX_FILE_SIZE) return d.errorSize;
+        // Accept images + known document types
+        if (file.type.startsWith("image/")) return undefined;
+        const allowed = ["application/pdf", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv"];
+        if (!allowed.includes(file.type)) return d.errorType;
     };
 
     const addFiles = useCallback((files: FileList | File[]) => {
@@ -99,48 +99,63 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
         addFiles(e.dataTransfer.files);
     };
 
-    const fileToBase64 = (file: File): Promise<string> =>
-        new Promise((res, rej) => {
-            const r = new FileReader();
-            r.onload = () => res((r.result as string).split(",")[1]);
-            r.onerror = rej;
-            r.readAsDataURL(file);
-        });
-
     const handleUpload = async () => {
         const valid = pendingFiles.filter(p => !p.error);
         if (!valid.length) return;
         setIsUploading(true);
         setUploadError(null);
         try {
-            const inputs: UploadedDocumentInput[] = await Promise.all(
-                valid.map(async p => ({
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error("Not authenticated");
+
+            // 1. Upload each file directly to Supabase Storage from the browser
+            const metadataList: DocumentMetadataInput[] = [];
+            for (const p of valid) {
+                const timestamp = Date.now();
+                const storagePath = `${user.id}/${timestamp}_${sanitizeName(p.file.name)}`;
+
+                const { error: uploadErr } = await supabase.storage
+                    .from(BUCKET)
+                    .upload(storagePath, p.file, {
+                        contentType: p.file.type || "application/octet-stream",
+                        upsert: false,
+                    });
+
+                if (uploadErr) {
+                    throw new Error(`Failed to upload ${p.file.name}: ${uploadErr.message}`);
+                }
+
+                metadataList.push({
                     fileName: p.file.name,
-                    mimeType: p.file.type,
+                    mimeType: p.file.type || "application/octet-stream",
                     fileSize: p.file.size,
+                    storagePath,
                     label: p.label || undefined,
-                    base64: await fileToBase64(p.file),
-                }))
-            );
-            const result = await uploadDocuments(inputs);
-            if (result.success) {
-                setUploadSuccess(true);
-                setPendingFiles([]);
-                if (fileInputRef.current) fileInputRef.current.value = "";
-                const now = new Date().toISOString();
-                const newDocs: DocumentRecord[] = valid.map(p => ({
-                    id: `temp-${Date.now()}-${Math.random()}`,
-                    file_name: p.file.name,
-                    storage_path: "",
-                    file_size: p.file.size,
-                    mime_type: p.file.type,
-                    label: p.label || null,
-                    uploaded_at: now,
-                }));
-                setDocuments(prev => [...newDocs, ...prev]);
-            } else {
-                setUploadError(result.error || d.errorUpload);
+                });
             }
+
+            // 2. Record metadata + notify admin via a lightweight server action
+            const result = await recordDocuments(metadataList);
+            if (!result.success) {
+                setUploadError(result.error || d.errorUpload);
+                return;
+            }
+
+            setUploadSuccess(true);
+            setPendingFiles([]);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+            const now = new Date().toISOString();
+            const newDocs: DocumentRecord[] = valid.map(p => ({
+                id: `temp-${Date.now()}-${Math.random()}`,
+                file_name: p.file.name,
+                storage_path: "",
+                file_size: p.file.size,
+                mime_type: p.file.type,
+                label: p.label || null,
+                uploaded_at: now,
+            }));
+            setDocuments(prev => [...newDocs, ...prev]);
         } catch (err) {
             const msg = err instanceof Error ? err.message : String(err);
             console.error("Upload error:", msg);
@@ -200,19 +215,17 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
                     ref={fileInputRef}
                     type="file"
                     multiple
-                    accept={ALLOWED_MIME_TYPES.join(",")}
+                    accept={ACCEPTED_TYPES}
                     onChange={e => e.target.files && addFiles(e.target.files)}
                     className="hidden"
                 />
                 <div className="flex flex-col items-center gap-3 pointer-events-none">
-                    {/* Animated upload icon */}
                     <div className={`relative transition-all duration-300 ${isDragOver ? "scale-125 -translate-y-1" : "group-hover:scale-105"}`}>
                         <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/60 dark:to-purple-900/60 rounded-2xl flex items-center justify-center shadow-sm">
                             <svg className={`w-8 h-8 transition-colors duration-200 ${isDragOver ? "text-indigo-600" : "text-indigo-400 group-hover:text-indigo-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.338-2.32 4.5 4.5 0 0 1 3.067 7.875" />
                             </svg>
                         </div>
-                        {/* Pulse ring on drag */}
                         {isDragOver && (
                             <div className="absolute inset-0 rounded-2xl border-2 border-indigo-400 animate-ping opacity-40" />
                         )}
@@ -250,8 +263,8 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
                         <div
                             key={p.id}
                             className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${p.error
-                                ? "border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-800"
-                                : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60"
+                                    ? "border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-800"
+                                    : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60"
                                 }`}
                         >
                             <span className="text-2xl flex-shrink-0">{getMimeIcon(p.file.type)}</span>
