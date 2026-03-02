@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from "react";
 import { uploadDocuments, deleteDocument, UploadedDocumentInput } from "@/actions/uploadDocuments";
 
 const ALLOWED_MIME_TYPES = [
+    "image/*",                 // covers all iOS camera/library formats (HEIC, JPEG, etc.)
     "application/pdf",
     "image/jpeg",
     "image/png",
@@ -247,8 +248,8 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
                         <div
                             key={p.id}
                             className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${p.error
-                                    ? "border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-800"
-                                    : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60"
+                                ? "border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-800"
+                                : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60"
                                 }`}
                         >
                             <span className="text-2xl flex-shrink-0">{getMimeIcon(p.file.type)}</span>

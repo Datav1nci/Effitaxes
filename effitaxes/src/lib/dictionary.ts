@@ -567,6 +567,7 @@ export const dictionary = {
             canUploadMore: "Vous pouvez ajouter d'autres fichiers ci-dessous.",
             readyToUpload: "prêt(s) à téléverser",
             stepTitle: "Documents fiscaux",
+            mobileHint: "Sur iPhone : appareil photo, bibliothèque ou fichiers disponibles. Sélection multiple supportée.",
         },
 
     },
@@ -1136,6 +1137,7 @@ export const dictionary = {
             canUploadMore: "You can add more files below.",
             readyToUpload: "ready to upload",
             stepTitle: "Tax Documents",
+            mobileHint: "On iPhone: camera, photo library, or files available. Multi-select supported.",
         },
     },
 };

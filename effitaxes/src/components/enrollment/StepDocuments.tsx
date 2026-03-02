@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from "react";
 import { uploadDocuments, UploadedDocumentInput } from "@/actions/uploadDocuments";
 
 const ALLOWED_MIME_TYPES = [
+    "image/*",                 // covers all iOS camera/library formats (HEIC, JPEG, etc.)
     "application/pdf",
     "image/jpeg",
     "image/png",
@@ -187,8 +188,10 @@ export function StepDocuments({ t, onUploadComplete }: StepDocumentsProps) {
                 </div>
             </div>
 
-            {/* Optional note */}
-            <p className="text-xs text-center text-gray-400 dark:text-gray-500 italic">{d.optional}</p>
+            {/* Mobile camera hint — only shown on touch devices */}
+            <p className="sm:hidden text-xs text-center text-indigo-500 dark:text-indigo-400 mt-2 font-medium">
+                📷 {d.mobileHint}
+            </p>
 
             {/* Pending file list */}
             {pendingFiles.length > 0 && (
@@ -207,8 +210,8 @@ export function StepDocuments({ t, onUploadComplete }: StepDocumentsProps) {
                         <div
                             key={p.id}
                             className={`group flex items-center gap-3 p-3 rounded-xl border transition-all ${p.error
-                                    ? "border-red-200 bg-red-50 dark:bg-red-950/50 dark:border-red-800"
-                                    : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
+                                ? "border-red-200 bg-red-50 dark:bg-red-950/50 dark:border-red-800"
+                                : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
                                 }`}
                         >
                             <span className="text-2xl flex-shrink-0">{getMimeIcon(p.file.type)}</span>
