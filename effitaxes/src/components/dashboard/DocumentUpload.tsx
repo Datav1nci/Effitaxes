@@ -69,7 +69,7 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
     const [deleteError, setDeleteError] = useState<string | null>(null);
     const [documentToDelete, setDocumentToDelete] = useState<DocumentRecord | null>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
-    const [panelOpen, setPanelOpen] = useState(false);
+    const [panelOpen, setPanelOpen] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const validate = (file: File): string | undefined => {
