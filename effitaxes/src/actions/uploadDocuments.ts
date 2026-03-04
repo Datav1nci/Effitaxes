@@ -19,7 +19,7 @@ export interface DocumentMetadataInput {
 
 export async function recordDocuments(
     files: DocumentMetadataInput[]
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; error?: string; documents?: any[] }> {
     try {
         const supabase = await createClient();
         const {
@@ -48,7 +48,10 @@ export async function recordDocuments(
             label: f.label || null,
         }));
 
-        const { error: dbError } = await supabase.from("user_documents").insert(rows);
+        const { data: insertedDocs, error: dbError } = await supabase
+            .from("user_documents")
+            .insert(rows)
+            .select();
 
         if (dbError) {
             console.error("DB insert error:", dbError);
@@ -90,7 +93,7 @@ export async function recordDocuments(
 
         revalidatePath("/[locale]/dashboard", "page");
 
-        return { success: true };
+        return { success: true, documents: insertedDocs || [] };
     } catch (error) {
         console.error("Record documents error:", error);
         return { success: false, error: "An unexpected error occurred." };

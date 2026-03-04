@@ -66,6 +66,8 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
     const [isUploading, setIsUploading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
+    const [documentToDelete, setDocumentToDelete] = useState<DocumentRecord | null>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [panelOpen, setPanelOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -156,15 +158,30 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
             setPendingFiles([]);
             if (fileInputRef.current) fileInputRef.current.value = "";
             const now = new Date().toISOString();
-            const newDocs: DocumentRecord[] = valid.map(p => ({
-                id: `temp-${Date.now()}-${Math.random()}`,
-                file_name: p.file.name,
-                storage_path: "",
-                file_size: p.file.size,
-                mime_type: p.file.type,
-                label: p.label || null,
-                uploaded_at: now,
-            }));
+
+            let newDocs: DocumentRecord[] = [];
+            if (result.documents && result.documents.length > 0) {
+                newDocs = result.documents.map((row: any) => ({
+                    id: row.id,
+                    file_name: row.file_name,
+                    storage_path: row.storage_path,
+                    file_size: row.file_size,
+                    mime_type: row.mime_type,
+                    label: row.label,
+                    uploaded_at: row.created_at || now,
+                }));
+            } else {
+                newDocs = valid.map(p => ({
+                    id: `temp-${Date.now()}-${Math.random()}`,
+                    file_name: p.file.name,
+                    storage_path: "",
+                    file_size: p.file.size,
+                    mime_type: p.file.type,
+                    label: p.label || null,
+                    uploaded_at: now,
+                }));
+            }
+
             setDocuments(prev => [...newDocs, ...prev]);
         } catch (err) {
             const msg = err instanceof Error ? err.message : String(err);
@@ -175,11 +192,21 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
         }
     };
 
-    const handleDelete = async (doc: DocumentRecord) => {
-        if (!confirm(d.deleteConfirm)) return;
-        setDeletingId(doc.id);
-        const result = await deleteDocument(doc.id, doc.storage_path);
-        if (result.success) setDocuments(prev => prev.filter(x => x.id !== doc.id));
+    const requestDelete = (doc: DocumentRecord) => {
+        setDeleteError(null);
+        setDocumentToDelete(doc);
+    };
+
+    const confirmDelete = async () => {
+        if (!documentToDelete) return;
+        setDeletingId(documentToDelete.id);
+        const result = await deleteDocument(documentToDelete.id, documentToDelete.storage_path);
+        if (result.success) {
+            setDocuments(prev => prev.filter(x => x.id !== documentToDelete.id));
+            setDocumentToDelete(null);
+        } else {
+            setDeleteError(result.error || "Failed to delete document.");
+        }
         setDeletingId(null);
     };
 
@@ -406,7 +433,7 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
                                         </div>
                                         <button
                                             type="button"
-                                            onClick={() => handleDelete(doc)}
+                                            onClick={() => requestDelete(doc)}
                                             disabled={deletingId === doc.id}
                                             className="opacity-0 group-hover:opacity-100 flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition-all disabled:opacity-30"
                                             title={d.deleteBtn}
@@ -429,6 +456,57 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
                     </div>
                 )}
             </div>
+
+            {/* ── Document Deletion Modal ── */}
+            {documentToDelete && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 border border-gray-200 dark:border-gray-700">
+                        <div className="p-6">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-3">
+                                <span className="text-red-500">
+                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </span>
+                                {d.deleteConfirm}
+                            </h3>
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 break-words mb-4">
+                                {documentToDelete.file_name}
+                            </p>
+                            {deleteError && (
+                                <div className="mb-4 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded-lg border border-red-200 dark:border-red-900">
+                                    {deleteError}
+                                </div>
+                            )}
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => { setDocumentToDelete(null); setDeleteError(null); }}
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:text-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-xl transition-colors"
+                                    disabled={deletingId === documentToDelete.id}
+                                >
+                                    {t.common.cancel}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={confirmDelete}
+                                    className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2"
+                                    disabled={deletingId === documentToDelete.id}
+                                >
+                                    {deletingId === documentToDelete.id ? (
+                                        <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                                        </svg>
+                                    ) : (
+                                        d.deleteBtn
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
