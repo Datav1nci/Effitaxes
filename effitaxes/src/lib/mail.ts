@@ -92,7 +92,7 @@ async function sendEmail({
 // --- Admin Notifications ---
 
 export async function sendEnrollmentNotification(data: EnrollmentData) {
-    const subject = `New Tax Enrollment: ${data.personal.firstName} ${data.personal.lastName}`;
+    const subject = `New Tax Enrollment: ${data.personal.lastName?.toUpperCase()}, ${data.personal.firstName}`;
     const incomeSourcesList = data.incomeSources ? data.incomeSources.join(', ') : 'None';
 
     const html = `
