@@ -16,36 +16,55 @@ export async function GET(request: Request) {
                 return NextResponse.redirect(`${origin}${next || "/fr/reset-password"}`);
             }
 
-            // Email confirmation flow — sign out so the user logs in manually
+            // Email confirmation flow — keep session and go to enrollment
             if (type === "signup") {
-                await supabase.auth.signOut();
-                return NextResponse.redirect(`${origin}/login?success=verified`);
+                return NextResponse.redirect(`${origin}/fr/inscription`);
             }
 
-            // OAuth (Google, etc.) — go straight to dashboard
+            // OAuth (Google, etc.) or session exchange — check enrollment status
+            // The dashboard page already guards unenrolled users, so this is safe.
             return NextResponse.redirect(`${origin}/dashboard`);
 
         } else {
-            // Code exchange failed — send to the right page based on what was attempted.
+            // Code exchange failed. Before showing an error, check if a valid session
+            // already exists — this happens when email security scanners (e.g. Microsoft
+            // Safe Links, Outlook, Gmail) pre-fetch the confirmation URL and consume the
+            // one-time code before the user actually clicks the link.
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                // Session is valid (created by the pre-fetcher). Redirect normally.
+                if (type === "recovery") {
+                    return NextResponse.redirect(`${origin}${next || "/fr/reset-password"}`);
+                }
+                if (type === "signup") {
+                    return NextResponse.redirect(`${origin}/fr/inscription`);
+                }
+                return NextResponse.redirect(`${origin}/dashboard`);
+            }
+
+            // No session — code exchange genuinely failed (truly expired / reused link).
             // IMPORTANT: never send signup failures to the forgot-password page.
             if (type === "recovery") {
                 return NextResponse.redirect(
                     `${origin}/fr/forgot-password?message=resetLinkInvalid`
                 );
             }
-            // Signup verification failed (e.g. link already used, Safe Links pre-fetch, etc.)
             return NextResponse.redirect(
                 `${origin}/fr/login?message=emailVerificationFailed`
             );
         }
     }
 
-    // No ?code= in URL — handle PKCE token-verified flows where Supabase sets the session directly.
+    // No ?code= in URL — handle token-hash flows where Supabase sets the session directly.
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-        await supabase.auth.signOut();
-        return NextResponse.redirect(`${origin}/fr/login?success=verified`);
+        // Keep session; send new signups straight to enrollment
+        if (type === "signup") {
+            return NextResponse.redirect(`${origin}/fr/inscription`);
+        }
+        // Recovery or other — let the dashboard guard handle it
+        return NextResponse.redirect(`${origin}/dashboard`);
     }
 
     // Final fallback — no code, no session. Show the right error for the right flow.
