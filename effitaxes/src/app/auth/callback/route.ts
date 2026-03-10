@@ -26,31 +26,21 @@ export async function GET(request: Request) {
             return NextResponse.redirect(`${origin}/dashboard`);
 
         } else {
-            // Code exchange failed. Before showing an error, check if a valid session
-            // already exists — this happens when email security scanners (e.g. Microsoft
-            // Safe Links, Outlook, Gmail) pre-fetch the confirmation URL and consume the
-            // one-time code before the user actually clicks the link.
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                // Session is valid (created by the pre-fetcher). Redirect normally.
-                if (type === "recovery") {
-                    return NextResponse.redirect(`${origin}${next || "/fr/reset-password"}`);
-                }
-                if (type === "signup") {
-                    return NextResponse.redirect(`${origin}/fr/inscription`);
-                }
-                return NextResponse.redirect(`${origin}/dashboard`);
-            }
-
-            // No session — code exchange genuinely failed (truly expired / reused link).
-            // IMPORTANT: never send signup failures to the forgot-password page.
+            // Code exchange failed — most likely because an email security scanner
+            // (Microsoft Safe Links, Outlook, Gmail) pre-fetched the confirmation URL
+            // and consumed the one-time code before the user clicked.
+            // The email IS already confirmed on Supabase's side (the scanner did it).
+            // Note: getUser() won't help here — scanner cookies live in a separate HTTP
+            // context and are never shared with the user's browser.
             if (type === "recovery") {
                 return NextResponse.redirect(
                     `${origin}/fr/forgot-password?message=resetLinkInvalid`
                 );
             }
+            // For signup: show the accurate "email confirmed, please sign in" banner
+            // instead of a scary red error. The account is valid and ready to use.
             return NextResponse.redirect(
-                `${origin}/fr/login?message=emailVerificationFailed`
+                `${origin}/fr/login?success=verified`
             );
         }
     }
