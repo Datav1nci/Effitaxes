@@ -65,13 +65,13 @@ export async function recordDocuments(
             .eq("id", user.id)
             .single();
 
-        // Generate signed download URLs (expire in 7 days)
-        const SEVEN_DAYS = 7 * 24 * 60 * 60;
+        // Generate signed download URLs (expire in 90 days)
+        const NINETY_DAYS = 90 * 24 * 60 * 60;
         const filesWithUrls = await Promise.all(
             files.map(async f => {
                 const { data: signedData } = await supabase.storage
                     .from("user-documents")
-                    .createSignedUrl(f.storagePath, SEVEN_DAYS);
+                    .createSignedUrl(f.storagePath, NINETY_DAYS);
                 return {
                     fileName: f.fileName,
                     label: f.label,
