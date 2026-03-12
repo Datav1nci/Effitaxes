@@ -46,9 +46,10 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
     name: string;
     options: { label: string; value: string }[];
     labelClassName?: string;
+    placeholder?: string;
 }
 
-export const FormSelect = ({ label, name, options, className, labelClassName, ...props }: SelectProps) => {
+export const FormSelect = ({ label, name, options, className, labelClassName, placeholder, ...props }: SelectProps) => {
     const { register } = useFormContext();
     return (
         <div className="mb-4 flex flex-col h-full">
@@ -58,7 +59,7 @@ export const FormSelect = ({ label, name, options, className, labelClassName, ..
                 {...props}
                 className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 mt-auto ${className || ""}`}
             >
-                <option value="">Select...</option>
+                <option value="">{placeholder ?? "Select..."}</option>
                 {options.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                         {opt.label}
