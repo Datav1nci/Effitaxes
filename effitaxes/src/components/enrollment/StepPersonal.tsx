@@ -64,28 +64,26 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 placeholder={t.contact.form.emailPlaceholder}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormSelect
-                    label={t.enrollment.personal.maritalStatus}
-                    name="personal.maritalStatus"
-                    options={[
-                        { value: "single", label: t.enrollment.personal.maritalStatusOptions.single },
-                        { value: "married", label: t.enrollment.personal.maritalStatusOptions.married },
-                        { value: "commonLaw", label: t.enrollment.personal.maritalStatusOptions.commonLaw },
-                        { value: "separated", label: t.enrollment.personal.maritalStatusOptions.separated },
-                        { value: "divorced", label: t.enrollment.personal.maritalStatusOptions.divorced },
-                        { value: "widowed", label: t.enrollment.personal.maritalStatusOptions.widowed },
-                    ]}
+            <FormSelect
+                label={t.enrollment.personal.maritalStatus}
+                name="personal.maritalStatus"
+                options={[
+                    { value: "single", label: t.enrollment.personal.maritalStatusOptions.single },
+                    { value: "married", label: t.enrollment.personal.maritalStatusOptions.married },
+                    { value: "commonLaw", label: t.enrollment.personal.maritalStatusOptions.commonLaw },
+                    { value: "separated", label: t.enrollment.personal.maritalStatusOptions.separated },
+                    { value: "divorced", label: t.enrollment.personal.maritalStatusOptions.divorced },
+                    { value: "widowed", label: t.enrollment.personal.maritalStatusOptions.widowed },
+                ]}
+            />
+            {/* Conditional Date field — kept outside the select's grid to avoid layout shift */}
+            {maritalStatus && maritalStatus !== "single" && (
+                <FormInput
+                    label={t.enrollment.personal.maritalChangeDate}
+                    name="personal.maritalChangeDate"
+                    type="date"
                 />
-                {/* Conditional Date field */}
-                {maritalStatus && maritalStatus !== "single" && (
-                    <FormInput
-                        label={t.enrollment.personal.maritalChangeDate}
-                        name="personal.maritalChangeDate"
-                        type="date"
-                    />
-                )}
-            </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
