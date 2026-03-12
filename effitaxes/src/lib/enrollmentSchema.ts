@@ -72,6 +72,8 @@ export const createSchemas = (t: T) => {
 
     const carSchema = z.object({
         makeModel: z.string().min(1, t.enrollment.errors.required),
+        isOwner: z.enum(["owner", "leased"]).optional(),
+        openingFMV: z.coerce.number().optional(),
         businessKm: z.coerce.number().min(0),
         totalKm: z.coerce.number().min(0),
         gas: z.coerce.number().optional(),
