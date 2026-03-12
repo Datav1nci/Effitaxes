@@ -16,6 +16,13 @@ export const FormLabel = ({ children, className }: { children: React.ReactNode; 
     </label>
 );
 
+export const AnnualBanner = ({ message }: { message: string }) => (
+    <div className="flex items-start gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-blue-800 dark:text-blue-300 text-sm">
+        <span className="text-lg leading-none mt-0.5 flex-shrink-0">📅</span>
+        <p className="font-medium">{message}</p>
+    </div>
+);
+
 export const FormError = ({ name }: { name: string }) => {
     const { formState: { errors } } = useFormContext();
     // lodash.get style access for nested errors

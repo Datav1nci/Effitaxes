@@ -341,6 +341,7 @@ export const dictionary = {
                 number: "Doit être un nombre",
                 positive: "Doit être un nombre positif",
             },
+            annualTotalsNote: "Tous les montants doivent être des totaux annuels (pour l'année fiscale 2025 complète), non mensuels.",
             confirmation: "Je confirme que toutes les informations fournies sont exactes.",
         },
         metadata: {
@@ -912,6 +913,7 @@ export const dictionary = {
                 number: "Must be a number",
                 positive: "Must be a positive number",
             },
+            annualTotalsNote: "All amounts must be annual totals (for the full 2025 fiscal year), not monthly.",
             confirmation: "I confirm that all information provided is accurate.",
         },
         metadata: {

@@ -1,5 +1,5 @@
 import React from "react";
-import { FormInput } from "./FormUI";
+import { FormInput, AnnualBanner } from "./FormUI";
 import { dictionary } from "@/lib/dictionary";
 
 type Dictionary = typeof dictionary.en;
@@ -11,6 +11,8 @@ export const StepCarExpenses = ({ t }: { t: Dictionary }) => {
                 <h3 className="text-lg font-medium">{t.enrollment.car.title}</h3>
             </div>
 
+            <AnnualBanner message={t.enrollment.annualTotalsNote} />
+
             <FormInput label={t.enrollment.car.makeModel} name="car.makeModel" placeholder="e.g. Honda Civic 2021" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -19,11 +21,11 @@ export const StepCarExpenses = ({ t }: { t: Dictionary }) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <FormInput label={t.enrollment.car.gas} name="car.gas" type="number" />
-                <FormInput label={t.enrollment.car.insurance} name="car.insurance" type="number" />
-                <FormInput label={t.enrollment.car.license} name="car.license" type="number" />
-                <FormInput label={t.enrollment.car.maintenance} name="car.maintenance" type="number" />
-                <FormInput label={t.enrollment.car.leasePayments} name="car.leasePayments" type="number" />
+                <FormInput label={t.enrollment.car.gas} name="car.gas" type="number" placeholder="$0" />
+                <FormInput label={t.enrollment.car.insurance} name="car.insurance" type="number" placeholder="$0" />
+                <FormInput label={t.enrollment.car.license} name="car.license" type="number" placeholder="$0" />
+                <FormInput label={t.enrollment.car.maintenance} name="car.maintenance" type="number" placeholder="$0" />
+                <FormInput label={t.enrollment.car.leasePayments} name="car.leasePayments" type="number" placeholder="$0" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

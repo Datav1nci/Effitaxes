@@ -1,5 +1,5 @@
 import React from "react";
-import { FormInput, FormSelect } from "./FormUI";
+import { FormInput, FormSelect, AnnualBanner } from "./FormUI";
 import { dictionary } from "@/lib/dictionary";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { EnrollmentFormData } from "@/lib/enrollmentSchema";
@@ -44,6 +44,8 @@ export const StepRental = ({ t }: { t: Dictionary }) => {
                 <h3 className="text-lg font-medium">{t.enrollment.rental.title}</h3>
             </div>
 
+            <AnnualBanner message={t.enrollment.annualTotalsNote} />
+
             {fields.map((field, index) => (
                 <div key={field.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg space-y-6 relative">
                     <div className="flex justify-between items-center border-b pb-2">
@@ -81,6 +83,7 @@ export const StepRental = ({ t }: { t: Dictionary }) => {
                             name={`rental.properties.${index}.grossIncome`}
                             type="number"
                             prefix="$"
+                            placeholder="$0"
                         />
                         <FormInput
                             label={t.enrollment.rental.ownershipPercentage}
@@ -93,14 +96,14 @@ export const StepRental = ({ t }: { t: Dictionary }) => {
                     <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-800">
                         <h4 className="text-md font-semibold">{t.enrollment.rental.expenses.other || "Expenses"}</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <FormInput label={t.enrollment.rental.expenses.advertising} name={`rental.properties.${index}.expenses.advertising`} type="number" />
-                            <FormInput label={t.enrollment.rental.expenses.insurance} name={`rental.properties.${index}.expenses.insurance`} type="number" />
-                            <FormInput label={t.enrollment.rental.expenses.interest} name={`rental.properties.${index}.expenses.interest`} type="number" />
-                            <FormInput label={t.enrollment.rental.expenses.taxes} name={`rental.properties.${index}.expenses.taxes`} type="number" />
-                            <FormInput label={t.enrollment.rental.expenses.maintenance} name={`rental.properties.${index}.expenses.maintenance`} type="number" />
-                            <FormInput label={t.enrollment.rental.expenses.utilities} name={`rental.properties.${index}.expenses.utilities`} type="number" />
-                            <FormInput label={t.enrollment.rental.expenses.managementFees} name={`rental.properties.${index}.expenses.managementFees`} type="number" />
-                            <FormInput label={t.enrollment.rental.expenses.other} name={`rental.properties.${index}.expenses.other`} type="number" />
+                            <FormInput label={t.enrollment.rental.expenses.advertising} name={`rental.properties.${index}.expenses.advertising`} type="number" placeholder="$0" />
+                            <FormInput label={t.enrollment.rental.expenses.insurance} name={`rental.properties.${index}.expenses.insurance`} type="number" placeholder="$0" />
+                            <FormInput label={t.enrollment.rental.expenses.interest} name={`rental.properties.${index}.expenses.interest`} type="number" placeholder="$0" />
+                            <FormInput label={t.enrollment.rental.expenses.taxes} name={`rental.properties.${index}.expenses.taxes`} type="number" placeholder="$0" />
+                            <FormInput label={t.enrollment.rental.expenses.maintenance} name={`rental.properties.${index}.expenses.maintenance`} type="number" placeholder="$0" />
+                            <FormInput label={t.enrollment.rental.expenses.utilities} name={`rental.properties.${index}.expenses.utilities`} type="number" placeholder="$0" />
+                            <FormInput label={t.enrollment.rental.expenses.managementFees} name={`rental.properties.${index}.expenses.managementFees`} type="number" placeholder="$0" />
+                            <FormInput label={t.enrollment.rental.expenses.other} name={`rental.properties.${index}.expenses.other`} type="number" placeholder="$0" />
                         </div>
                     </div>
                 </div>
@@ -116,3 +119,4 @@ export const StepRental = ({ t }: { t: Dictionary }) => {
         </div>
     );
 };
+
