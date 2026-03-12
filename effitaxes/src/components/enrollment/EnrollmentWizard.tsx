@@ -8,6 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Dictionary } from "@/lib/dictionary";
 import { submitEnrollment } from "@/actions/submitEnrollment";
 import { StepPersonal } from "./StepPersonal";
+import { StepHousehold } from "./StepHousehold";
 import { StepIncomeSelection } from "./StepIncomeSelection";
 import { StepSelfEmployed } from "./StepSelfEmployed";
 import { StepCarExpenses } from "./StepCarExpenses";
@@ -75,6 +76,7 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
             car: profile?.tax_data?.car,
             rental: profile?.tax_data?.rental,
             workFromHome: profile?.tax_data?.workFromHome,
+            household: profile?.tax_data?.household || [],
         },
     });
 
@@ -113,6 +115,7 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
     const steps = useMemo(() => {
         const baseSteps = [
             { id: "personal", title: t.enrollment.steps.personal, component: StepPersonal, fields: ["personal"] },
+            { id: "household", title: t.enrollment.personal.household.title, component: StepHousehold, fields: ["household"] },
             { id: "selection", title: t.enrollment.steps.selection, component: StepIncomeSelection, fields: ["incomeSources"] },
         ];
 

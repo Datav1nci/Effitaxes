@@ -48,6 +48,28 @@ export const FormInput = ({ label, name, className, labelClassName, ...props }: 
     );
 };
 
+interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+    label: string | React.ReactNode;
+    name: string;
+    labelClassName?: string;
+}
+
+export const FormTextarea = ({ label, name, className, labelClassName, rows = 3, ...props }: TextareaProps) => {
+    const { register } = useFormContext();
+    return (
+        <div className="mb-4 flex flex-col h-full">
+            <FormLabel className={labelClassName}>{label}</FormLabel>
+            <textarea
+                {...register(name)}
+                {...props}
+                rows={rows}
+                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 mt-auto resize-none ${className || ""}`}
+            />
+            <FormError name={name} />
+        </div>
+    );
+};
+
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
     label: string | React.ReactNode;
     name: string;

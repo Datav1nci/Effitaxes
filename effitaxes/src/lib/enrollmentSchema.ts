@@ -133,6 +133,15 @@ export const createSchemas = (t: T) => {
         incomeSources: z.array(z.string()).default([]),
     });
 
+    const householdMemberSchema = z.object({
+        firstName: z.string().min(1, t.enrollment.errors.required),
+        lastName: z.string().min(1, t.enrollment.errors.required),
+        relationship: z.enum(["SPOUSE", "PARTNER", "CHILD", "DEPENDANT", "OTHER"]),
+        dateOfBirth: z.string().optional(),
+        livesWithPrimary: z.boolean().default(true),
+        isDependent: z.boolean().default(false),
+    });
+
     return {
         personal: personalSchema,
         selfEmployed: selfEmployedSchema,
@@ -140,6 +149,7 @@ export const createSchemas = (t: T) => {
         rental: rentalSchema,
         workFromHome: workFromHomeSchema,
         incomeSources: incomeSourcesSchema,
+        householdMember: householdMemberSchema,
     };
 };
 
@@ -149,7 +159,8 @@ export const createEnrollmentSchema = (t: T) => {
     // Base Schema linking everything
     const baseSchema = z.object({
         personal: schemas.personal,
-        incomeSources: schemas.incomeSources.shape.incomeSources, // Access shape to get the array schema directly
+        incomeSources: schemas.incomeSources.shape.incomeSources,
+        household: z.array(schemas.householdMember).default([]),
 
         // Detailed sections are optional but will be validated via refinements if selected
         selfEmployed: schemas.selfEmployed.optional(),
