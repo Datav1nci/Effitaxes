@@ -67,6 +67,7 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
             <FormSelect
                 label={t.enrollment.personal.maritalStatus}
                 name="personal.maritalStatus"
+                placeholder={t.common.select}
                 options={[
                     { value: "single", label: t.enrollment.personal.maritalStatusOptions.single },
                     { value: "married", label: t.enrollment.personal.maritalStatusOptions.married },
@@ -90,6 +91,7 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
                 <FormSelect
                     label={t.enrollment.personal.ownerTenant}
                     name="personal.ownerTenant"
+                    placeholder={t.common.select}
                     options={[
                         { value: "owner", label: t.enrollment.personal.ownerTenantOptions.owner },
                         { value: "tenant", label: t.enrollment.personal.ownerTenantOptions.tenant },

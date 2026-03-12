@@ -65,6 +65,7 @@ export const StepRental = ({ t }: { t: Dictionary }) => {
                         <FormSelect
                             label={t.enrollment.rental.propertyType}
                             name={`rental.properties.${index}.propertyType`}
+                            placeholder={t.common.select}
                             options={propertyTypeOptions}
                         />
                         <FormInput
