@@ -54,7 +54,7 @@ export default function ResetPasswordPage() {
                 setStatus("error");
             }
         });
-    }, [searchParams]);
+    }, [searchParams, t]);
 
 
     const handleSubmit = async (e: React.FormEvent) => {

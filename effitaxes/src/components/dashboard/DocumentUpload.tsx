@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { recordDocuments, deleteDocument, DocumentMetadataInput } from "@/actions/uploadDocuments";
+import { recordDocuments, deleteDocument, DocumentMetadataInput, DocumentRow as ServerDocumentRow } from "@/actions/uploadDocuments";
 
 const ACCEPTED_TYPES = "image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv";
 const MAX_FILE_SIZE = 15 * 1024 * 1024;
@@ -28,7 +28,7 @@ interface PendingFile {
 
 interface DocumentUploadProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    t: any;
+    t: Record<string, any>;
     initialDocuments: DocumentRecord[];
 }
 
@@ -161,7 +161,7 @@ export default function DocumentUpload({ t, initialDocuments }: DocumentUploadPr
 
             let newDocs: DocumentRecord[] = [];
             if (result.documents && result.documents.length > 0) {
-                newDocs = result.documents.map((row: any) => ({
+                newDocs = result.documents.map((row: ServerDocumentRow) => ({
                     id: row.id,
                     file_name: row.file_name,
                     storage_path: row.storage_path,

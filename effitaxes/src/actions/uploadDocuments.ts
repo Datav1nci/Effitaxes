@@ -17,9 +17,19 @@ export interface DocumentMetadataInput {
     label?: string;
 }
 
+export interface DocumentRow {
+    id: string;
+    file_name: string;
+    storage_path: string;
+    file_size: number | null;
+    mime_type: string | null;
+    label: string | null;
+    created_at: string;
+}
+
 export async function recordDocuments(
     files: DocumentMetadataInput[]
-): Promise<{ success: boolean; error?: string; documents?: any[] }> {
+): Promise<{ success: boolean; error?: string; documents?: DocumentRow[] }> {
     try {
         const supabase = await createClient();
         const {
