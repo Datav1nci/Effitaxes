@@ -295,6 +295,12 @@ export const dictionary = {
             },
             car: {
                 title: "Dépenses Automobiles",
+                isOwner: "Êtes-vous propriétaire ou locataire du véhicule?",
+                isOwnerOptions: {
+                    owner: "Propriétaire",
+                    leased: "En location (leasing)",
+                },
+                openingFMV: "Valeur marchande du véhicule au 1er janvier 2025 (JVM)",
                 makeModel: "Description de votre voiture (Marque, modèle, année)",
                 businessKm: "Km parcourus pour affaires",
                 totalKm: "Km parcourus au total dans l'année fiscale",
@@ -867,6 +873,12 @@ export const dictionary = {
             },
             car: {
                 title: "Car Expenses",
+                isOwner: "Do you own or lease this vehicle?",
+                isOwnerOptions: {
+                    owner: "I own it",
+                    leased: "I lease it",
+                },
+                openingFMV: "Vehicle value at January 1, 2025 (Fair Market Value for CCA)",
                 makeModel: "Car Description (Make, Model, Year)",
                 businessKm: "Km driven for business",
                 totalKm: "Total Km driven in fiscal year",
