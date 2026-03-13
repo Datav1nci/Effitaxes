@@ -596,6 +596,7 @@ export const dictionary = {
             readyToUpload: "prêt(s) à téléverser",
             stepTitle: "Documents fiscaux",
             mobileHint: "Sur iPhone : appareil photo, bibliothèque ou fichiers disponibles. Sélection multiple supportée.",
+            pendingFilesWarning: "Vous avez des fichiers sélectionnés qui n'ont pas été envoyés. Cliquez sur \"Envoyer les fichiers\" avant de continuer.",
         },
 
     },
@@ -1194,6 +1195,7 @@ export const dictionary = {
             readyToUpload: "ready to upload",
             stepTitle: "Tax Documents",
             mobileHint: "On iPhone: camera, photo library, or files available. Multi-select supported.",
+            pendingFilesWarning: "You have selected files that have not been submitted. Click \"Send Files\" before continuing.",
         },
     },
 };

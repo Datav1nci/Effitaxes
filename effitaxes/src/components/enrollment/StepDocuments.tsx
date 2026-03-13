@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { recordDocuments, DocumentMetadataInput } from "@/actions/uploadDocuments";
 
@@ -21,6 +21,8 @@ interface StepDocumentsProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     t: any;
     onUploadComplete?: (uploaded: boolean) => void;
+    /** Fires whenever files are selected but not yet submitted (true) or cleared (false) */
+    onHasPendingFiles?: (hasPending: boolean) => void;
 }
 
 function formatFileSize(bytes: number): string {
@@ -39,7 +41,7 @@ function sanitizeName(name: string) {
     return name.replace(/[^a-zA-Z0-9._-]/g, "_");
 }
 
-export function StepDocuments({ t, onUploadComplete }: StepDocumentsProps) {
+export function StepDocuments({ t, onUploadComplete, onHasPendingFiles }: StepDocumentsProps) {
     const d = t.documents;
 
     const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
@@ -49,6 +51,12 @@ export function StepDocuments({ t, onUploadComplete }: StepDocumentsProps) {
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [uploadedCount, setUploadedCount] = useState(0);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Notify parent whenever pending files change
+    useEffect(() => {
+        onHasPendingFiles?.(pendingFiles.length > 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pendingFiles.length]);
 
     const validate = (file: File): string | undefined => {
         if (file.size > MAX_FILE_SIZE) return d.errorSize;
@@ -133,6 +141,7 @@ export function StepDocuments({ t, onUploadComplete }: StepDocumentsProps) {
             setUploadSuccess(true);
             setUploadedCount(c => c + valid.length);
             setPendingFiles([]);
+            onHasPendingFiles?.(false);
             if (fileInputRef.current) fileInputRef.current.value = "";
             onUploadComplete?.(true);
         } catch (err) {

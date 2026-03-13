@@ -33,6 +33,8 @@ interface EnrollmentData {
     workFromHome?: Record<string, unknown>;
     household?: HouseholdMember[];
     updatedSections?: string[];
+    /** Uploaded document links — used in enrollment notification to admin only */
+    documents?: { fileName: string; label?: string; downloadUrl?: string }[];
 }
 
 interface ContactFormData {
@@ -95,6 +97,35 @@ export async function sendEnrollmentNotification(data: EnrollmentData) {
     const subject = `New Tax Enrollment: ${data.personal.lastName?.toUpperCase()}, ${data.personal.firstName}`;
     const incomeSourcesList = data.incomeSources ? data.incomeSources.join(', ') : 'None';
 
+    // Build documents section
+    const documentsBlock = data.documents && data.documents.length > 0
+        ? `<h2 style="color:#4f46e5;">📎 Uploaded Documents (${data.documents.length})</h2>
+           <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:16px;">
+               <thead>
+                   <tr style="background:#f8fafc;">
+                       <th style="padding:8px 12px;font-size:12px;font-weight:700;color:#64748b;text-align:left;text-transform:uppercase;">File</th>
+                       <th style="padding:8px 12px;font-size:12px;font-weight:700;color:#64748b;text-align:center;text-transform:uppercase;">Download</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   ${data.documents.map(f => `
+                       <tr>
+                           <td style="padding:10px 12px;font-size:13px;color:#0f172a;border-bottom:1px solid #f1f5f9;">
+                               ${f.fileName}
+                               ${f.label ? `<br/><span style="font-size:11px;color:#64748b;">${f.label}</span>` : ''}
+                           </td>
+                           <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;text-align:center;">
+                               ${f.downloadUrl
+                                   ? `<a href="${f.downloadUrl}" style="display:inline-block;padding:6px 16px;background:#4f46e5;color:#fff;font-size:12px;font-weight:700;text-decoration:none;border-radius:8px;">⬇ Download</a>`
+                                   : '<span style="font-size:12px;color:#94a3b8;">—</span>'
+                               }
+                           </td>
+                       </tr>`).join('')}
+               </tbody>
+           </table>
+           <p style="font-size:12px;color:#94a3b8;">🔒 Download links expire in 90 days. Files are stored securely in Supabase Storage.</p>`
+        : `<h2 style="color:#94a3b8;">📎 Documents</h2><p style="color:#94a3b8;font-size:13px;">No documents uploaded by this client.</p>`;
+
     const html = `
         <h1>New Enrollment Received</h1>
         <h2>Personal Info</h2>
@@ -120,6 +151,8 @@ export async function sendEnrollmentNotification(data: EnrollmentData) {
                 `).join('')}
             </ul>`
             : '<p>No household members added.</p>'}
+
+        ${documentsBlock}
     `;
 
     return sendEmail({

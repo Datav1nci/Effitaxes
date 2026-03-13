@@ -49,10 +49,42 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
             }
         }
 
-        // 2. Notify Admin
+        // 2. Fetch uploaded documents and generate signed URLs for admin email
+        const NINETY_DAYS = 90 * 24 * 60 * 60;
+        let enrollmentDocuments: { fileName: string; label?: string; downloadUrl?: string }[] = [];
+
+        if (user) {
+            try {
+                const { data: docRows } = await supabase
+                    .from("user_documents")
+                    .select("file_name, storage_path, label")
+                    .eq("user_id", user.id)
+                    .order("created_at", { ascending: true });
+
+                if (docRows && docRows.length > 0) {
+                    enrollmentDocuments = await Promise.all(
+                        docRows.map(async (doc) => {
+                            const { data: signedData } = await supabase.storage
+                                .from("user-documents")
+                                .createSignedUrl(doc.storage_path, NINETY_DAYS);
+                            return {
+                                fileName: doc.file_name,
+                                label: doc.label ?? undefined,
+                                downloadUrl: signedData?.signedUrl ?? undefined,
+                            };
+                        })
+                    );
+                }
+            } catch (err) {
+                console.error("Error fetching documents for enrollment notification:", err);
+            }
+        }
+
+        // 3. Notify Admin (with enrollment data + document links)
         const { success: adminSuccess, error: adminError } = await sendEnrollmentNotification({
             ...data,
-            household: householdMembers
+            household: householdMembers,
+            documents: enrollmentDocuments,
         });
         if (!adminSuccess) {
             console.error("Failed to send admin notification:", adminError);
@@ -60,7 +92,7 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
             // Usually valid submission + db save is success for the user, even if admin email fails (rare).
         }
 
-        // 2. Receipt to Customer
+        // 4. Receipt to Customer (no document links — private)
         if (data.personal?.email && data.personal?.firstName) {
             await sendEnrollmentReceipt(data.personal.email, data.personal.firstName);
         }

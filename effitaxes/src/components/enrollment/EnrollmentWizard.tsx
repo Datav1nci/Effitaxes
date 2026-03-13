@@ -22,6 +22,10 @@ import { User } from "@supabase/supabase-js";
 type StepProps = {
     t: Dictionary;
     highlightConfirmation?: boolean;
+    /** Passed to StepDocuments only — fires when pending file count changes */
+    onHasPendingFiles?: (hasPending: boolean) => void;
+    /** Passed to StepDocuments only — fires when upload completes */
+    onUploadComplete?: (uploaded: boolean) => void;
 };
 
 interface Profile {
@@ -187,6 +191,15 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
     const handleNext = async () => {
         const stepFields = steps[currentStep].fields;
 
+        // Block advancement from documents step if there are unsubmitted files
+        if (steps[currentStep].id === "documents" && hasPendingDocuments) {
+            setShowPendingDocsWarning(true);
+            setTimeout(() => setShowPendingDocsWarning(false), 4000);
+            return;
+        }
+
+        setShowPendingDocsWarning(false);
+
         // Validate current step fields
         if (stepFields.length > 0) {
             // @ts-expect-error - trigger accepts array of field names/paths
@@ -212,6 +225,10 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
     const confirmed = watch("confirmed");
 
     const [submitError, setSubmitError] = useState<string | null>(null);
+
+    // Documents step — track whether user has pending (un-submitted) files
+    const [hasPendingDocuments, setHasPendingDocuments] = useState(false);
+    const [showPendingDocsWarning, setShowPendingDocsWarning] = useState(false);
 
     const onSubmit: SubmitHandler<EnrollmentFormData> = async (data) => {
         setSubmitError(null);
@@ -289,7 +306,19 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
                 {/* Dynamic Step Content */}
                 <form onSubmit={handleSubmit(onSubmit)} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700">
 
-                    <CurrentComponent t={t} highlightConfirmation={highlightConfirmation} />
+                    <CurrentComponent
+                        t={t}
+                        highlightConfirmation={highlightConfirmation}
+                        onHasPendingFiles={steps[currentStep].id === "documents" ? setHasPendingDocuments : undefined}
+                        onUploadComplete={steps[currentStep].id === "documents" ? () => setHasPendingDocuments(false) : undefined}
+                    />
+
+                    {/* Pending documents warning */}
+                    {showPendingDocsWarning && (
+                        <div className="mt-4 p-3 bg-amber-50 border border-amber-300 text-amber-800 dark:bg-amber-900/30 dark:border-amber-700 dark:text-amber-300 rounded-md text-sm text-center animate-in fade-in duration-300">
+                            ⚠️ {t.documents.pendingFilesWarning}
+                        </div>
+                    )}
 
                     {/* Navigation Buttons */}
                     <div className="mt-8 flex justify-between pt-4 border-t">
