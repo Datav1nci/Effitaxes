@@ -84,6 +84,9 @@ export const dictionary = {
         household: {
             title: "Famille / Ménage",
             addMember: "Ajouter des membres",
+            edit: "Modifier",
+            editMemberTitle: "Modifier le membre",
+            updateSuccess: "Membre mis à jour.",
             remove: "Retirer",
             confirmDelete: "Êtes-vous sûr de vouloir retirer ce membre ?",
             noMembers: "Aucun membre de la famille ajouté.",
@@ -684,6 +687,9 @@ export const dictionary = {
         household: {
             title: "Family / Household",
             addMember: "Add Family Members",
+            edit: "Edit",
+            editMemberTitle: "Edit Member",
+            updateSuccess: "Member updated.",
             remove: "Remove",
             confirmDelete: "Are you sure you want to remove this member?",
             noMembers: "No family members added.",

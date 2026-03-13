@@ -173,7 +173,21 @@ export async function removeHouseholdMember(memberId: string) {
 
     if (!user) return { success: false, error: "Unauthorized" };
 
-    // Verify ownership via policy, but extra check is good
+    // Verify the member belongs to the authenticated user's household before deleting
+    const { data: member, error: fetchError } = await supabase
+        .from("household_members")
+        .select("household_id, households!inner(primary_person_id)")
+        .eq("id", memberId)
+        .single();
+
+    if (fetchError || !member) return { success: false, error: "Member not found" };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ownerCheck = (member as any).households?.primary_person_id;
+    if (ownerCheck !== user.id) {
+        return { success: false, error: "Unauthorized" };
+    }
+
     const { error } = await supabase
         .from("household_members")
         .delete()
@@ -184,7 +198,52 @@ export async function removeHouseholdMember(memberId: string) {
         return { success: false, error: "Failed to remove member" };
     }
 
-    // notifyAdminOfHouseholdChange is now handled on the client side
+    revalidatePath("/[locale]/dashboard/tax-profile", "page");
+    revalidatePath("/[locale]/dashboard", "layout");
+    return { success: true };
+}
+
+export async function updateHouseholdMember(memberId: string, data: MemberFormData) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) return { success: false, error: "Unauthorized" };
+
+    // Verify the member belongs to the authenticated user's household before updating.
+    // This is defense-in-depth on top of RLS — prevents cross-user writes even if
+    // RLS policies are ever misconfigured.
+    const { data: member, error: fetchError } = await supabase
+        .from("household_members")
+        .select("household_id, households!inner(primary_person_id)")
+        .eq("id", memberId)
+        .single();
+
+    if (fetchError || !member) return { success: false, error: "Member not found" };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ownerCheck = (member as any).households?.primary_person_id;
+    if (ownerCheck !== user.id) {
+        return { success: false, error: "Unauthorized" };
+    }
+
+    const { error } = await supabase
+        .from("household_members")
+        .update({
+            first_name: data.firstName,
+            last_name: data.lastName,
+            relationship: data.relationship,
+            date_of_birth: data.dateOfBirth || null,
+            lives_with_primary: data.livesWithPrimary,
+            is_dependent: data.isDependent,
+            tax_data: data.dependencyDetails || {},
+        })
+        .eq("id", memberId);
+
+    if (error) {
+        console.error("Error updating member:", error);
+        return { success: false, error: "Failed to update member" };
+    }
+
     revalidatePath("/[locale]/dashboard/tax-profile", "page");
     revalidatePath("/[locale]/dashboard", "layout");
     return { success: true };

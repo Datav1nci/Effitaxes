@@ -4,13 +4,10 @@
 import React, { useState } from "react";
 import { Dictionary } from "@/lib/dictionary";
 import AddMemberModal from "./AddMemberModal";
+import EditMemberModal from "./EditMemberModal";
 import { removeHouseholdMember } from "@/actions/household";
 
 import { Household, HouseholdMember } from "@/lib/householdTypes";
-
-// Define a type for the household and members since we don't have a shared type file yet
-// Ideally this should come from generated Supabase types
-// type Member = { ... } // Replaced by import
 
 type HouseholdPanelProps = {
     household?: Household | null;
@@ -25,6 +22,7 @@ export default function HouseholdPanel({ household, members: initialMembers = []
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
     const [clientMembers, setClientMembers] = useState<HouseholdMember[]>(initialMembers || []);
+    const [editingMember, setEditingMember] = useState<HouseholdMember | null>(null);
 
     // Sync initialMembers if they change (e.g. after revalidatePath)
     React.useEffect(() => {
@@ -37,16 +35,10 @@ export default function HouseholdPanel({ household, members: initialMembers = []
     }, [initialMembers]);
 
     const fetchMembers = async () => {
-        // We need a client-side supabase client, but for now we can rely on a server action or just re-trigger
-        // Actually, let's use the browser client if available or just a simple fetch to an API route? 
-        // We don't have API routes set up for this, but we can use the server action 'getHousehold' we created!
-
-        // Wait, 'getHousehold' is a server action. We can call it directly.
         const { getHousehold } = await import("@/actions/household");
         const res = await getHousehold();
         if (res.success && res.members) {
             setClientMembers(res.members);
-            console.log("Client-side fetch members:", res.members);
         }
     };
 
@@ -61,6 +53,13 @@ export default function HouseholdPanel({ household, members: initialMembers = []
 
     const handleMembersAdded = (newMembers: HouseholdMember[]) => {
         setClientMembers(current => [...current, ...newMembers]);
+        if (onUpdate) onUpdate();
+    };
+
+    const handleMemberUpdated = (updated: HouseholdMember) => {
+        setClientMembers(current =>
+            current.map(m => m.id === updated.id ? updated : m)
+        );
         if (onUpdate) onUpdate();
     };
 
@@ -90,15 +89,19 @@ export default function HouseholdPanel({ household, members: initialMembers = []
                                     <div className="text-xs text-gray-500 dark:text-gray-400">
                                         {t.household.relationships[member.relationship]}
                                         {member.date_of_birth && ` • ${member.date_of_birth}`}
+                                        {member.is_dependent && (
+                                            <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">
+                                                {t.household.form.isDependent}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="flex space-x-2">
+                                <div className="flex items-center space-x-2">
                                     {isDeleting === member.id ? (
                                         <span className="text-xs text-gray-400 animate-pulse">
                                             {t.common.saving || "Removing..."}
                                         </span>
                                     ) : confirmingDeleteId === member.id ? (
-                                        // Show Cancel in the card while the confirmation panel is open
                                         <button
                                             onClick={() => setConfirmingDeleteId(null)}
                                             className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-2 py-1 rounded border border-gray-300 dark:border-gray-600"
@@ -106,12 +109,20 @@ export default function HouseholdPanel({ household, members: initialMembers = []
                                             {t.common.cancel || "Cancel"}
                                         </button>
                                     ) : (
-                                        <button
-                                            onClick={() => setConfirmingDeleteId(member.id)}
-                                            className="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400"
-                                        >
-                                            {t.household.remove}
-                                        </button>
+                                        <>
+                                            <button
+                                                onClick={() => setEditingMember(member)}
+                                                className="text-xs text-indigo-500 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                            >
+                                                {t.household.edit}
+                                            </button>
+                                            <button
+                                                onClick={() => setConfirmingDeleteId(member.id)}
+                                                className="text-xs text-red-500 hover:text-red-700 dark:hover:text-red-400"
+                                            >
+                                                {t.household.remove}
+                                            </button>
+                                        </>
                                     )}
                                 </div>
                             </div>
@@ -149,6 +160,14 @@ export default function HouseholdPanel({ household, members: initialMembers = []
                 t={t}
                 existingMembers={clientMembers}
                 onMembersAdded={handleMembersAdded}
+            />
+
+            <EditMemberModal
+                member={editingMember}
+                isOpen={editingMember !== null}
+                onClose={() => setEditingMember(null)}
+                t={t}
+                onMemberUpdated={handleMemberUpdated}
             />
         </div>
     );
