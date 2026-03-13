@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { FormInput, FormSelect, FormRadioGroup } from "./FormUI";
+import { FormInput, FormSelect, FormRadioGroup, FormTextarea } from "./FormUI";
 import { dictionary } from "@/lib/dictionary";
 
 // Helper to infer type from dictionary
@@ -121,12 +121,11 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
 
 
 
-            <FormInput
+            <FormTextarea
                 label={t.enrollment.personal.additionalInfo}
                 name="personal.additionalInfo"
-                className="h-24"
-            // FormInput renders 'input'. I should probably add FormTextarea. 
-            // For now I'll use input but it's single line. 
+                rows={4}
+                placeholder="..."
             />
         </div>
     );
