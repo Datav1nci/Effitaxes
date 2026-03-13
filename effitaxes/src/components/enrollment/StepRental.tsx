@@ -94,7 +94,7 @@ export const StepRental = ({ t }: { t: Dictionary }) => {
                     </div>
 
                     <div className="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                        <h4 className="text-md font-semibold">{t.enrollment.rental.expenses.other || "Expenses"}</h4>
+                        <h4 className="text-md font-semibold">{t.enrollment.rental.expensesTitle}</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <FormInput label={t.enrollment.rental.expenses.advertising} name={`rental.properties.${index}.expenses.advertising`} type="number" placeholder="$0" />
                             <FormInput label={t.enrollment.rental.expenses.insurance} name={`rental.properties.${index}.expenses.insurance`} type="number" placeholder="$0" />

@@ -349,6 +349,7 @@ export const dictionary = {
                 address: "Adresse de la propriété locative",
                 grossIncome: "Revenus bruts de location",
                 ownershipPercentage: "Votre pourcentage de propriété",
+                expensesTitle: "Dépenses de location",
                 expenses: {
                     advertising: "Publicité",
                     insurance: "Assurances",
@@ -948,6 +949,7 @@ export const dictionary = {
                 address: "Rental Property Address",
                 grossIncome: "Gross Rents Collected",
                 ownershipPercentage: "Your Ownership Percentage",
+                expensesTitle: "Rental Expenses",
                 expenses: {
                     advertising: "Advertising",
                     insurance: "Insurance",
