@@ -448,12 +448,21 @@ export async function sendEnrollmentReceipt(email: string, firstName: string, la
 
         <!-- Header -->
         <tr>
+<<<<<<< HEAD
           <td style="background:linear-gradient(160deg,#071525 0%,#0a2040 100%);padding:36px 40px;text-align:center;">
             <!-- Logo wordmark — matches website BrandName.tsx exactly -->
             <div style="display:inline-block;font-size:30px;font-weight:700;letter-spacing:0.12em;font-family:Arial,Helvetica,sans-serif;">
               <span style="color:#3FBDED;">EFF</span><span style="color:#0274A9;">ITAXES</span>
             </div>
             <p style="margin:10px 0 0;font-size:11px;color:#5a8aaa;letter-spacing:0.18em;text-transform:uppercase;">
+=======
+          <td style="background:linear-gradient(135deg,#0a0f1c 0%,#1a2540 100%);padding:32px 40px;text-align:center;">
+            <!-- Logo wordmark -->
+            <div style="display:inline-block;font-size:26px;font-weight:800;letter-spacing:0.08em;color:#ffffff;">
+              <span style="color:#22d3ee;">EFFI</span><span style="color:#ffffff;">TAXES</span>
+            </div>
+            <p style="margin:10px 0 0;font-size:13px;color:#94a3b8;letter-spacing:0.05em;text-transform:uppercase;">
+>>>>>>> b0028566837ff8cbcd0304f8c1cdef1aa716753e
               ${isFr ? "Services fiscaux professionnels" : "Professional Tax Services"}
             </p>
           </td>
