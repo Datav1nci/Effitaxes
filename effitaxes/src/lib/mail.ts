@@ -449,12 +449,12 @@ export async function sendEnrollmentReceipt(email: string, firstName: string, la
 
         <!-- Header -->
         <tr>
-          <td style="background:linear-gradient(160deg,#071525 0%,#0a2040 100%);padding:36px 40px;text-align:center;">
+          <td style="background:#ffffff;padding:32px 40px 24px;text-align:center;border-bottom:1px solid #e8edf2;">
             <!-- Logo image — same as Supabase verification email -->
             <img src="https://www.effitaxes.com/images/Effitaxes_Logo.webp"
                  alt="Effitaxes"
-                 width="220"
-                 style="display:block;margin:0 auto;max-width:220px;height:auto;border:0;"/>
+                 width="200"
+                 style="display:block;margin:0 auto;max-width:200px;height:auto;border:0;"/>
           </td>
         </tr>
 
