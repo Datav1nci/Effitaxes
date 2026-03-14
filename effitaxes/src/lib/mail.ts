@@ -462,7 +462,7 @@ export async function sendEnrollmentReceipt(email: string, firstName: string, la
           <td style="background:linear-gradient(160deg,#071525 0%,#0a2040 100%);padding:36px 40px;text-align:center;">
             <!-- Logo wordmark — matches website BrandName.tsx exactly -->
             <div class="brand-logo" style="display:inline-block;font-size:30px;font-weight:700;letter-spacing:0.12em;">
-              <span style="color:#3FBDED;">EFF</span><span style="color:#0274A9;">ITAXES</span>
+              <span style="color:#3FBDED;">EFF</span><span style="color:#0274A9;">ITA&gt;&lt;ES</span>
             </div>
             <p style="margin:10px 0 0;font-size:11px;color:#5a8aaa;letter-spacing:0.18em;text-transform:uppercase;">
               ${isFr ? "Services fiscaux professionnels" : "Professional Tax Services"}
