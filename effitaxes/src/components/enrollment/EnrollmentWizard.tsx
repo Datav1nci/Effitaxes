@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createEnrollmentSchema, EnrollmentFormData } from "@/lib/enrollmentSchema";
 import { useLanguage } from "@/context/LanguageContext";
@@ -84,7 +84,7 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
         },
     });
 
-    const { watch, trigger, handleSubmit, reset } = methods;
+    const { watch, trigger, reset, getValues } = methods;
 
     const watchedIncomeSources = watch("incomeSources");
     const incomeSources = useMemo(() => watchedIncomeSources || [], [watchedIncomeSources]);
@@ -230,18 +230,25 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
     const [hasPendingDocuments, setHasPendingDocuments] = useState(false);
     const [showPendingDocsWarning, setShowPendingDocsWarning] = useState(false);
 
-    const onSubmit: SubmitHandler<EnrollmentFormData> = async (data) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmitClick = async () => {
         setSubmitError(null);
 
-        // Guard: checkbox must be checked
-        if (!data.confirmed) {
+        // Guard: confirmation checkbox must be checked
+        if (!confirmed) {
             setHighlightConfirmation(true);
             setTimeout(() => setHighlightConfirmation(false), 2000);
             setSubmitError(t.enrollment.confirmation);
             return;
         }
 
+        setIsSubmitting(true);
         try {
+            // Use getValues() directly — each step already validated its own
+            // fields on "Next", so we skip the full-schema re-validation that
+            // would silently block submission for optional enum fields.
+            const data = getValues() as EnrollmentFormData;
             const result = await submitEnrollment(data);
 
             if (result.success) {
@@ -255,6 +262,8 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
         } catch (e) {
             console.error(e);
             setSubmitError(t.auth.errorUpdate);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -306,7 +315,7 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
                 </div>
 
                 {/* Dynamic Step Content */}
-                <form onSubmit={handleSubmit(onSubmit)} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700">
+                <form onSubmit={(e) => e.preventDefault()} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border dark:border-gray-700">
 
                     <CurrentComponent
                         t={t}
@@ -343,14 +352,18 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
                             </button>
                         ) : (
                             <button
-                                type="submit"
+                                type="button"
+                                onClick={handleSubmitClick}
+                                disabled={isSubmitting}
                                 className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 ${
-                                    confirmed
-                                        ? "bg-green-600 hover:bg-green-700 focus:ring-green-500"
-                                        : "bg-gray-400 focus:ring-gray-400"
+                                    isSubmitting
+                                        ? "bg-green-400 cursor-wait"
+                                        : confirmed
+                                            ? "bg-green-600 hover:bg-green-700 focus:ring-green-500"
+                                            : "bg-gray-400 focus:ring-gray-400"
                                 }`}
                             >
-                                {t.enrollment.buttons.submit}
+                                {isSubmitting ? "..." : t.enrollment.buttons.submit}
                             </button>
                         )}
                     </div>
