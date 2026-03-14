@@ -88,13 +88,13 @@ export async function submitEnrollment(data: any): Promise<{ success: boolean; e
         });
         if (!adminSuccess) {
             console.error("Failed to send admin notification:", adminError);
-            // We can decide to just log this, or return error. 
-            // Usually valid submission + db save is success for the user, even if admin email fails (rare).
+            // Log only — a failed admin email shouldn't block the user's success
         }
 
         // 4. Receipt to Customer (no document links — private)
         if (data.personal?.email && data.personal?.firstName) {
-            await sendEnrollmentReceipt(data.personal.email, data.personal.firstName);
+            const lang: "fr" | "en" = data.language === "en" ? "en" : "fr";
+            await sendEnrollmentReceipt(data.personal.email, data.personal.firstName, lang);
         }
 
         console.log("Enrollment submitted successfully.");

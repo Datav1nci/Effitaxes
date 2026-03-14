@@ -249,7 +249,7 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
             // fields on "Next", so we skip the full-schema re-validation that
             // would silently block submission for optional enum fields.
             const data = getValues() as EnrollmentFormData;
-            const result = await submitEnrollment(data);
+            const result = await submitEnrollment({ ...data, language });
 
             if (result.success) {
                 localStorage.removeItem("enrollment_draft");

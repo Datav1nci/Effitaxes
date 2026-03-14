@@ -405,22 +405,119 @@ export async function sendDocumentUploadNotification(data: {
 
 // --- Customer Receipts ---
 
-export async function sendEnrollmentReceipt(email: string, firstName: string) {
-    const subject = "Confirmation: Nous avons reçu votre dossier fiscal";
+export async function sendEnrollmentReceipt(email: string, firstName: string, language: "fr" | "en" = "fr") {
+    const isFr = language === "fr";
 
-    const html = `
-        <h1>Bonjour ${firstName},</h1>
-        <p>Nous confirmons la réception de votre dossier d'inscription pour l'année fiscale en cours.</p>
-        <p>Notre équipe va examiner vos informations et vous contactera si des documents supplémentaires sont nécessaires.</p>
-        <p>Vous pouvez à tout moment vous connecter à votre <a href="https://effitaxes.com/dashboard">Dashboard</a> pour mettre à jour vos informations.</p>
-        <br />
-        <p>Cordialement,</p>
-        <p><strong>L'équipe Effitaxes</strong></p>
-    `;
+    const copy = {
+        subject: isFr
+            ? "Confirmation d'inscription — Effitaxes"
+            : "Enrollment Confirmation — Effitaxes",
+        greeting: isFr ? `Bonjour ${firstName},` : `Hello ${firstName},`,
+        confirmed: isFr ? "Dossier reçu avec succès ✓" : "Application Successfully Received ✓",
+        p1: isFr
+            ? "Nous confirmons la réception de votre dossier d'inscription pour l'année fiscale <strong>2025</strong>. Notre équipe va examiner vos informations dans les plus brefs délais."
+            : "We have successfully received your tax enrollment application for the <strong>2025</strong> fiscal year. Our team will review your information shortly.",
+        p2: isFr
+            ? "Si des documents supplémentaires sont requis, nous vous contacterons directement."
+            : "If any additional documents are required, we will contact you directly.",
+        docsTitle: isFr ? "📎 Téléverser des documents" : "📎 Upload Documents",
+        docsBody: isFr
+            ? "Vous pouvez téléverser vos documents fiscaux (T4, relevés, reçus, etc.) directement depuis votre tableau de bord en tout temps."
+            : "You can upload your tax documents (T4 slips, statements, receipts, etc.) directly from your dashboard at any time.",
+        ctaLabel: isFr ? "Accéder à mon tableau de bord" : "Go to my Dashboard",
+        closing: isFr ? "Cordialement," : "Best regards,",
+        team: isFr ? "L'équipe Effitaxes" : "The Effitaxes Team",
+        footer: isFr
+            ? "Ce courriel a été envoyé automatiquement. Merci de ne pas y répondre directement."
+            : "This email was sent automatically. Please do not reply directly to this message.",
+    };
+
+    const dashboardUrl = `https://www.effitaxes.com/${language}/dashboard`;
+
+    const html = `<!DOCTYPE html>
+<html lang="${language}">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>${copy.subject}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f0f4f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f4f8;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(160deg,#071525 0%,#0a2040 100%);padding:36px 40px;text-align:center;">
+            <!-- Logo wordmark — matches website BrandName.tsx exactly -->
+            <div style="display:inline-block;font-size:30px;font-weight:700;letter-spacing:0.12em;font-family:Arial,Helvetica,sans-serif;">
+              <span style="color:#3FBDED;">EFF</span><span style="color:#0274A9;">ITAXES</span>
+            </div>
+            <p style="margin:10px 0 0;font-size:11px;color:#5a8aaa;letter-spacing:0.18em;text-transform:uppercase;">
+              ${isFr ? "Services fiscaux professionnels" : "Professional Tax Services"}
+            </p>
+          </td>
+        </tr>
+
+        <!-- Green confirmation banner -->
+        <tr>
+          <td style="background:#ecfdf5;border-bottom:2px solid #6ee7b7;padding:20px 40px;text-align:center;">
+            <span style="display:inline-block;font-size:15px;font-weight:700;color:#065f46;letter-spacing:0.02em;">
+              ${copy.confirmed}
+            </span>
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td style="padding:40px 40px 32px;">
+            <p style="margin:0 0 24px;font-size:22px;font-weight:700;color:#0f172a;">${copy.greeting}</p>
+
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#334155;">${copy.p1}</p>
+            <p style="margin:0 0 32px;font-size:15px;line-height:1.7;color:#334155;">${copy.p2}</p>
+
+            <!-- Document upload section -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:32px;">
+              <tr>
+                <td style="padding:24px 28px;">
+                  <p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#0f172a;">${copy.docsTitle}</p>
+                  <p style="margin:0 0 20px;font-size:14px;line-height:1.6;color:#475569;">${copy.docsBody}</p>
+                  <a href="${dashboardUrl}" style="display:inline-block;background:linear-gradient(135deg,#0ea5e9,#06b6d4);color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;padding:12px 28px;border-radius:8px;letter-spacing:0.02em;">
+                    ${copy.ctaLabel} →
+                  </a>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Closing -->
+            <p style="margin:0 0 4px;font-size:14px;color:#64748b;">${copy.closing}</p>
+            <p style="margin:0;font-size:15px;font-weight:700;color:#0f172a;">${copy.team}</p>
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr><td style="height:1px;background:#e2e8f0;"></td></tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="padding:20px 40px;text-align:center;">
+            <p style="margin:0 0 8px;font-size:12px;color:#94a3b8;">${copy.footer}</p>
+            <p style="margin:0;font-size:12px;color:#cbd5e1;">
+              © ${new Date().getFullYear()} Effitaxes &nbsp;|&nbsp;
+              <a href="https://www.effitaxes.com" style="color:#0ea5e9;text-decoration:none;">www.effitaxes.com</a>
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
 
     return sendEmail({
         to: email,
-        subject,
+        subject: copy.subject,
         html,
         from: EMAILS.SENDER_SUPPORT
     });
