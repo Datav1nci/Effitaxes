@@ -440,6 +440,17 @@ export async function sendEnrollmentReceipt(email: string, firstName: string, la
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>${copy.subject}</title>
+  <style>
+    @font-face {
+      font-family: 'Promethean';
+      src: url('https://www.effitaxes.com/fonts/Promethean-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    .brand-logo {
+      font-family: 'Promethean', Arial, Helvetica, sans-serif !important;
+    }
+  </style>
 </head>
 <body style="margin:0;padding:0;background-color:#f0f4f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f4f8;padding:32px 16px;">
@@ -450,7 +461,7 @@ export async function sendEnrollmentReceipt(email: string, firstName: string, la
         <tr>
           <td style="background:linear-gradient(160deg,#071525 0%,#0a2040 100%);padding:36px 40px;text-align:center;">
             <!-- Logo wordmark — matches website BrandName.tsx exactly -->
-            <div style="display:inline-block;font-size:30px;font-weight:700;letter-spacing:0.12em;font-family:Arial,Helvetica,sans-serif;">
+            <div class="brand-logo" style="display:inline-block;font-size:30px;font-weight:700;letter-spacing:0.12em;">
               <span style="color:#3FBDED;">EFF</span><span style="color:#0274A9;">ITAXES</span>
             </div>
             <p style="margin:10px 0 0;font-size:11px;color:#5a8aaa;letter-spacing:0.18em;text-transform:uppercase;">
