@@ -232,6 +232,15 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
 
     const onSubmit: SubmitHandler<EnrollmentFormData> = async (data) => {
         setSubmitError(null);
+
+        // Guard: checkbox must be checked
+        if (!data.confirmed) {
+            setHighlightConfirmation(true);
+            setTimeout(() => setHighlightConfirmation(false), 2000);
+            setSubmitError(t.enrollment.confirmation);
+            return;
+        }
+
         try {
             const result = await submitEnrollment(data);
 
@@ -246,13 +255,6 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
         } catch (e) {
             console.error(e);
             setSubmitError(t.auth.errorUpdate);
-        }
-    };
-
-    const handleFakeSubmit = () => {
-        if (!confirmed) {
-            setHighlightConfirmation(true);
-            setTimeout(() => setHighlightConfirmation(false), 500);
         }
     };
 
@@ -340,22 +342,16 @@ export default function EnrollmentWizard({ user, profile }: EnrollmentWizardProp
                                 {t.enrollment.buttons.next}
                             </button>
                         ) : (
-                            confirmed ? (
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
-                                >
-                                    {t.enrollment.buttons.submit}
-                                </button>
-                            ) : (
-                                <button
-                                    type="button"
-                                    onClick={handleFakeSubmit}
-                                    className="px-4 py-2 text-sm font-medium text-white bg-gray-400 border border-transparent rounded-md shadow-sm cursor-not-allowed focus:outline-none transition-colors duration-200"
-                                >
-                                    {t.enrollment.buttons.submit}
-                                </button>
-                            )
+                            <button
+                                type="submit"
+                                className={`px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 ${
+                                    confirmed
+                                        ? "bg-green-600 hover:bg-green-700 focus:ring-green-500"
+                                        : "bg-gray-400 focus:ring-gray-400"
+                                }`}
+                            >
+                                {t.enrollment.buttons.submit}
+                            </button>
                         )}
                     </div>
                     {submitError && (

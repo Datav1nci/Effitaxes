@@ -117,9 +117,19 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
           </button>
           <button
             onClick={toggleLanguage}
-            className="rounded-full px-3 py-1 text-sm font-medium border border-gray-300 dark:border-gray-700 hover:bg-slate-100 dark:hover:bg-gray-800"
+            aria-label="Toggle language"
+            className="flex items-center gap-0.5 rounded-full border border-gray-300 dark:border-gray-600 px-1 py-1 text-xs font-semibold hover:border-blue-400 dark:hover:border-blue-500 transition-colors"
           >
-            {language.toUpperCase()}
+            <span className={`px-2 py-0.5 rounded-full transition-colors ${
+              language === "fr"
+                ? "bg-blue-600 text-white"
+                : "text-gray-400 dark:text-gray-500"
+            }`}>FR</span>
+            <span className={`px-2 py-0.5 rounded-full transition-colors ${
+              language === "en"
+                ? "bg-blue-600 text-white"
+                : "text-gray-400 dark:text-gray-500"
+            }`}>EN</span>
           </button>
 
           {mounted && (
@@ -166,11 +176,19 @@ export default function Header({ initialUser }: { initialUser?: User | null }) {
         <div className="flex items-center gap-2 md:hidden">
           <button
             onClick={toggleLanguage}
-            className="rounded-full p-2 text-slate-700 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            aria-label="Toggle language"
+            className="flex items-center gap-0.5 rounded-full border border-gray-300 dark:border-gray-600 px-1 py-1 text-xs font-semibold hover:border-blue-400 dark:hover:border-blue-500 transition-colors"
           >
-            <span className="flex items-center justify-center font-bold text-sm h-5 w-5">
-              {language.toUpperCase()}
-            </span>
+            <span className={`px-2 py-0.5 rounded-full transition-colors ${
+              language === "fr"
+                ? "bg-blue-600 text-white"
+                : "text-gray-400 dark:text-gray-500"
+            }`}>FR</span>
+            <span className={`px-2 py-0.5 rounded-full transition-colors ${
+              language === "en"
+                ? "bg-blue-600 text-white"
+                : "text-gray-400 dark:text-gray-500"
+            }`}>EN</span>
           </button>
           <button
             onClick={toggleTheme}
