@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { FormInput, FormSelect, FormRadioGroup, FormTextarea } from "./FormUI";
+import { FormInput, FormSelect, FormRadioGroup, FormTextarea, FormDateInput } from "./FormUI";
 import { dictionary } from "@/lib/dictionary";
 
 // Helper to infer type from dictionary
@@ -53,7 +53,7 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormInput label={t.enrollment.personal.phone} name="personal.phone" placeholder={t.contact.form.phonePlaceholder} />
-                <FormInput label={t.enrollment.personal.dob} name="personal.dob" type="date" />
+                <FormDateInput label={t.enrollment.personal.dob} name="personal.dob" />
             </div>
 
             <FormInput
@@ -79,10 +79,9 @@ export const StepPersonal = ({ t }: { t: Dictionary }) => {
             />
             {/* Conditional Date field — kept outside the select's grid to avoid layout shift */}
             {maritalStatus && maritalStatus !== "single" && (
-                <FormInput
+                <FormDateInput
                     label={t.enrollment.personal.maritalChangeDate}
                     name="personal.maritalChangeDate"
-                    type="date"
                 />
             )}
 

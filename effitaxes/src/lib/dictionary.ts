@@ -367,7 +367,9 @@ export const dictionary = {
             errors: {
                 required: "Ce champ est obligatoire",
                 invalidEmail: "Adresse courriel invalide",
-                invalidDate: "Date invalide",
+                invalidDate: "Date invalide (AAAA-MM-JJ)",
+                dobFuture: "La date de naissance ne peut pas être dans le futur",
+                dobTooOld: "Veuillez entrer une date après l'an 1900",
                 number: "Doit être un nombre",
                 positive: "Doit être un nombre positif",
             },
@@ -970,7 +972,9 @@ export const dictionary = {
             errors: {
                 required: "This field is required",
                 invalidEmail: "Invalid email address",
-                invalidDate: "Invalid date",
+                invalidDate: "Invalid date (YYYY-MM-DD)",
+                dobFuture: "Date of birth cannot be in the future",
+                dobTooOld: "Please enter a date after the year 1900",
                 number: "Must be a number",
                 positive: "Must be a positive number",
             },

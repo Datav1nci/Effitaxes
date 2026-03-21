@@ -5,6 +5,33 @@ type T = typeof dictionary.en;
 
 export const createSchemas = (t: T) => {
     const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+
+    // Reusable: required date string in YYYY-MM-DD, must be ≥ 1900 and ≤ today
+    const requiredDateSchema = z
+        .string()
+        .min(1, t.enrollment.errors.required)
+        .regex(dateRegex, t.enrollment.errors.invalidDate)
+        .refine((v) => v >= "1900-01-01", t.enrollment.errors.dobTooOld)
+        .refine((v) => v <= today, t.enrollment.errors.dobFuture);
+
+    // Optional version: empty string is allowed, but if filled must be valid
+    const optionalDateSchema = z
+        .string()
+        .optional()
+        .refine(
+            (v) => !v || dateRegex.test(v),
+            t.enrollment.errors.invalidDate
+        )
+        .refine(
+            (v) => !v || v >= "1900-01-01",
+            t.enrollment.errors.dobTooOld
+        )
+        .refine(
+            (v) => !v || v <= today,
+            t.enrollment.errors.dobFuture
+        );
 
     const personalSchema = z.object({
         firstName: z.string().min(1, t.enrollment.errors.required),
@@ -14,12 +41,12 @@ export const createSchemas = (t: T) => {
         addressCity: z.string().min(1, t.enrollment.errors.required),
         addressApp: z.string().optional(),
         phone: z.string().regex(phoneRegex, t.contact.form.phonePlaceholder),
-        dob: z.string().min(1, t.enrollment.errors.required),
+        dob: requiredDateSchema,
         email: z.string().email(t.enrollment.errors.invalidEmail),
         maritalStatus: z.enum(["single", "married", "commonLaw", "separated", "divorced", "widowed"], {
             message: t.enrollment.errors.required,
         }),
-        maritalChangeDate: z.string().optional(),
+        maritalChangeDate: optionalDateSchema,
         province: z.string().min(1, t.enrollment.errors.required),
         ownerTenant: z.enum(["owner", "tenant"], {
             message: t.enrollment.errors.required,
@@ -137,7 +164,7 @@ export const createSchemas = (t: T) => {
         firstName: z.string().min(1, t.enrollment.errors.required),
         lastName: z.string().min(1, t.enrollment.errors.required),
         relationship: z.enum(["SPOUSE", "PARTNER", "CHILD", "DEPENDANT", "OTHER"]),
-        dateOfBirth: z.string().optional(),
+        dateOfBirth: optionalDateSchema,
         livesWithPrimary: z.boolean().default(true),
         isDependent: z.boolean().default(false),
     });

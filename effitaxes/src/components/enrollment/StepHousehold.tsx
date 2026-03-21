@@ -4,6 +4,7 @@ import React from "react";
 import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import { EnrollmentFormData } from "@/lib/enrollmentSchema";
 import { dictionary } from "@/lib/dictionary";
+import { FormDateInput } from "./FormUI";
 
 type Dictionary = typeof dictionary.en;
 
@@ -102,10 +103,9 @@ export const StepHousehold = ({ t }: { t: Dictionary }) => {
                                 </div>
                                 <div>
                                     <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{hh.dob}</label>
-                                    <input
-                                        type="date"
-                                        {...register(`household.${index}.dateOfBirth`)}
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    <FormDateInput
+                                        label=""
+                                        name={`household.${index}.dateOfBirth`}
                                     />
                                 </div>
                             </div>
