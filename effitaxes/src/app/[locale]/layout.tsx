@@ -33,10 +33,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       type: "website",
     },
     alternates: {
-      canonical: "./",
+      canonical: `https://www.effitaxes.com/${lang}`,
       languages: {
-        "fr": "/fr",
-        "en": "/en",
+        "fr": "https://www.effitaxes.com/fr",
+        "en": "https://www.effitaxes.com/en",
       },
     },
   };

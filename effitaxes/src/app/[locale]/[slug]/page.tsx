@@ -32,10 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             description: page.metadata.description[lang],
         },
         alternates: {
-            canonical: "./",
+            canonical: `https://www.effitaxes.com/${locale}/${slug}`,
             languages: {
-                en: `/en/${slug}`,
-                fr: `/fr/${slug}`,
+                en: `https://www.effitaxes.com/en/${slug}`,
+                fr: `https://www.effitaxes.com/fr/${slug}`,
             },
         },
     };
