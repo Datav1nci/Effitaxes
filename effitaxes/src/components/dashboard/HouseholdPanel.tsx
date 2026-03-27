@@ -24,12 +24,13 @@ export default function HouseholdPanel({ household, members: initialMembers = []
     const [clientMembers, setClientMembers] = useState<HouseholdMember[]>(initialMembers || []);
     const [editingMember, setEditingMember] = useState<HouseholdMember | null>(null);
 
-    // Sync initialMembers if they change (e.g. after revalidatePath)
+    // Sync initialMembers if they change (e.g. after revalidatePath).
+    // Use != null check so that an empty [] (confirmed empty list) is accepted as-is,
+    // and fetchMembers() is only called when the server passed no data at all (null/undefined).
     React.useEffect(() => {
-        if (initialMembers && initialMembers.length > 0) {
+        if (initialMembers != null) {
             setClientMembers(initialMembers);
         } else {
-            // If server returns empty, try fetching client side to verify
             fetchMembers();
         }
     }, [initialMembers]);
