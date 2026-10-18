@@ -69,9 +69,11 @@ export const StepSelfEmployed = ({ t }: { t: Dictionary }) => {
                         <FormInput label={t.enrollment.selfEmployed.homeOffice.insurance} name="selfEmployed.homeOffice.insurance" type="number" placeholder="$0" />
                         <FormInput label={t.enrollment.selfEmployed.homeOffice.maintenance} name="selfEmployed.homeOffice.maintenance" type="number" placeholder="$0" />
                         <FormInput label={t.enrollment.selfEmployed.homeOffice.mortgageInterest} name="selfEmployed.homeOffice.mortgageInterest" type="number" placeholder="$0" />
+                        <FormInput label={t.enrollment.selfEmployed.homeOffice.rent} name="selfEmployed.homeOffice.rent" type="number" placeholder="$0" />
                         <FormInput label={t.enrollment.selfEmployed.homeOffice.propertyTaxes} name="selfEmployed.homeOffice.propertyTaxes" type="number" placeholder="$0" />
                         <FormInput label={t.enrollment.selfEmployed.homeOffice.other} name="selfEmployed.homeOffice.other" type="number" placeholder="$0" />
                     </div>
+                    <FormInput label={t.enrollment.selfEmployed.homeOffice.otherDescription} name="selfEmployed.homeOffice.otherDescription" placeholder="Ex: Internet, stationnement..." />
                 </div>
             )}
         </div>
